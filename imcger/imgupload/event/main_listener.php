@@ -170,13 +170,13 @@ class main_listener implements EventSubscriberInterface
 			{
 				/* set the max file size for the image */
 				$filesize = $this->image_auto_length($image, $image_max_filesize);
-				
-				/* store new file size */
-				$filedata_array = $event['filedata'];
-				$filedata_array['filesize'] = $filesize;
-				$event['filedata'] = $filedata_array;
 			}
 			
+			/* store new file size */			
+			$filedata_array = $event['filedata'];
+			$filedata_array['filesize'] = $filesize ?? strlen($image->getImageBlob());
+			$event['filedata'] = $filedata_array;
+
 			/* store the image */
 			if($image->writeImage($file_path))
 			{
