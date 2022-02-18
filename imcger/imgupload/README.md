@@ -4,7 +4,7 @@
 This extension us the PHP imagick class to modify upload image for improved quality.
 It can change the image size and/or the image file size. Rotate thumbnails according to their exif information. Remove EXIF data.
 
-#### Settings in User Control Panel > Board preferences > Edit display options
+#### Settings in User Control Panel
 - No settings. 
 
 #### Settings in Administration Control Panel
