@@ -1,0 +1,10 @@
+services:
+    imcger.imgupload.listener:
+        class: imcger\imgupload\event\main_listener
+        arguments:
+            - '@config'
+            - '@request'
+            - '@user'
+            - '@language'
+        tags:
+            - { name: event.listener }
