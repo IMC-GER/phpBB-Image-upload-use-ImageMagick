@@ -115,7 +115,7 @@ class main_listener implements EventSubscriberInterface
 			$image_max_width	= $this->config['imcger_imgupload_max_width'];
 			$image_max_height	= $this->config['imcger_imgupload_max_height'];
 			$image_quality		= $this->config['imcger_imgupload_img_quality'];
-			$image_del_exif		= $this->config['imcger_imgupload_del_exif'];
+			$image_del_exif		= $this->config['img_strip_metadata'];
 			$image_max_filesize = $this->config['imcger_imgupload_max_filesize'];
 
 			/* get file path */
