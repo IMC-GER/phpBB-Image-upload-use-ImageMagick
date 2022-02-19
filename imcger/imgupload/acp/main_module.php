@@ -45,7 +45,7 @@ class main_module
 			$config->set('imcger_imgupload_max_width', $request->variable('imcger_imgupload_max_width', 0));
 			$config->set('imcger_imgupload_max_height', $request->variable('imcger_imgupload_max_height', 0));
 			$config->set('imcger_imgupload_max_filesize', $max_filesize);
-			$config->set('imcger_imgupload_del_exif', $request->variable('imcger_imgupload_del_exif', 0));
+			$config->set('img_strip_metadata', $request->variable('imcger_imgupload_del_exif', 0));
 
 			trigger_error($user->lang('ACP_IMCGER_SETTINGS_SAVED') . adm_back_link($this->u_action));
 		}
@@ -60,7 +60,7 @@ class main_module
 			'IMCGER_MAX_HEIGHT'		=> $config['imcger_imgupload_max_height'],
 			'IMCGER_MAX_FILESIZE'	=> $filesize['value'],
 			'IMCGER_UNIT'			=> $filesize['si_identifier'],
-			'IMCGER_DEL_EXIF'		=> $config['imcger_imgupload_del_exif'],
+			'IMCGER_DEL_EXIF'		=> $config['img_strip_metadata'],
 		));
 	}
 }

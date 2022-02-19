@@ -24,8 +24,14 @@ It can change the image size and/or the image file size. Rotate thumbnails accor
 Copy the extension to `phpBB3/ext/imcger/imgupload`.
 Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
 For full functionality "Maximum file size" in "ACP" > "Posting" > "Attachment settings" must be set to 0. This is done automatically during the migration.
+For full functionality "Maximum image dimensions" in "ACP" > "Posting" > "Attachment settings" must be set to 0. This is done automatically during the migration.
+
+## Update
+For update from v0.01 to v0.0.2 please `disable` the extension and `delete data` before copy the new files to `phpBB3/ext/imcger/imgupload`.
 
 ## Changelog
+
+### v0.0.2 (19-02-2022) Code changes
 
 ### v0.0.1 (18-02-2022)
 

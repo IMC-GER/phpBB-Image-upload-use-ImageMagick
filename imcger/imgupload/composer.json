@@ -2,8 +2,8 @@
 	"name" : "imcger/imgupload",
 	"type" : "phpbb-extension",
 	"description" : "Using ImageMagick php librarie for image attachments and creating thumbnails.",
-	"homepage" : "https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick",
-	"version" : "0.0.1",
+	"homepage" : "https://github.com/IMC-GER/phpBB-Image-Upload",
+	"version" : "0.0.2",
 	"time" : "2022-02-18",
 	"license" : "GPL-2.0-only",
 	"authors" : [{
