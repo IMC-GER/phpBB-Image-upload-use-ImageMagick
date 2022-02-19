@@ -31,7 +31,8 @@ For update from v0.01 to v0.0.2 please `disable` the extension and `delete data`
 
 ## Changelog
 
-### v0.0.2 (19-02-2022) Code changes
+### v0.0.2 (19-02-2022)
+Code changes. Continues to take into account settings from "Attachment settings".
 
 ### v0.0.1 (18-02-2022)
 
