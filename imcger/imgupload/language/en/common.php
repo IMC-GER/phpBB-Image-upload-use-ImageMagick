@@ -42,10 +42,10 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_IMGUPLOAD_TITLE'	=> 'Image upload use ImageMagick',
 	'ACP_IMCGER_SETTINGS'			=> 'Einstellungen',
 
-	'ACP_IMCGER_THUMB_QUALITY'		=> 'Thumbnail compression quality',
+	'ACP_IMCGER_THUMB_QUALITY'		=> 'Thumbnail compression quality (JPEG only)',
 	'ACP_IMCGER_THUMB_QUALITY_DESC'	=> 'This setting adjusts the compression quality for the generated thumbnails. The best display quality is achieved with the setting 100%. Lower values will generate smaller files.',
 
-	'ACP_IMCGER_IMAGE_QUALITY'		=> 'Image compression quality',
+	'ACP_IMCGER_IMAGE_QUALITY'		=> 'Image compression quality (JPEG only)',
 	'ACP_IMCGER_IMAGE_QUALITY_DESC'	=> 'This setting adjusts the compression quality for the resized image. The best display quality is achieved with the setting 100%. Lower values will generate smaller files.',
 
 	'ACP_IMCGER_MAX_WIDTH'			=> 'Maximum image width',
@@ -54,8 +54,8 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_MAX_HEIGTH'			=> 'Maximum image height',
 	'ACP_IMCGER_MAX_HEIGTH_DESC'	=> 'Setting of the maximum image height in pixels. Higher images are reduced in size and the width is adjusted proportionally. If 0 is specified, no change is made.',
 
-	'MAX_EXTGROUP_FILESIZE'			=> 'Maximum file size',
-	'MAX_EXTGROUP_FILESIZE_DESC'	=> 'Setting of the maximum file size in bytes. If 0 is specified, there is no size limitation. If the size of the image file exceeds the set value, it is calculated approximately small.',
+	'ACP_IMCGER_MAX_FILESIZE'		=> 'Maximum file size',
+	'ACP_IMCGER_MAX_FILESIZE_DESC'	=> 'Setting of the maximum file size in bytes. If 0 is specified, there is no size limitation. If the size of the image file exceeds the set value, it will be reduced approximately.',
 
 	'ACP_IMCGER_DEL_EXIF'			=> 'Remove image properties',
 	'ACP_IMCGER_DEL_EXIF_DESC'		=> 'Cameras store additional information in images, such as geodata. These can be removed for data protection.',

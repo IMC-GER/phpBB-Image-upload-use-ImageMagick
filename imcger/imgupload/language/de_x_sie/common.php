@@ -42,10 +42,10 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_IMGUPLOAD_TITLE'	=> 'Image upload use ImageMagick',
 	'ACP_IMCGER_SETTINGS'			=> 'Einstellungen',
 
-	'ACP_IMCGER_THUMB_QUALITY'		=> 'Vorschaubilder Komprimierungsqualität',
+	'ACP_IMCGER_THUMB_QUALITY'		=> 'Vorschaubilder Komprimierungsqualität (nur JPEG)',
 	'ACP_IMCGER_THUMB_QUALITY_DESC'	=> 'Mit dieser Einstellung wird die Komprimierungsqualität für die generierten Vorschaubilder eingestellen. Die beste Anzeigequalität wir mit der Einstellung 100% erreicht. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
 
-	'ACP_IMCGER_IMAGE_QUALITY'		=> 'Bild Komprimierungsqualität',
+	'ACP_IMCGER_IMAGE_QUALITY'		=> 'Bild Komprimierungsqualität (nur JPEG)',
 	'ACP_IMCGER_IMAGE_QUALITY_DESC'	=> 'Mit dieser Einstellung wird die Komprimierungsqualität für das größenveränderte Bild eingestellen. Die beste Anzeigequalität wir mit der Einstellung 100% erreicht. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
 
 	'ACP_IMCGER_MAX_WIDTH'			=> 'Maximale Bildbreite',
@@ -54,8 +54,8 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_MAX_HEIGTH'			=> 'Maximale Bildhöhe',
 	'ACP_IMCGER_MAX_HEIGTH_DESC'	=> 'Einstellung der maximalen Bildhöhe in Pixel. Höhere Bilder werden verkleinert und die Breite proportional angepasst. Bei der Angabe von 0 wird keine Veränderung durchgeführt.',
 
-	'MAX_EXTGROUP_FILESIZE'			=> 'Maximale Dateigröße',
-	'MAX_EXTGROUP_FILESIZE_DESC'	=> 'Einstellung der maximalen Dateigröße in Byte. Bei der Angabe von 0 findet keine Größenbeschränkung statt. Überschreitet die Größe der Bilddatei den eingestellten Wert wird diese angenähert klein gerechnet.',
+	'ACP_IMCGER_MAX_FILESIZE'		=> 'Maximale Dateigröße',
+	'ACP_IMCGER_MAX_FILESIZE_DESC'	=> 'Einstellung der maximalen Dateigröße in Byte. Bei der Angabe von 0 findet keine Größenbeschränkung statt. Überschreitet die Größe der Bilddatei den eingestellten Wert wird diese angenähert verkleinert.',
 
 	'ACP_IMCGER_DEL_EXIF'			=> 'Bildeigenschaften entfernen',
 	'ACP_IMCGER_DEL_EXIF_DESC'		=> 'Kameras speichern in Bildern zusätzliche Informationen wie z.B. Geodaten. Diese können zum Datenschutz entfernt werden.',

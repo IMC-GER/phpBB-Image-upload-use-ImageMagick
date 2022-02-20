@@ -25,13 +25,19 @@ class install_acp_module extends \phpbb\db\migration\migration
 
 	public function update_data()
 	{		
+		global $config;
+		
+		$img_quality	= $config['img_quality'];		
+		$max_filesize	= $config['max_filesize'];		
+		$img_max_width	= $config['img_max_width'];		
+		$img_max_height	= $config['img_max_height'];
+
 		return array(
-			array('config.add', array('imcger_imgupload_tum_quality', 80)),
-			array('config.add', array('imcger_imgupload_img_quality', 80)),
-			array('config.add', array('imcger_imgupload_max_width', 0)),
-			array('config.add', array('imcger_imgupload_max_height', 0)),
-			array('config.add', array('imcger_imgupload_max_filesize', 0)),
-			array('config.add', array('imcger_imgupload_del_exif', 0)),
+			array('config.add', array('imcger_imgupload_tum_quality', $img_quality)),
+			array('config.add', array('imcger_imgupload_img_quality', $img_quality)),
+			array('config.add', array('imcger_imgupload_max_width', $img_max_width)),
+			array('config.add', array('imcger_imgupload_max_height', $img_max_height)),
+			array('config.add', array('imcger_imgupload_max_filesize', $max_filesize)),
 
 			array('module.add', array(
 				'acp',

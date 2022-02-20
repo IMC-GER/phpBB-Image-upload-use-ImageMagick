@@ -26,37 +26,19 @@ class main_listener implements EventSubscriberInterface
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\request\request */
-	protected $request;
-
-	/** @var \phpbb\user */
-	protected $user;
-
-	/** @var \phpbb\language\language */
-	protected $language;
-
 	/**
 	* Constructor for listener
 	*
 	* @param \phpbb\config\config		$config		phpBB config
-	* @param \phpbb\request\request		$request	phpBB request
-	* @param \phpbb\user				$user		phpBB user
-	* @param \phpbb\language\language	$language	phpBB language
 	*
 	* @access public
 	*/
 	public function __construct
 	(
-		\phpbb\config\config $config, 
-		\phpbb\request\request $request, 
-		\phpbb\user $user, 
-		\phpbb\language\language $language
+		\phpbb\config\config $config
 	)
 	{
 		$this->config	= $config;
-		$this->request	= $request;
-		$this->user		= $user;
-		$this->language	= $language;
 	}
 
 	static public function getSubscribedEvents()
@@ -77,20 +59,32 @@ class main_listener implements EventSubscriberInterface
 		/* return value is only thumbnail_created, defaults to false */
 		$thumbnail_created	= false;
 
-		/* load language file */
-		$this->language->add_lang('common', 'imcger/imgupload');
-
 		/* create a new instance of ImageMagick and load current image */
 		$thumbnail = new \Imagick(realpath($event['source']));
 
+		/* rotate the image according it's orientation flag */
+		$thumb = $this->image_auto_rotate($thumbnail);
+
+		/* changed the image heigth and width when it rotate */
+		if($thumb['rotate'])
+		{
+			$new_width = $event['new_height'];
+			$new_height = $event['new_width'];
+		}
+		else
+		{
+			$new_width = $event['new_width'];
+			$new_height = $event['new_height'];
+		}		
+
+		/* resize the Image */
+		$thumbnail->resizeImage($new_width, $new_height, \Imagick::FILTER_LANCZOS, 1, false);
+		
 		/* Set image format */
 		$this->set_image_format($thumbnail, $event['mimetype']);
 
 		/* Compression quality is read from config, set in ACP */
 		$this->set_image_compression($thumbnail, $this->config['imcger_imgupload_tum_quality']);
-
-		/* rotate the image according it's orientation flag */
-		$this->image_auto_rotate($thumbnail, $event['new_width'], $event['new_height']);
 
 		/* Strip EXIF data and image profile */
 		if($this->config['imcger_imgupload_del_exif'])
@@ -108,10 +102,16 @@ class main_listener implements EventSubscriberInterface
 		$event['thumbnail_created'] = $thumbnail_created;
 	}
 
+	/**
+	 * Modify upload image using IMagick
+	 *
+	 * @param \phpbb\event\data	$event	Event object
+	 */
 	public function imcger_modify_uploaded_file($event)
 	{
 		if ($event['is_image'])
 		{
+			$write_image		= false; // set to true wenn image attribute changed
 			$image_max_width	= $this->config['imcger_imgupload_max_width'];
 			$image_max_height	= $this->config['imcger_imgupload_max_height'];
 			$image_quality		= $this->config['imcger_imgupload_img_quality'];
@@ -130,56 +130,81 @@ class main_listener implements EventSubscriberInterface
 			/* create a new instance of ImageMagick and load current image */
 			$image = new \Imagick($file_path);
 
+			/* rotate the image according it's orientation flag */
+			$img = $this->image_auto_rotate($image);
+
 			/* get image dimensions */
-			$width = $image->getImageWidth();
+			$width	= $image->getImageWidth();
 			$height = $image->getImageHeight();
 
 			/* image side ratio */
 			$side_ratio = $width / $height;
 
 			/* set new images width */
-			if($image_max_width > 0 && $image_max_width < $width)
+			if($image_max_width && $image_max_width < $width)
 			{
 				$width = $image_max_width;
-				$height = $width / $side_ratio;
+				$height = (int) ($width / $side_ratio);
+				
+				$write_image = true;
 			}
 
 			/* set new images height */
-			if($image_max_height > 0 && $image_max_height < $height)
+			if($image_max_height && $image_max_height < $height)
 			{
 				$height = $image_max_height;
-				$width = $height * $side_ratio;
+				$width = (int) ($height * $side_ratio);
+				
+				$write_image = true;
+			}
+
+			/* when changed dimensions resize the Image */
+			if($write_image)
+			{
+				$image->resizeImage($width, $height, \Imagick::FILTER_LANCZOS, 1, false);
+			}
+
+			/* when not resize don`t changed image quality when it less then quality set in ACP */
+			if($write_image || $image_quality < $image->getImageCompressionQuality())
+			{
+				/* set compression quality is read from config */
+				$this->set_image_compression($image, $image_quality);
+				
+				$write_image = true;
 			}
 
 			/* Set image format */
 			$this->set_image_format($image, $event['filedata']['mimetype']);
 
-			/* compression quality is read from config, set in ACP */
-			$this->set_image_compression($image, $image_quality);
-
-			/* rotate the image according it's orientation flag and resize */
-			$this->image_auto_rotate($image, $width, $height);
-			
 			/* strip EXIF data and image profile */
 			if($image_del_exif)
 			{
 				$image->stripImage();
+				
+				$write_image = true;
 			}
 
+			/* shrink file size wenn greater then set in ACP */
 			if($image_max_filesize && $event['filedata']['filesize'] > $image_max_filesize)
 			{
+				/* set compression quality is read from config */
+				$this->set_image_compression($image, $image_quality);
+
 				/* set the max file size for the image */
 				$filesize = $this->image_auto_length($image, $image_max_filesize);
+				
+				$write_image = true;
 			}
 			
-			/* store new file size */			
+			/* set return value new file size */			
 			$filedata_array = $event['filedata'];
 			$filedata_array['filesize'] = $filesize ?? strlen($image->getImageBlob());
 			$event['filedata'] = $filedata_array;
 
-			/* store the image */
-			if($image->writeImage($file_path))
+			/* store the image when changed attribute */
+			if($write_image || $img['rotate'])
 			{
+				$image->writeImage($file_path);
 				$image->clear();
 			}
 		}
@@ -190,11 +215,11 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * @param object	$image		image object
 	 * @param string	$mimetype	mimetype of the image in phpBB internal format
+	 *
+	 * @return string	$imageformat images format
 	 */
 	function set_image_format($image, $mimetype)
 	{
-		$imageformat = '';
-		
 		/* Check the mimetype and set the appropriate type for the image */
 		switch ($mimetype)
 		{
@@ -216,6 +241,8 @@ class main_listener implements EventSubscriberInterface
 		}
 
 		$image->setImageFormat($imageformat);
+		
+		return($imageformat);
 	}
 
 	/**
@@ -235,10 +262,14 @@ class main_listener implements EventSubscriberInterface
 	 * @param object	$image		image object
 	 * @param integer	$width		new witdth of the image
 	 * @param integer	$height		new height of the image
+	 *
+	 * @return array	changed		orientation changed
+	 * 					rotate		rotate 90 degree
 	 */
-	function image_auto_rotate($image, $width, $height)
+	function image_auto_rotate($image)
 	{
-		$is_rotate = 0;
+		$is_rotate	= false;
+		$is_changed = true;
 		
 		/* read the orientation from the image */
 		if (!($image_orientation = $image->getImageOrientation()))
@@ -251,9 +282,11 @@ class main_listener implements EventSubscriberInterface
 		{
 			case \Imagick::ORIENTATION_UNDEFINED:
 				/* do nothing */
+				$is_changed = false;
 				break;
 			case \Imagick::ORIENTATION_TOPLEFT:
 				/* do nothing */
+				$is_changed = false;
 				break;
 			case \Imagick::ORIENTATION_TOPRIGHT:
 				$image->flopImage();
@@ -264,49 +297,36 @@ class main_listener implements EventSubscriberInterface
 			case \Imagick::ORIENTATION_BOTTOMLEFT:
 				$image->flipImage();
 				$image->rotateImage("#000", 90);
-				$is_rotate = 1;
+				$is_rotate = true;
 				break;
 			case \Imagick::ORIENTATION_LEFTTOP:
 				$image->flopImage();
 				$image->rotateImage("#000", 90);
-				$is_rotate = 1;
+				$is_rotate = true;
 				break;
 			case \Imagick::ORIENTATION_RIGHTTOP:
 				$image->rotateImage("#000", 90);
-				$is_rotate = 1;
+				$is_rotate = true;
 				break;
 			case \Imagick::ORIENTATION_RIGHTBOTTOM:
 				$image->flipImage();
 				$image->rotateImage("#000", 270);
-				$is_rotate = 1;
+				$is_rotate = true;
 				break;
 			case \Imagick::ORIENTATION_LEFTBOTTOM:
 				$image->rotateImage("#000", 270);
-				$is_rotate = 1;
+				$is_rotate = true;
 				break;
 			default:
 				/* do nothing */
+				$is_changed = false;
 				break;
 		}
 
-		/* change the image heigth and width when it rotate */
-		if($is_rotate)
-		{
-			$new_width = $height;
-			$new_height = $width;
-		}
-		else
-		{
-			$new_width = $width;
-			$new_height = $height;
-
-		}
-		
 		/* set the Orientation from the Image */
 		$image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
 
-		/* resize the Image */
-		$image->resizeImage($new_width, $new_height, \Imagick::FILTER_LANCZOS, 1, false);
+		return(['changed' => $is_changed, 'rotate' => $is_rotate]);
 	}
 	
 	/**
@@ -314,6 +334,7 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * @param object	$image			image object
 	 * @param integer	$new_image_size	new size of the image
+	 *
 	 * @return integer	$filesize		file size of the image after shrink
 	 */
 	function image_auto_length($image, $new_image_size)
@@ -332,8 +353,9 @@ class main_listener implements EventSubscriberInterface
 			/* calculate the image side in relation to the image area */
 			$size_ratio = $filesize / $new_image_size;
 			$xh = sqrt($width * $height / $size_ratio / $side_ratio);
+			
+			/* calculate the different to new height */
 			$dh = ($height - $xh) * 0.9;
-
 			$dh = $dh > 10 ? $dh : 10;
 
 			/* set image dimensions */

@@ -18,17 +18,17 @@
 
 		<dl>
 			<dt><label for="imcger_imgupload_max_width">{{ lang('ACP_IMCGER_MAX_WIDTH') ~ lang('COLON') }}</label><br/><span>{{ lang('ACP_IMCGER_MAX_WIDTH_DESC') }}</span></dt>
-			<dd><input type="number" id="imcger_imgupload_max_width" min="0" max="99999999999" step="any" maxlength="10" name="imcger_imgupload_max_width" value="{{ IMCGER_MAX_WIDTH }}" /></dd>
+			<dd><input type="number" id="imcger_imgupload_max_width" min="0" max="9999999999" step="any" maxlength="10" name="imcger_imgupload_max_width" value="{{ IMCGER_MAX_WIDTH }}" /></dd>
 		</dl>
 
 		<dl>
 			<dt><label for="imcger_imgupload_max_height">{{ lang('ACP_IMCGER_MAX_HEIGTH') ~ lang('COLON') }}</label><br/><span>{{ lang('ACP_IMCGER_MAX_HEIGTH_DESC') }}</span></dt>
-			<dd><input type="number" id="imcger_imgupload_max_height" min="0" max="99999999999" step="any" maxlength="10" name="imcger_imgupload_max_height" value="{{ IMCGER_MAX_HEIGHT }}" /></dd>
+			<dd><input type="number" id="imcger_imgupload_max_height" min="0" max="9999999999" step="any" maxlength="10" name="imcger_imgupload_max_height" value="{{ IMCGER_MAX_HEIGHT }}" /></dd>
 		</dl>
 		
 		<dl>
-			<dt><label for="imcger_imgupload_max_filesize">{{ lang('MAX_EXTGROUP_FILESIZE') ~ lang('COLON') }}</label><br/><span>{{ lang('MAX_EXTGROUP_FILESIZE_DESC') }}</span></dt>
-			<dd><input type="number" id="imcger_imgupload_max_filesize" min="0" max="999999999999999" step="any" name="imcger_imgupload_max_filesize" value="{{ IMCGER_MAX_FILESIZE }}"/> <select name="size_select"><option value="b" {% if IMCGER_UNIT == 'b' %} selected="selected"{% endif %}>Bytes</option><option value="kb" {% if IMCGER_UNIT == 'kb' %} selected="selected"{% endif %}>KiB</option><option value="mb" {% if IMCGER_UNIT == 'mb' %} selected="selected"{% endif %}>MiB</option></select></dd>
+			<dt><label for="imcger_imgupload_max_filesize">{{ lang('ACP_IMCGER_MAX_FILESIZE') ~ lang('COLON') }}</label><br/><span>{{ lang('ACP_IMCGER_MAX_FILESIZE_DESC') }}</span></dt>
+			<dd><input type="number" id="imcger_imgupload_max_filesize" min="0" max="9999999999" step="any" name="imcger_imgupload_max_filesize" value="{{ IMCGER_MAX_FILESIZE }}"/> <select name="size_select"><option value="b" {% if IMCGER_UNIT == 'b' %} selected="selected"{% endif %}>Bytes</option><option value="kb" {% if IMCGER_UNIT == 'kb' %} selected="selected"{% endif %}>KiB</option><option value="mb" {% if IMCGER_UNIT == 'mb' %} selected="selected"{% endif %}>MiB</option></select></dd>
 		</dl>
 
 		<dl>

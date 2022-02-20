@@ -25,22 +25,13 @@ class install_settings extends \phpbb\db\migration\migration
 
 	public function update_data()
 	{
-		global $config;
-		
-		$max_filesize = $config['max_filesize'];
-		$config->set('max_filesize', 0);
-		$config->set('imcger_imgupload_max_filesize', $max_filesize);
-		
-		$img_max_width = $config['img_max_width'];
-		$config->set('img_max_width', 0);
-		$config->set('imcger_imgupload_max_width', $img_max_width);
-		
-		$img_max_height = $config['img_max_height'];
-		$config->set('img_max_height', 0);
-		$config->set('imcger_imgupload_max_height', $img_max_height);
-		
 		return array(
-			array('config.add', array('imcger_imgupload_version', '0.0.2')),
+			array('config.update', array('max_filesize', 0)),
+			array('config.update', array('img_max_width', 0)),
+			array('config.update', array('img_max_height', 0)),
+			
+			array('config.add', array('imcger_imgupload_version', '0.0.3')),
 		);
 	}
+
 }
