@@ -41,14 +41,14 @@ class main_listener implements EventSubscriberInterface
 		$this->config	= $config;
 	}
 
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
-			'core.thumbnail_create_before'				=> 'imcger_create_tumbnail',
-			'core.modify_uploaded_file'					=> 'imcger_modify_uploaded_file',
+			'core.thumbnail_create_before'	=> 'imcger_create_tumbnail',
+			'core.modify_uploaded_file'		=> 'imcger_modify_uploaded_file',
 		);
 	}
-	
+
 	/**
 	 * Create a thumbnail using IMagick
 	 *
@@ -66,7 +66,7 @@ class main_listener implements EventSubscriberInterface
 		$thumb = $this->image_auto_rotate($thumbnail);
 
 		/* changed the image heigth and width when it rotate */
-		if($thumb['rotate'])
+		if ($thumb['rotate'])
 		{
 			$new_width = $event['new_height'];
 			$new_height = $event['new_width'];
@@ -75,11 +75,11 @@ class main_listener implements EventSubscriberInterface
 		{
 			$new_width = $event['new_width'];
 			$new_height = $event['new_height'];
-		}		
+		}
 
 		/* resize the Image */
 		$thumbnail->resizeImage($new_width, $new_height, \Imagick::FILTER_LANCZOS, 1, false);
-		
+
 		/* Set image format */
 		$this->set_image_format($thumbnail, $event['mimetype']);
 
@@ -87,13 +87,13 @@ class main_listener implements EventSubscriberInterface
 		$this->set_image_compression($thumbnail, $this->config['imcger_imgupload_tum_quality']);
 
 		/* Strip EXIF data and image profile */
-		if($this->config['imcger_imgupload_del_exif'])
+		if ($this->config['imcger_imgupload_del_exif'])
 		{
 			$thumbnail->stripImage();
 		}
 
 		/* Store the image */
-		if($thumbnail->writeImage($event['destination']))
+		if ($thumbnail->writeImage($event['destination']))
 		{
 			$thumbnail_created = true;
 		}
@@ -141,35 +141,35 @@ class main_listener implements EventSubscriberInterface
 			$side_ratio = $width / $height;
 
 			/* set new images width */
-			if($image_max_width && $image_max_width < $width)
+			if ($image_max_width && $image_max_width < $width)
 			{
 				$width = $image_max_width;
 				$height = (int) ($width / $side_ratio);
-				
+
 				$write_image = true;
 			}
 
 			/* set new images height */
-			if($image_max_height && $image_max_height < $height)
+			if ($image_max_height && $image_max_height < $height)
 			{
 				$height = $image_max_height;
 				$width = (int) ($height * $side_ratio);
-				
+
 				$write_image = true;
 			}
 
 			/* when changed dimensions resize the Image */
-			if($write_image)
+			if ($write_image)
 			{
 				$image->resizeImage($width, $height, \Imagick::FILTER_LANCZOS, 1, false);
 			}
 
 			/* when not resize don`t changed image quality when it less then quality set in ACP */
-			if($write_image || $image_quality < $image->getImageCompressionQuality())
+			if ($write_image || $image_quality < $image->getImageCompressionQuality())
 			{
 				/* set compression quality is read from config */
 				$this->set_image_compression($image, $image_quality);
-				
+
 				$write_image = true;
 			}
 
@@ -177,32 +177,32 @@ class main_listener implements EventSubscriberInterface
 			$this->set_image_format($image, $event['filedata']['mimetype']);
 
 			/* strip EXIF data and image profile */
-			if($image_del_exif)
+			if ($image_del_exif)
 			{
 				$image->stripImage();
-				
+
 				$write_image = true;
 			}
 
 			/* shrink file size wenn greater then set in ACP */
-			if($image_max_filesize && $event['filedata']['filesize'] > $image_max_filesize)
+			if ($image_max_filesize && $event['filedata']['filesize'] > $image_max_filesize)
 			{
 				/* set compression quality is read from config */
 				$this->set_image_compression($image, $image_quality);
 
 				/* set the max file size for the image */
 				$filesize = $this->image_auto_length($image, $image_max_filesize);
-				
+
 				$write_image = true;
 			}
-			
-			/* set return value new file size */			
+
+			/* set return value new file size */
 			$filedata_array = $event['filedata'];
 			$filedata_array['filesize'] = $filesize ?? strlen($image->getImageBlob());
 			$event['filedata'] = $filedata_array;
 
 			/* store the image when changed attribute */
-			if($write_image || $img['rotate'])
+			if ($write_image || $img['rotate'])
 			{
 				$image->writeImage($file_path);
 				$image->clear();
@@ -241,7 +241,7 @@ class main_listener implements EventSubscriberInterface
 		}
 
 		$image->setImageFormat($imageformat);
-		
+
 		return($imageformat);
 	}
 
@@ -257,7 +257,7 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * rotate and resize the generated image
+	 * rotate the generated image
 	 *
 	 * @param object	$image		image object
 	 * @param integer	$width		new witdth of the image
@@ -270,7 +270,7 @@ class main_listener implements EventSubscriberInterface
 	{
 		$is_rotate	= false;
 		$is_changed = true;
-		
+
 		/* read the orientation from the image */
 		if (!($image_orientation = $image->getImageOrientation()))
 		{
@@ -328,7 +328,7 @@ class main_listener implements EventSubscriberInterface
 
 		return(['changed' => $is_changed, 'rotate' => $is_rotate]);
 	}
-	
+
 	/**
 	 * resize the image file
 	 *
@@ -342,18 +342,18 @@ class main_listener implements EventSubscriberInterface
 		/* get image dimensions */
 		$width = $image->getImageWidth();
 		$height = $image->getImageHeight();
-		
+
 		$filesize = strlen($image->getImageBlob());
 
 		/* image side ratio */
 		$side_ratio = $width / $height;
 
-		while($filesize >  $new_image_size)
+		while ($filesize >  $new_image_size)
 		{
 			/* calculate the image side in relation to the image area */
 			$size_ratio = $filesize / $new_image_size;
 			$xh = sqrt($width * $height / $size_ratio / $side_ratio);
-			
+
 			/* calculate the different to new height */
 			$dh = ($height - $xh) * 0.9;
 			$dh = $dh > 10 ? $dh : 10;
@@ -364,7 +364,7 @@ class main_listener implements EventSubscriberInterface
 
 			/* resize the Image */
 			$image->resizeImage($width, $height, \Imagick::FILTER_LANCZOS, 1, false);
-			
+
 			/* get the file size */
 			$filesize = strlen($image->getImageBlob());
 		}

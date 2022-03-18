@@ -49,7 +49,7 @@ class main_module
 
 			trigger_error($user->lang('ACP_IMCGER_SETTINGS_SAVED') . adm_back_link($this->u_action));
 		}
-		
+
 		$filesize = get_formatted_filesize($config['imcger_imgupload_max_filesize'], false, array('mb', 'kb', 'b'));
 
 		$template->assign_vars(array(

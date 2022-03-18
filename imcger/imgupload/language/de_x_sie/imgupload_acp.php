@@ -1,9 +1,10 @@
 <?php
 /**
  *
- * This file is part of the ImageMagick Thumbnailer extension for phpBB.
- * @package ImageMagick Thumbnailer
- * @copyright (c) 2018 Frank Jakobs (canonknipser)
+ * Image upload use ImageMagick
+ * An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2022, Thorsten Ahlers
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */

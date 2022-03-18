@@ -18,18 +18,18 @@ class install_acp_module extends \phpbb\db\migration\migration
 		return isset($this->config['imcger_imgupload_tum_quality']);
 	}
 
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return array('\phpbb\db\migration\data\v32x\v324');
 	}
 
 	public function update_data()
-	{		
+	{
 		global $config;
-		
-		$img_quality	= $config['img_quality'];		
-		$max_filesize	= $config['max_filesize'];		
-		$img_max_width	= $config['img_max_width'];		
+
+		$img_quality	= $config['img_quality'];
+		$max_filesize	= $config['max_filesize'];
+		$img_max_width	= $config['img_max_width'];
 		$img_max_height	= $config['img_max_height'];
 
 		return array(

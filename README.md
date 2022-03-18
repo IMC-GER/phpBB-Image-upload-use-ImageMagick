@@ -16,7 +16,7 @@ It can change the image size and/or the image file size. Rotate thumbnails accor
 - Remove EXIF data
 
 ## Requirements
-- php 7.3 or higher
+- php 7.0 or higher
 - phpBB 3.2.4 or higher
 - php the Imagick class
 
@@ -27,9 +27,11 @@ For full functionality "Maximum file size" in "ACP" > "Posting" > "Attachment se
 For full functionality "Maximum image dimensions" in "ACP" > "Posting" > "Attachment settings" must be set to 0. This is done automatically during the migration.
 
 ## Update
-For update to v0.0.3 please `disable` the extension and `delete data` before copy the new files to `phpBB3/ext/imcger/imgupload`.
+For update from v0.0.1 or v0.0.2 please `disable` the extension and `delete data` before copy the new files to `phpBB3/ext/imcger/imgupload`.
 
 ## Changelog
+
+### v0.0.4 (18-03-2022) Cleanup Code
 
 ### v0.0.3 (20-02-2022) Code changes
 
