@@ -31,6 +31,8 @@ For update from v0.0.1 or v0.0.2 please `disable` the extension and `delete data
 
 ## Changelog
 
+### v0.1.0 (31-05-2022) Error in migrations
+
 ### v0.0.4 (18-03-2022) Cleanup Code
 
 ### v0.0.3 (20-02-2022) Code changes

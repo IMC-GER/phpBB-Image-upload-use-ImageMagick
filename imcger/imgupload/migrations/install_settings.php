@@ -20,7 +20,7 @@ class install_settings extends \phpbb\db\migration\migration
 
 	public static function depends_on()
 	{
-		return array('\imcger\externallinks\migrations\install_acp_module');
+		return array('\imcger\imgupload\migrations\install_acp_module');
 	}
 
 	public function update_data()
@@ -30,7 +30,7 @@ class install_settings extends \phpbb\db\migration\migration
 			array('config.update', array('img_max_width', 0)),
 			array('config.update', array('img_max_height', 0)),
 
-			array('config.add', array('imcger_imgupload_version', '0.0.3')),
+			array('config.add', array('imcger_imgupload_version', '0.1.0')),
 		);
 	}
 }
