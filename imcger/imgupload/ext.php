@@ -20,20 +20,21 @@ class ext extends \phpbb\extension\base
 	{
 		$language = $this->container->get('language');
 		$language->add_lang('imgupload_acp', 'imcger/imgupload');
+		$error_message = [];
 
 		/* Imagick library installed? */
 		if (!class_exists('Imagick'))
 		{
-			trigger_error($language->lang('IMCGER_IM_REQUIRE_IMAGICK'), E_USER_WARNING);
+			$error_message += ['error1' => $language->lang('IMCGER_IM_REQUIRE_IMAGICK')];
 		}
 
 		/* phpBB version greater equal 3.2.4 */
 		$config = $this->container->get('config');
 		if (!phpbb_version_compare($config['version'], '3.2.4', '>='))
 		{
-			trigger_error($language->lang('IMCGER_IM_REQUIRE_324'), E_USER_WARNING);
+			$error_message += ['error2' => $language->lang('IMCGER_IM_REQUIRE_324')];
 		}
 
-		return true;
+		return empty($error_message) ? true : $error_message;
 	}
 }
