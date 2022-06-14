@@ -1,0 +1,11 @@
+{
+    "stable": {
+        "0.1": {
+            "current": "0.1.1",
+            "announcement": "https://www.phpbb.de/community/viewtopic.php?t=246009",
+            "download": "https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick/tags",
+            "eol": null,
+            "security": false
+        }
+    }
+}
