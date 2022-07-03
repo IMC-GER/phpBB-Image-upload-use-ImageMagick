@@ -43,10 +43,10 @@ class main_listener implements EventSubscriberInterface
 
 	public static function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.thumbnail_create_before'	=> 'imcger_create_tumbnail',
 			'core.modify_uploaded_file'		=> 'imcger_modify_uploaded_file',
-		);
+		];
 	}
 
 	/**
@@ -242,7 +242,7 @@ class main_listener implements EventSubscriberInterface
 
 		$image->setImageFormat($imageformat);
 
-		return($imageformat);
+		return $imageformat;
 	}
 
 	/**
@@ -326,7 +326,7 @@ class main_listener implements EventSubscriberInterface
 		/* set the Orientation from the Image */
 		$image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
 
-		return(['changed' => $is_changed, 'rotate' => $is_rotate]);
+		return ['changed' => $is_changed, 'rotate' => $is_rotate];
 	}
 
 	/**
@@ -368,6 +368,6 @@ class main_listener implements EventSubscriberInterface
 			/* get the file size */
 			$filesize = strlen($image->getImageBlob());
 		}
-		return($filesize);
+		return $filesize;
 	}
 }
