@@ -1,4 +1,11 @@
 services:
+    imcger.imgupload.admin.controller:
+        class: 'imcger\imgupload\controller\admin_controller'
+        arguments:
+            - '@config'
+            - '@template'
+            - '@language'
+            - '@request'
     imcger.imgupload.listener:
         class: imcger\imgupload\event\main_listener
         arguments:

@@ -37,5 +37,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'IMCGER_IM_REQUIRE_IMAGICK'	=> 'This extension requires the ImageMagick PHP library for installation. Please update your PHP installation.',
-	'IMCGER_IM_REQUIRE_324'		=> 'This extension requires at least phpBB version 3.2.4.',
+	'IMCGER_IM_REQUIRE_PHPBB'	=> 'This extension requires a phpBB version greater or equal than 3.2.4 and less than 4.0.0',
+	'IMCGER_IM_REQUIRE_PHP'		=> 'This extension requires a php version greater or equal than 7.0 and less than 8.2.',
 ));

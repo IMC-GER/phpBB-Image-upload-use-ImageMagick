@@ -20,12 +20,12 @@ class main_info
 	{
 		return array(
 			'filename'	=> '\imcger\imgupload\acp\main_module',
-			'title'		=> 'ACP_IMGUPLOAD_TITLE',
+			'title'		=> 'ACP_IMCGER_IMGUPLOAD_TITLE',
 			'modes'		=> array(
 				'settings'	=> array(
 					'title'	=> 'ACP_IMCGER_SETTINGS',
 					'auth'	=> 'ext_imcger/imgupload && acl_a_board',
-					'cat'	=> array('ACP_IMGUPLOAD_TITLE')
+					'cat'	=> array('ACP_IMCGER_IMGUPLOAD_TITLE')
 				),
 			),
 		);

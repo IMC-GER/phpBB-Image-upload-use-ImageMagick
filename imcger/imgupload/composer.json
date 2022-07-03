@@ -1,26 +1,33 @@
 {
-	"name" : "imcger/imgupload",
-	"type" : "phpbb-extension",
-	"description" : "Using ImageMagick php librarie for image attachments and creating thumbnails.",
-	"homepage" : "https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick",
-	"version" : "0.1.0",
-	"time" : "2022-05-31",
-	"license" : "GPL-2.0-only",
-	"authors" : [{
-			"name" : "imc-ger",
-			"email" : "",
-			"homepage" : "https://github.com/IMC-GER",
-			"role" : "Lead Developer"
+	"name": "imcger/imgupload",
+	"type": "phpbb-extension",
+	"description": "Using ImageMagick php librarie for resize image attachments and creating thumbnails.",
+	"homepage": "https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick",
+	"version": "1.0.0",
+	"time": "2022-06-28",
+	"license": "GPL-2.0-only",
+	"authors": [{
+			"name": "Thorsten Ahlers",
+			"email": "",
+			"homepage": "https://github.com/IMC-GER",
+			"role": "Developer"
 		}
 	],
-	"require" : {
-		"php" : ">=7.0.0",
-		"composer/installers" : "~1.0"
+	"require": {
+		"php": ">=7.0.0",
+		"phpbb/phpbb": ">=3.2.4",
+		"composer/installers": "~1.0"
 	},
-	"extra" : {
-		"display-name" : "Image upload use ImageMagick",
-		"soft-require" : {
-			"phpbb/phpbb" : ">=3.2.4"
+	"extra": {
+		"display-name": "Image upload use ImageMagick",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.4"
+		},
+		"version-check": {
+			"host": "raw.githubusercontent.com",
+			"directory": "/IMC-GER/phpBB-Image-upload-use-ImageMagick/master",
+			"filename": "imgupload_version.json",
+			"ssl": true
 		}
 	}
 }

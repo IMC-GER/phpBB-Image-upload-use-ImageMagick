@@ -1,4 +1,4 @@
-# phpBB-Image upload use ImageMagick
+# phpBB Image upload use ImageMagick
 
 ## Description
 This extension us the PHP imagick class to modify upload image for improved quality.
@@ -27,17 +27,30 @@ For full functionality "Maximum file size" in "ACP" > "Posting" > "Attachment se
 For full functionality "Maximum image dimensions" in "ACP" > "Posting" > "Attachment settings" must be set to 0. This is done automatically during the migration.
 
 ## Update
-For update from v0.0.1 or v0.0.2 please `disable` the extension and `delete data` before copy the new files to `phpBB3/ext/imcger/imgupload`.
+- Navigate in the ACP to `Customise -> Manage extensions`.
+- Click the `Disable` link for "Image upload use ImageMagick".
+- Delete the `imgupload` folder from `phpBB3/ext/imcger/`.
+- Copy the extension to `phpBB3/ext/imcger/imgupload`.
+- Go to "ACP" > "Customise" > "Manage extensions" and enable the "Collapse Quote" extension.
 
 ## Changelog
 
-### v0.1.0 (31-05-2022) Error in migration
+### v1.0.0 (28-06-2022)
+- Version check
+- Check system requirement
+- Controller for ACP template
 
-### v0.0.4 (18-03-2022) Cleanup Code
+### v0.1.0 (31-05-2022)
+- Error in migrations
 
-### v0.0.3 (20-02-2022) Code changes
+### v0.0.4 (18-03-2022)
+- Cleanup Code
 
-### v0.0.2 (19-02-2022) Code changes
+### v0.0.3 (20-02-2022)
+- Code changes
+
+### v0.0.2 (19-02-2022)
+- Code changes
 
 ### v0.0.1 (18-02-2022)
 
