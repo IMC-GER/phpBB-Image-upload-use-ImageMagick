@@ -4,7 +4,7 @@
 	"description": "Using ImageMagick php librarie for resize image attachments and creating thumbnails.",
 	"homepage": "https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick",
 	"version": "1.0.0",
-	"time": "2022-06-28",
+	"time": "2022-04-07",
 	"license": "GPL-2.0-only",
 	"authors": [{
 			"name": "Thorsten Ahlers",

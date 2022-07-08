@@ -12,22 +12,22 @@
 namespace imcger\imgupload\acp;
 
 /**
- * ImageMagick Thumbnailer ACP module info.
+ * ImageMagick ACP module info.
  */
 class main_info
 {
 	public function module()
 	{
-		return array(
+		return [
 			'filename'	=> '\imcger\imgupload\acp\main_module',
 			'title'		=> 'ACP_IMCGER_IMGUPLOAD_TITLE',
-			'modes'		=> array(
-				'settings'	=> array(
+			'modes'		=> [
+				'settings'	=> [
 					'title'	=> 'ACP_IMCGER_SETTINGS',
 					'auth'	=> 'ext_imcger/imgupload && acl_a_board',
-					'cat'	=> array('ACP_IMCGER_IMGUPLOAD_TITLE')
-				),
-			),
-		);
+					'cat'	=> ['ACP_IMCGER_IMGUPLOAD_TITLE']
+				],
+			],
+		];
 	}
 }

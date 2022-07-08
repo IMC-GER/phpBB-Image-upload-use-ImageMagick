@@ -38,7 +38,7 @@ class main_listener implements EventSubscriberInterface
 		\phpbb\config\config $config
 	)
 	{
-		$this->config	= $config;
+		$this->config = $config;
 	}
 
 	public static function getSubscribedEvents()
