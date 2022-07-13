@@ -80,14 +80,14 @@ class admin_controller
 		$filesize = get_formatted_filesize($this->config['imcger_imgupload_max_filesize'], false, array('mb', 'kb', 'b'));
 
 		$this->template->assign_vars([
-			'U_ACTION'				=> $this->u_action,
-			'IMCGER_TUM_QUALITY'	=> $this->config['imcger_imgupload_tum_quality'],
-			'IMCGER_IMG_QUALITY'	=> $this->config['imcger_imgupload_img_quality'],
-			'IMCGER_MAX_WIDTH'		=> $this->config['imcger_imgupload_max_width'],
-			'IMCGER_MAX_HEIGHT'		=> $this->config['imcger_imgupload_max_height'],
-			'IMCGER_MAX_FILESIZE'	=> $filesize['value'],
-			'IMCGER_UNIT'			=> $filesize['si_identifier'],
-			'IMCGER_DEL_EXIF'		=> $this->config['img_strip_metadata'],
+			'U_ACTION'			  => $this->u_action,
+			'IMCGER_TUM_QUALITY'  => $this->config['imcger_imgupload_tum_quality'],
+			'IMCGER_IMG_QUALITY'  => $this->config['imcger_imgupload_img_quality'],
+			'IMCGER_MAX_WIDTH'	  => $this->config['imcger_imgupload_max_width'],
+			'IMCGER_MAX_HEIGHT'	  => $this->config['imcger_imgupload_max_height'],
+			'IMCGER_MAX_FILESIZE' => $filesize['value'],
+			'IMCGER_UNIT'		  => $filesize['si_identifier'],
+			'IMCGER_DEL_EXIF'	  => $this->config['img_strip_metadata'],
 		]);
 	}
 
@@ -99,9 +99,9 @@ class admin_controller
 	 */
 	protected function set_variable()
 	{
-		$size_select	= $this->request->variable('size_select', 'b');
-		$max_filesize	= $this->request->variable('imcger_imgupload_max_filesize', 0);
-		$max_filesize	= ($size_select == 'kb') ? round($max_filesize * 1024) : (($size_select == 'mb') ? round($max_filesize * 1048576) : $max_filesize);
+		$size_select  = $this->request->variable('size_select', 'b');
+		$max_filesize = $this->request->variable('imcger_imgupload_max_filesize', 0);
+		$max_filesize = ($size_select == 'kb') ? round($max_filesize * 1024) : (($size_select == 'mb') ? round($max_filesize * 1048576) : $max_filesize);
 
 		$this->config->set('imcger_imgupload_tum_quality', $this->request->variable('imcger_imgupload_tum_quality', 80));
 		$this->config->set('imcger_imgupload_img_quality', $this->request->variable('imcger_imgupload_img_quality', 80));

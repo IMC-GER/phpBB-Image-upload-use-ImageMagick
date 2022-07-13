@@ -35,10 +35,11 @@ For full functionality "Maximum image dimensions" in "ACP" > "Posting" > "Attach
 
 ## Changelog
 
-### v1.0.0 (28-06-2022)
+### v1.0.0 (09-07-2022)
 - Version check
 - Check system requirement
 - Controller for ACP template
+- Bug in EXIF orientation handling 
 
 ### v0.1.0 (31-05-2022)
 - Error in migrations

@@ -119,13 +119,7 @@ class main_listener implements EventSubscriberInterface
 			$image_max_filesize = $this->config['imcger_imgupload_max_filesize'];
 
 			/* get file path */
-			$file_path = join('/', array(trim($this->config['upload_path'], '/'), trim($event['filedata']['physical_filename'], '/')));
-			$dimensions = @getimagesize($file_path);
-
-			if ($dimensions === false)
-			{
-				return false;
-			}
+			$file_path = join('/', [trim($this->config['upload_path'], '/'), trim($event['filedata']['physical_filename'], '/')]);
 
 			/* create a new instance of ImageMagick and load current image */
 			$image = new \Imagick($file_path);
@@ -164,6 +158,9 @@ class main_listener implements EventSubscriberInterface
 				$image->resizeImage($width, $height, \Imagick::FILTER_LANCZOS, 1, false);
 			}
 
+			/* set image format */
+			$image_format = $this->set_image_format($image, $event['filedata']['mimetype']);
+
 			/* when not resize don`t changed image quality when it less then quality set in ACP */
 			if ($write_image || $image_quality < $image->getImageCompressionQuality())
 			{
@@ -173,11 +170,8 @@ class main_listener implements EventSubscriberInterface
 				$write_image = true;
 			}
 
-			/* Set image format */
-			$this->set_image_format($image, $event['filedata']['mimetype']);
-
 			/* strip EXIF data and image profile */
-			if ($image_del_exif)
+			if ($image_del_exif && $image_format == 'JPEG')
 			{
 				$image->stripImage();
 
@@ -196,14 +190,14 @@ class main_listener implements EventSubscriberInterface
 				$write_image = true;
 			}
 
-			/* set return value new file size */
-			$filedata_array = $event['filedata'];
-			$filedata_array['filesize'] = $filesize ?? strlen($image->getImageBlob());
-			$event['filedata'] = $filedata_array;
-
 			/* store the image when changed attribute */
-			if ($write_image || $img['rotate'])
+			if ($write_image || $img['changed'])
 			{
+				/* set return value new file size */
+				$filedata_array = $event['filedata'];
+				$filedata_array['filesize'] = $filesize ?? strlen($image->getImageBlob());
+				$event['filedata'] = $filedata_array;
+
 				$image->writeImage($file_path);
 				$image->clear();
 			}
@@ -253,7 +247,30 @@ class main_listener implements EventSubscriberInterface
 	 */
 	function set_image_compression($image, $quality)
 	{
-		$image->setImageCompressionQuality($quality);
+		$image_format = $image->getImageFormat();
+
+		switch ($image_format)
+		{
+			case 'JPEG':
+				$image->setImageCompression(\imagick::COMPRESSION_JPEG);
+				$image->setImageCompressionQuality($quality);
+				break;
+
+			case 'PNG':
+				$image->setOption('png:compression-method', 0);
+				$image->setOption('png:compression-filter', 0);
+				$image->setOption('png:compression-level', 9);
+				break;
+
+			case 'WEBP':
+				$image->setOption('webp:alpha-compression', 1);
+				$image->setOption('webp:method', 6);
+				break;
+
+			default:
+				/* do nothing */
+				break;
+		}
 	}
 
 	/**
@@ -268,8 +285,8 @@ class main_listener implements EventSubscriberInterface
 	 */
 	function image_auto_rotate($image)
 	{
-		$is_rotate	= false;
-		$is_changed = true;
+		$is_rotate	= false; // true, when orientation change between portrait and landscape
+		$is_changed = true;  // true, when orientation change
 
 		/* read the orientation from the image */
 		if (!($image_orientation = $image->getImageOrientation()))
@@ -296,11 +313,9 @@ class main_listener implements EventSubscriberInterface
 				break;
 			case \Imagick::ORIENTATION_BOTTOMLEFT:
 				$image->flipImage();
-				$image->rotateImage("#000", 90);
-				$is_rotate = true;
 				break;
 			case \Imagick::ORIENTATION_LEFTTOP:
-				$image->flopImage();
+				$image->flipImage();
 				$image->rotateImage("#000", 90);
 				$is_rotate = true;
 				break;
@@ -309,8 +324,8 @@ class main_listener implements EventSubscriberInterface
 				$is_rotate = true;
 				break;
 			case \Imagick::ORIENTATION_RIGHTBOTTOM:
-				$image->flipImage();
-				$image->rotateImage("#000", 270);
+				$image->flopImage();
+				$image->rotateImage("#000", 90);
 				$is_rotate = true;
 				break;
 			case \Imagick::ORIENTATION_LEFTBOTTOM:
@@ -323,7 +338,7 @@ class main_listener implements EventSubscriberInterface
 				break;
 		}
 
-		/* set the Orientation from the Image */
+		/* set the orientation from the Image */
 		$image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
 
 		return ['changed' => $is_changed, 'rotate' => $is_rotate];
