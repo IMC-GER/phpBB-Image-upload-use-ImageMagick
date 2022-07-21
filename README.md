@@ -1,8 +1,8 @@
 # phpBB Image upload use ImageMagick
 
 ## Description
-This extension us the PHP imagick class to modify upload image for improved quality.
-It can change the image size and/or the image file size. Rotate thumbnails according to their exif information. Remove EXIF data.
+This extension us the PHP Imagick class to modify upload image for improved quality.
+This extension can change the image size and/or the image file size. It rotate images and thumbnails according to their EXIF information and it can remove the EXIF data.
 
 #### Settings in User Control Panel
 - No settings. 
@@ -31,11 +31,11 @@ For full functionality "Maximum image dimensions" in "ACP" > "Posting" > "Attach
 - Click the `Disable` link for "Image upload use ImageMagick".
 - Delete the `imgupload` folder from `phpBB3/ext/imcger/`.
 - Copy the extension to `phpBB3/ext/imcger/imgupload`.
-- Go to "ACP" > "Customise" > "Manage extensions" and enable the "Collapse Quote" extension.
+- Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
 
 ## Changelog
 
-### v1.0.0 (09-07-2022)
+### v1.0.0 (21-07-2022)
 - Version check
 - Check system requirement
 - Controller for ACP template

@@ -5,7 +5,6 @@
  * An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2022, Thorsten Ahlers
- * @copyright (c) 2019, ftc2, Auto-Resize Images Server-side
  * @copyright (c) 2018, canonknipser, ImageMagick Thumbnailer, http://canonknipser.com
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
@@ -78,25 +77,22 @@ class main_listener implements EventSubscriberInterface
 		}
 
 		/* resize the Image */
-		$thumbnail->resizeImage($new_width, $new_height, \Imagick::FILTER_LANCZOS, 1, false);
+		$thumbnail->resizeImage($new_width, $new_height, \Imagick::FILTER_LANCZOS, 1);
 
 		/* Set image format */
-		$this->set_image_format($thumbnail, $event['mimetype']);
+		$image_format = $this->set_image_format($thumbnail, $event['mimetype']);
 
 		/* Compression quality is read from config, set in ACP */
 		$this->set_image_compression($thumbnail, $this->config['imcger_imgupload_tum_quality']);
 
 		/* Strip EXIF data and image profile */
-		if ($this->config['imcger_imgupload_del_exif'])
+		if ($this->config['imcger_imgupload_del_exif'] && $image_format == 'JPEG')
 		{
 			$thumbnail->stripImage();
 		}
 
 		/* Store the image */
-		if ($thumbnail->writeImage($event['destination']))
-		{
-			$thumbnail_created = true;
-		}
+		$thumbnail_created = $thumbnail->writeImage($event['destination']);
 
 		/* set return value */
 		$event['thumbnail_created'] = $thumbnail_created;
@@ -112,8 +108,6 @@ class main_listener implements EventSubscriberInterface
 		if ($event['is_image'])
 		{
 			$write_image		= false; // set to true wenn image attribute changed
-			$image_max_width	= $this->config['imcger_imgupload_max_width'];
-			$image_max_height	= $this->config['imcger_imgupload_max_height'];
 			$image_quality		= $this->config['imcger_imgupload_img_quality'];
 			$image_del_exif		= $this->config['img_strip_metadata'];
 			$image_max_filesize = $this->config['imcger_imgupload_max_filesize'];
@@ -127,36 +121,8 @@ class main_listener implements EventSubscriberInterface
 			/* rotate the image according it's orientation flag */
 			$img = $this->image_auto_rotate($image);
 
-			/* get image dimensions */
-			$width	= $image->getImageWidth();
-			$height = $image->getImageHeight();
-
-			/* image side ratio */
-			$side_ratio = $width / $height;
-
-			/* set new images width */
-			if ($image_max_width && $image_max_width < $width)
-			{
-				$width = $image_max_width;
-				$height = (int) ($width / $side_ratio);
-
-				$write_image = true;
-			}
-
-			/* set new images height */
-			if ($image_max_height && $image_max_height < $height)
-			{
-				$height = $image_max_height;
-				$width = (int) ($height * $side_ratio);
-
-				$write_image = true;
-			}
-
-			/* when changed dimensions resize the Image */
-			if ($write_image)
-			{
-				$image->resizeImage($width, $height, \Imagick::FILTER_LANCZOS, 1, false);
-			}
+			/* resize the image */
+			$write_image = $this->resize_image($image);
 
 			/* set image format */
 			$image_format = $this->set_image_format($image, $event['filedata']['mimetype']);
@@ -202,6 +168,53 @@ class main_listener implements EventSubscriberInterface
 				$image->clear();
 			}
 		}
+	}
+
+	/**
+	 * resize image if image to large
+	 *
+	 * @param object	$image	image object
+	 *
+	 * @return bool		$img_resize	images is resize
+	 */
+	function resize_image($image)
+	{
+		$image_max_width	= $this->config['imcger_imgupload_max_width'];
+		$image_max_height	= $this->config['imcger_imgupload_max_height'];
+		$img_resize			= false;
+
+		/* get image dimensions */
+		$width	= $image->getImageWidth();
+		$height = $image->getImageHeight();
+
+		/* image side ratio */
+		$side_ratio = $width / $height;
+
+		/* set new images width */
+		if ($image_max_width && $image_max_width < $width)
+		{
+			$width = $image_max_width;
+			$height = (int) ($width / $side_ratio);
+
+			$img_resize = true;
+		}
+
+		/* set new images height */
+		if ($image_max_height && $image_max_height < $height)
+		{
+			$height = $image_max_height;
+			$width = (int) ($height * $side_ratio);
+
+			$img_resize = true;
+		}
+
+		/* when changed dimensions resize the Image */
+		if ($img_resize)
+		{
+			$image->resizeImage($width, $height, \Imagick::FILTER_LANCZOS, 1, false);
+		}
+
+		return $img_resize;
 	}
 
 	/**
@@ -315,8 +328,7 @@ class main_listener implements EventSubscriberInterface
 				$image->flipImage();
 				break;
 			case \Imagick::ORIENTATION_LEFTTOP:
-				$image->flipImage();
-				$image->rotateImage("#000", 90);
+				$image->transposeImage();
 				$is_rotate = true;
 				break;
 			case \Imagick::ORIENTATION_RIGHTTOP:
@@ -324,8 +336,7 @@ class main_listener implements EventSubscriberInterface
 				$is_rotate = true;
 				break;
 			case \Imagick::ORIENTATION_RIGHTBOTTOM:
-				$image->flopImage();
-				$image->rotateImage("#000", 90);
+				$image->transverseImage();
 				$is_rotate = true;
 				break;
 			case \Imagick::ORIENTATION_LEFTBOTTOM:
