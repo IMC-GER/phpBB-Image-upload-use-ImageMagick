@@ -220,7 +220,7 @@ class main_listener implements EventSubscriberInterface
 					$filedata_array = $event['filedata'];
 
 					/* set new file size */
-					$filedata_array['filesize'] = $image->getImageLength();
+					$filedata_array['filesize'] = $filesize ? $filesize : $image->getImageBlob();
 
 					/* if image format change to JPEG set filedata to JPEG */
 					if ($image_format == 'JPEG' && $event['filedata']['mimetype'] != 'image/jpeg')
@@ -294,7 +294,7 @@ class main_listener implements EventSubscriberInterface
 
 				/* set return value new file size*/
 				$filedata_array = $event['filedata'];
-				$filedata_array['filesize'] = $avatar->getImageLength();
+				$filedata_array['filesize'] = $avatar->getImageBlob();
 				$event['filedata'] = $filedata_array;
 
 				$avatar->clear();

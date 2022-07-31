@@ -41,7 +41,7 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
-### v1.0.0 (21-07-2022)
+### v1.0.0 (31-07-2022)
 - Add avatar resize
 - Add Version check
 - Add Controller for ACP template
