@@ -36,7 +36,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'IMCGER_IM_REQUIRE_IMAGICK'	=> 'Diese Erweiterung benötigt die PHP-Bibliothek ImageMagick für die Installation. Bitte aktualisiere deine PHP-Installation',
-	'IMCGER_IM_REQUIRE_PHPBB'	=> 'Diese Erweiterung benötigt eine phpBB Version gleich oder grösser 3.2.4 und kleiner 4.0.0',
-	'IMCGER_IM_REQUIRE_PHP'		=> 'Diese Erweiterung benötigt eine php Version gleich oder grösser 7.1 und kleiner 8.2.',
+	'AVATAR_EXPLAIN'			 => 'Maximum dimensions; width: %1$s, height: %2$s, file size: %3$.2f KiB.<br>The dimensions of the image are automatically resized to the maximum values when uploading. The maximum filesize must be respected.',
+	'AVATAR_EXPLAIN_NO_FILESIZE' => 'Maximum dimensions; width: %1$s, height: %2$s.<br>The dimensions of the image are automatically resized to the maximum values when uploading.',
 ));

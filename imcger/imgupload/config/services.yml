@@ -10,5 +10,6 @@ services:
         class: imcger\imgupload\event\main_listener
         arguments:
             - '@config'
+            - '@language'
         tags:
             - { name: event.listener }

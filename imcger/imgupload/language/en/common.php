@@ -40,13 +40,17 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_SETTINGS_SAVED'		=> 'Settings have been saved successfully.',
 
 	'ACP_IMCGER_IMGUPLOAD_TITLE'	=> 'Image upload use ImageMagick',
-	'ACP_IMCGER_SETTINGS'			=> 'Einstellungen',
+	'ACP_IMCGER_IMGUPLOAD_DESC'		=> 'The extension uses the PHP Imagick class to modify upload​ed image​s. If the values set in the ACP are exceeded by the image file, the image ​is being ​resized by the extension.<br>The extension sup​port​s JPEG, WEBP, GIF and PNG images. Other image formats, for example BMP, ​are ​convert​ed​ to JPEG when resize​d.<br>This extension can change the image size and/or the image file size. It rotate images, thumbnails and avatars according to their EXIF information and it can remove the EXIF data from JPEG and WEBP files.',
 
-	'ACP_IMCGER_THUMB_QUALITY'		=> 'Thumbnail compression quality (JPEG only)',
-	'ACP_IMCGER_THUMB_QUALITY_DESC'	=> 'This setting adjusts the compression quality for the generated thumbnails. The best display quality is achieved with the setting 100%. Lower values will generate smaller files.',
+	'ACP_IMCGER_SETTINGS_THUMB'		=> 'Thumbnail Settings',
+	'ACP_IMCGER_SETTINGS_IMAGE'		=> 'Image Settings',
+	'ACP_IMCGER_SETTINGS_AVATAR'	=> 'Avatar Settings',
 
-	'ACP_IMCGER_IMAGE_QUALITY'		=> 'Image compression quality (JPEG only)',
-	'ACP_IMCGER_IMAGE_QUALITY_DESC'	=> 'This setting adjusts the compression quality for the resized image. The best display quality is achieved with the setting 100%. Lower values will generate smaller files.',
+	'ACP_IMCGER_THUMB_QUALITY'		=> 'Thumbnail compression quality',
+	'ACP_IMCGER_THUMB_QUALITY_DESC'	=> 'Specify value between 50% (smaller file size) and 90% (higher quality). Quality higher than 90% increases filesize and is disabled. Lower values will generate smaller files.',
+
+	'ACP_IMCGER_IMAGE_QUALITY'		=> 'Image compression quality',
+	'ACP_IMCGER_IMAGE_QUALITY_DESC'	=> 'Specify value between 50% (smaller file size) and 90% (higher quality). Quality higher than 90% increases filesize and is disabled. Lower values will generate smaller files.',
 
 	'ACP_IMCGER_MAX_WIDTH'			=> 'Maximum image width',
 	'ACP_IMCGER_MAX_WIDTH_DESC'		=> 'Setting the maximum image width in pixels. Wide images are reduced in size and the height is adjusted proportionally. If 0 is specified, no change is made.',
@@ -57,6 +61,10 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_MAX_FILESIZE'		=> 'Maximum file size',
 	'ACP_IMCGER_MAX_FILESIZE_DESC'	=> 'Setting of the maximum file size in bytes. If 0 is specified, there is no size limitation. If the size of the image file exceeds the set value, it will be reduced approximately.',
 
-	'ACP_IMCGER_DEL_EXIF'			=> 'Remove image properties',
-	'ACP_IMCGER_DEL_EXIF_DESC'		=> 'Cameras store additional information in images, such as geodata. These can be removed for data protection.',
+	'ACP_IMCGER_DEL_EXIF'			=> 'Strip image metadata  (JPEG & WEBP)',
+	'ACP_IMCGER_DEL_EXIF_DESC'		=> 'Strip Exif metadata, e.g. author name, GPS coordinates and camera details.',
+
+	'ACP_IMCGER_AVATAR_RESIZE'			=> 'Resize avatar',
+	'ACP_IMCGER_AVATAR_RESIZE_DESC'		=> 'The image file of the avatar will be automatically resize during the upload.',
+	'ACP_IMCGER_AVATAR_FILESIZE_ISSET'	=> 'For this function the "Maximum avatar file size" must be set to 0.',
 ));

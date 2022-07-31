@@ -29,6 +29,8 @@ class v100 extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('config.update', array('imcger_imgupload_version', '1.0.0')),
+			array('config.update', array('avatar_filesize', 0)),
+			array('config.add', array('imcger_imgupload_avatar_resize', 1)),
 		);
 	}
 }

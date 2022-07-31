@@ -25,27 +25,46 @@ class main_listener implements EventSubscriberInterface
 	/** @var \phpbb\config\config */
 	protected $config;
 
+	/** @var \phpbb\language\language */
+	protected $language;
+
 	/**
 	* Constructor for listener
 	*
 	* @param \phpbb\config\config		$config		phpBB config
+	* @param \phpbb\language\language	$language	phpBB language
 	*
 	* @access public
 	*/
 	public function __construct
 	(
-		\phpbb\config\config $config
+		\phpbb\config\config $config,
+		\phpbb\language\language $language
 	)
 	{
 		$this->config = $config;
+		$this->language = $language;
 	}
 
 	public static function getSubscribedEvents()
 	{
 		return [
-			'core.thumbnail_create_before'	=> 'imcger_create_tumbnail',
-			'core.modify_uploaded_file'		=> 'imcger_modify_uploaded_file',
+			'core.ucp_display_module_before'			 => 'new_profil_avatar_text',
+			'core.thumbnail_create_before'				 => 'imcger_create_tumbnail',
+			'core.modify_uploaded_file'					 => 'imcger_modify_uploaded_file',
+			'core.avatar_driver_upload_move_file_before' => 'imcger_modify_uploaded_avatar',
 		];
+	}
+
+	/**
+	 * Add language file for avatar upload page
+	 */
+	public function new_profil_avatar_text()
+	{
+		if ($this->config['imcger_imgupload_avatar_resize'])
+		{
+			$this->language->add_lang('ucp','imcger/imgupload');
+		}
 	}
 
 	/**
@@ -55,9 +74,6 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function imcger_create_tumbnail($event)
 	{
-		/* return value is only thumbnail_created, defaults to false */
-		$thumbnail_created	= false;
-
 		/* create a new instance of ImageMagick and load current image */
 		$thumbnail = new \Imagick(realpath($event['source']));
 
@@ -79,20 +95,27 @@ class main_listener implements EventSubscriberInterface
 		/* resize the Image */
 		$thumbnail->resizeImage($new_width, $new_height, \Imagick::FILTER_LANCZOS, 1);
 
-		/* Set image format */
+		/* set image format */
 		$image_format = $this->set_image_format($thumbnail, $event['mimetype']);
 
-		/* Compression quality is read from config, set in ACP */
+		/* compression quality is read from config, set in ACP */
 		$this->set_image_compression($thumbnail, $this->config['imcger_imgupload_tum_quality']);
 
-		/* Strip EXIF data and image profile */
-		if ($this->config['imcger_imgupload_del_exif'] && $image_format == 'JPEG')
+		/* strip EXIF data and image profile */
+		if ($this->config['imcger_imgupload_del_exif'] && ($image_format == 'JPEG' || $image_format == 'WEBP'))
 		{
 			$thumbnail->stripImage();
 		}
 
-		/* Store the image */
+		/* store the image */
 		$thumbnail_created = $thumbnail->writeImage($event['destination']);
+		$thumbnail->clear();
+
+		/* if image format change to JPEG set mimetype to jpeg */
+		if ($image_format == 'JPEG' && $event['mimetype'] != 'image/jpeg' && $thumbnail_created)
+		{
+			$event['mimetype'] = 'image/jpeg';
+		}
 
 		/* set return value */
 		$event['thumbnail_created'] = $thumbnail_created;
@@ -108,12 +131,35 @@ class main_listener implements EventSubscriberInterface
 		if ($event['is_image'])
 		{
 			$write_image		= false; // set to true wenn image attribute changed
+			$image_max_width	= $this->config['imcger_imgupload_max_width'];
+			$image_max_height	= $this->config['imcger_imgupload_max_height'];
 			$image_quality		= $this->config['imcger_imgupload_img_quality'];
 			$image_del_exif		= $this->config['img_strip_metadata'];
 			$image_max_filesize = $this->config['imcger_imgupload_max_filesize'];
+			$filesize			= $event['filedata']['filesize'];
 
 			/* get file path */
 			$file_path = join('/', [trim($this->config['upload_path'], '/'), trim($event['filedata']['physical_filename'], '/')]);
+
+			/* get image dimension and type */
+			$dimension = @getimagesize($file_path);
+
+			if ($dimension === false)
+			{
+				return false;
+			}
+
+			list($width, $height, $img_type, ) = $dimension;
+
+			/* if image no jpeg or webp and image properties smaller then maximum values do nothing */
+			if (!(($img_type == IMAGETYPE_JPEG || $img_type == IMAGETYPE_WEBP ) && $image_del_exif) &&
+				(!$image_max_width || $image_max_width >= $width) &&
+				(!$image_max_height || $image_max_height >= $height) &&
+				(!$image_max_filesize || $image_max_filesize >= $filesize)
+				)
+			{
+				return true;
+			}
 
 			/* create a new instance of ImageMagick and load current image */
 			$image = new \Imagick($file_path);
@@ -122,13 +168,13 @@ class main_listener implements EventSubscriberInterface
 			$img = $this->image_auto_rotate($image);
 
 			/* resize the image */
-			$write_image = $this->resize_image($image);
+			$write_image = $this->resize_image($image, $image_max_width, $image_max_height);
 
 			/* set image format */
 			$image_format = $this->set_image_format($image, $event['filedata']['mimetype']);
 
 			/* when not resize don`t changed image quality when it less then quality set in ACP */
-			if ($write_image || $image_quality < $image->getImageCompressionQuality())
+			if (($image_format == 'JPEG' || $image_format == 'WEBP') && ($write_image || $image_quality < $image->getImageCompressionQuality()))
 			{
 				/* set compression quality is read from config */
 				$this->set_image_compression($image, $image_quality);
@@ -136,8 +182,14 @@ class main_listener implements EventSubscriberInterface
 				$write_image = true;
 			}
 
+			if ($image_format == 'PNG')
+			{
+				/* set compression quality, second parameter isn't importent for PNG */
+				$this->set_image_compression($image);
+			}
+
 			/* strip EXIF data and image profile */
-			if ($image_del_exif && $image_format == 'JPEG')
+			if ($image_del_exif && ($image_format == 'JPEG' || $image_format == 'WEBP'))
 			{
 				$image->stripImage();
 
@@ -145,7 +197,7 @@ class main_listener implements EventSubscriberInterface
 			}
 
 			/* shrink file size wenn greater then set in ACP */
-			if ($image_max_filesize && $event['filedata']['filesize'] > $image_max_filesize)
+			if ($image_max_filesize && $filesize > $image_max_filesize)
 			{
 				/* set compression quality is read from config */
 				$this->set_image_compression($image, $image_quality);
@@ -156,16 +208,96 @@ class main_listener implements EventSubscriberInterface
 				$write_image = true;
 			}
 
-			/* store the image when changed attribute */
+			/* store the image when attribute change */
 			if ($write_image || $img['changed'])
 			{
-				/* set return value new file size */
+				$write = $image->writeImage($file_path);
+
+				/* if image store set new filedata */
+				if ($write)
+				{
+					/* set return value new file size and filedata*/
+					$filedata_array = $event['filedata'];
+
+					/* set new file size */
+					$filedata_array['filesize'] = $image->getImageLength();
+
+					/* if image format change to JPEG set filedata to JPEG */
+					if ($image_format == 'JPEG' && $event['filedata']['mimetype'] != 'image/jpeg')
+					{
+						$filedata_array['mimetype'] = 'image/jpeg';
+						$filedata_array['extension'] = 'jpg';
+						$filedata_array['real_filename'] .= '.jpg';
+					}
+
+					$event['filedata'] = $filedata_array;
+				}
+
+				$image->clear();
+			}
+		}
+	}
+
+	/**
+	 * Modify upload avatar image using IMagick
+	 *
+	 * @param \phpbb\event\data	$event	Event object
+	 */
+	function imcger_modify_uploaded_avatar($event)
+	{
+		if ($this->config['imcger_imgupload_avatar_resize'])
+		{
+			$avatar_max_width	 = $this->config['avatar_max_width'];
+			$avatar_max_height	 = $this->config['avatar_max_height'];
+			$avatar_file		 = $event['filedata']['filename'];
+
+			$dimension = @getimagesize($avatar_file);
+
+			if ($dimension === false)
+			{
+				return false;
+			}
+
+			list($width, $height, ) = $dimension;
+
+			/* when avatar image file to great modify it */
+			if ($width > $avatar_max_width || $height > $avatar_max_height)
+			{
+				/* create a new instance of ImageMagick and load current image */
+				$avatar = new \Imagick($avatar_file);
+
+				/* rotate the image according it's orientation flag */
+				$this->image_auto_rotate($avatar);
+
+				/* resize the image */
+				$this->resize_image($avatar, $avatar_max_width, $avatar_max_height);
+
+				/* set compression quality is read from config */
+				$this->set_image_compression($avatar);
+
+				/* set image format */
+				$image_format = $this->set_image_format($avatar, $event['filedata']['mimetype']);
+
+				/* strip EXIF data and image profile */
+				if ($image_format == 'JPEG' || $image_format == 'WEBP')
+				{
+					$avatar->stripImage();
+				}
+
+				/* store the avatar */
+				$write = $avatar->writeImage($avatar_file);
+
+				if($write === false)
+				{
+					return false;
+				}
+
+				/* set return value new file size*/
 				$filedata_array = $event['filedata'];
-				$filedata_array['filesize'] = $filesize ?? strlen($image->getImageBlob());
+				$filedata_array['filesize'] = $avatar->getImageLength();
 				$event['filedata'] = $filedata_array;
 
-				$image->writeImage($file_path);
-				$image->clear();
+				$avatar->clear();
 			}
 		}
 	}
@@ -177,32 +309,30 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * @return bool		$img_resize	images is resize
 	 */
-	function resize_image($image)
+	function resize_image($image, $max_width, $max_height)
 	{
-		$image_max_width	= $this->config['imcger_imgupload_max_width'];
-		$image_max_height	= $this->config['imcger_imgupload_max_height'];
-		$img_resize			= false;
+		$img_resize = false;
 
 		/* get image dimensions */
-		$width	= $image->getImageWidth();
-		$height = $image->getImageHeight();
+		$img_geo = $image->getImageGeometry();
+		list('width' => $width, 'height' =>  $height, ) = $img_geo;
 
-		/* image side ratio */
+		/* image aspect ratio */
 		$side_ratio = $width / $height;
 
 		/* set new images width */
-		if ($image_max_width && $image_max_width < $width)
+		if ($max_width && $max_width < $width)
 		{
-			$width = $image_max_width;
+			$width = $max_width;
 			$height = (int) ($width / $side_ratio);
 
 			$img_resize = true;
 		}
 
 		/* set new images height */
-		if ($image_max_height && $image_max_height < $height)
+		if ($max_height && $max_height < $height)
 		{
-			$height = $image_max_height;
+			$height = $max_height;
 			$width = (int) ($height * $side_ratio);
 
 			$img_resize = true;
@@ -258,14 +388,14 @@ class main_listener implements EventSubscriberInterface
 	 * @param object	$image		image object
 	 * @param integer	$quality	image quality value
 	 */
-	function set_image_compression($image, $quality)
+	function set_image_compression($image, $quality = 80)
 	{
 		$image_format = $image->getImageFormat();
 
 		switch ($image_format)
 		{
 			case 'JPEG':
-				$image->setImageCompression(\imagick::COMPRESSION_JPEG);
+				$image->setImageCompression(\Imagick::COMPRESSION_JPEG);
 				$image->setImageCompressionQuality($quality);
 				break;
 
@@ -278,6 +408,7 @@ class main_listener implements EventSubscriberInterface
 			case 'WEBP':
 				$image->setOption('webp:alpha-compression', 1);
 				$image->setOption('webp:method', 6);
+				$image->setImageCompressionQuality($quality);
 				break;
 
 			default:
@@ -290,8 +421,6 @@ class main_listener implements EventSubscriberInterface
 	 * rotate the generated image
 	 *
 	 * @param object	$image		image object
-	 * @param integer	$width		new witdth of the image
-	 * @param integer	$height		new height of the image
 	 *
 	 * @return array	changed		orientation changed
 	 * 					rotate		rotate 90 degree
@@ -366,12 +495,12 @@ class main_listener implements EventSubscriberInterface
 	function image_auto_length($image, $new_image_size)
 	{
 		/* get image dimensions */
-		$width = $image->getImageWidth();
-		$height = $image->getImageHeight();
+		$img_geo = $image->getImageGeometry();
+		list('width' => $width, 'height' =>  $height, ) = $img_geo;
 
 		$filesize = strlen($image->getImageBlob());
 
-		/* image side ratio */
+		/* image aspect ratio */
 		$side_ratio = $width / $height;
 
 		while ($filesize >  $new_image_size)
@@ -386,10 +515,10 @@ class main_listener implements EventSubscriberInterface
 
 			/* set image dimensions */
 			$height -= $dh;
-			$width = $height * $side_ratio;
+			$width	 = $height * $side_ratio;
 
-			/* resize the Image */
-			$image->resizeImage($width, $height, \Imagick::FILTER_LANCZOS, 1, false);
+			/* resize the image */
+			$image->resizeImage((int) $width, (int) $height, \Imagick::FILTER_LANCZOS, 1, false);
 
 			/* get the file size */
 			$filesize = strlen($image->getImageBlob());

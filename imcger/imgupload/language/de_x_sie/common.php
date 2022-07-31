@@ -40,13 +40,17 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_SETTINGS_SAVED'		=> 'Einstellungen wurden erfolgreich gespeichert.',
 
 	'ACP_IMCGER_IMGUPLOAD_TITLE'	=> 'Image upload use ImageMagick',
-	'ACP_IMCGER_SETTINGS'			=> 'Einstellungen',
+	'ACP_IMCGER_IMGUPLOAD_DESC'		=> 'Die Erweiterung verwendet die PHP Imagick Klasse, um hochgeladene Bilder, Thumbnails und Avatars zu verändern. Wenn die im ACP eingestellten Werte von der Bilddatei überschritten werden, wird die Größe des Bildes von der Erweiterung angepasst.<br>Die Erweiterung unterstützt JPEG, WEBP, GIF und PNG Bilder. Andere Bildformate, z. B. BMP, werden beim Ändern der Größe in JPEG umgewandelt.<br>Diese Erweiterung kann die Bildgröße und/oder die Größe der Bilddatei ändern. Es dreht Bilder, Thumbnails und Avatare entsprechend ihrer EXIF Informationen und kann die EXIF Daten aus JPEG und WEBP Dateien entfernen.',
 
-	'ACP_IMCGER_THUMB_QUALITY'		=> 'Vorschaubilder Komprimierungsqualität (nur JPEG)',
-	'ACP_IMCGER_THUMB_QUALITY_DESC'	=> 'Mit dieser Einstellung wird die Komprimierungsqualität für die generierten Vorschaubilder eingestellen. Die beste Anzeigequalität wir mit der Einstellung 100% erreicht. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
+	'ACP_IMCGER_SETTINGS_THUMB'		=> 'Vorschaubild Einstellungen',
+	'ACP_IMCGER_SETTINGS_IMAGE'		=> 'Bild Einstellungen',
+	'ACP_IMCGER_SETTINGS_AVATAR'	=> 'Avatar Einstellungen',
 
-	'ACP_IMCGER_IMAGE_QUALITY'		=> 'Bild Komprimierungsqualität (nur JPEG)',
-	'ACP_IMCGER_IMAGE_QUALITY_DESC'	=> 'Mit dieser Einstellung wird die Komprimierungsqualität für das größenveränderte Bild eingestellen. Die beste Anzeigequalität wir mit der Einstellung 100% erreicht. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
+	'ACP_IMCGER_THUMB_QUALITY'		=> 'Vorschaubilder Komprimierungsqualität',
+	'ACP_IMCGER_THUMB_QUALITY_DESC'	=> 'Lege einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
+
+	'ACP_IMCGER_IMAGE_QUALITY'		=> 'Bild Komprimierungsqualität',
+	'ACP_IMCGER_IMAGE_QUALITY_DESC'	=> 'Lege einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
 
 	'ACP_IMCGER_MAX_WIDTH'			=> 'Maximale Bildbreite',
 	'ACP_IMCGER_MAX_WIDTH_DESC'		=> 'Einstellung der maximalen Bildbreite in Pixel. Breite Bilder werden verkleinert und die Höhe proportional angepasst. Bei der Angabe von 0 wird keine Veränderung durchgeführt.',
@@ -57,6 +61,10 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_MAX_FILESIZE'		=> 'Maximale Dateigröße',
 	'ACP_IMCGER_MAX_FILESIZE_DESC'	=> 'Einstellung der maximalen Dateigröße in Byte. Bei der Angabe von 0 findet keine Größenbeschränkung statt. Überschreitet die Größe der Bilddatei den eingestellten Wert wird diese angenähert verkleinert.',
 
-	'ACP_IMCGER_DEL_EXIF'			=> 'Bildeigenschaften entfernen',
-	'ACP_IMCGER_DEL_EXIF_DESC'		=> 'Kameras speichern in Bildern zusätzliche Informationen wie z.B. Geodaten. Diese können zum Datenschutz entfernt werden.',
+	'ACP_IMCGER_DEL_EXIF'			=> 'Entferne Metadaten (JPEG & WEBP)',
+	'ACP_IMCGER_DEL_EXIF_DESC'		=> 'Entfernt die Exif-Metadaten wie Name des Autors, GPS-Koordinaten und Kamera-Details.',
+
+	'ACP_IMCGER_AVATAR_RESIZE'			=> 'Avatar Größe anpassen',
+	'ACP_IMCGER_AVATAR_RESIZE_DESC'		=> 'Die Bilddatei des Avatar wird beim Hochladen automatisch verkleinert.',
+	'ACP_IMCGER_AVATAR_FILESIZE_ISSET'	=> 'Für diese Funktion muss die "Maximale Dateigröße" des Avatars auf 0 gesetzt werden.',
 ));

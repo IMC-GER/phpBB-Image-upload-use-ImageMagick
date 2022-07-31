@@ -1,8 +1,10 @@
 # phpBB Image upload use ImageMagick
 
 ## Description
-This extension us the PHP Imagick class to modify upload image for improved quality.
-This extension can change the image size and/or the image file size. It rotate images and thumbnails according to their EXIF information and it can remove the EXIF data.
+This extension is a further development of [canonknipser](https://www.phpbb.com/customise/db/author/canonknipser) [ImageMagick Thumbnailer](https://www.phpbb.com/customise/db/extension/imagemagick_thumbnailer).
+The extension uses the PHP imagick class to modify uploaded images, thumbnails and avatars. If the values set in the ACP are exceeded by the image file, the image ​is being resized by the extension.
+The extension supports JPEG, WEBP, GIF and PNG images. Other image formats, for example BMP, ​are ​convert​ed​ to JPEG when resize​d.
+This extension can change the image size and/or the image file size. It rotate images, thumbnails and avatars according to their EXIF information and it can remove the EXIF data from JPEG and WEBP files.
 
 #### Settings in User Control Panel
 - No settings. 
@@ -14,17 +16,19 @@ This extension can change the image size and/or the image file size. It rotate i
 - Maximum image heigth.
 - Maximum image file size.
 - Remove EXIF data
+- Resize avatar
 
 ## Requirements
-- php 7.0 or higher
 - phpBB 3.2.4 or higher
-- php the Imagick class
+- php 7.1 or higher
+- php ImageMagick library installed
 
 ## Installation
 Copy the extension to `phpBB3/ext/imcger/imgupload`.
 Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
 For full functionality "Maximum file size" in "ACP" > "Posting" > "Attachment settings" must be set to 0. This is done automatically during the migration.
 For full functionality "Maximum image dimensions" in "ACP" > "Posting" > "Attachment settings" must be set to 0. This is done automatically during the migration.
+For full functionality "Maximum avatar file size" in "ACP" > "Board configuration" > "Avatar settings" must be set to 0. This is done automatically during the migration.
 
 ## Update
 - Navigate in the ACP to `Customise -> Manage extensions`.
@@ -36,13 +40,14 @@ For full functionality "Maximum image dimensions" in "ACP" > "Posting" > "Attach
 ## Changelog
 
 ### v1.0.0 (21-07-2022)
-- Version check
-- Check system requirement
-- Controller for ACP template
+- Add avatar resize
+- Add Version check
+- Add Controller for ACP template
+- Update check system requirement
 - Bug in EXIF orientation handling 
 
 ### v0.1.0 (31-05-2022)
-- Error in migrations
+- Bug in migrations
 
 ### v0.0.4 (18-03-2022)
 - Cleanup Code

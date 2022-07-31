@@ -2,18 +2,23 @@
 
 <h1>{{ lang('ACP_IMCGER_IMGUPLOAD_TITLE') }}</h1>
 
+<p>{{ lang('ACP_IMCGER_IMGUPLOAD_DESC') }}</p>
+
 <form id="acp_board" method="post" action="{{ U_ACTION }}">
 
 	<fieldset>
-		<legend>{{ lang('ACP_IMCGER_SETTINGS') }}</legend>
+		<legend>{{ lang('ACP_IMCGER_SETTINGS_THUMB') }}</legend>
 		<dl>
 			<dt><label for="imcger_imgupload_tum_quality">{{ lang('ACP_IMCGER_THUMB_QUALITY') ~ lang('COLON') }}</label><br/><span>{{ lang('ACP_IMCGER_THUMB_QUALITY_DESC') }}</span></dt>
-			<dd><input type="number" id="imcger_imgupload_tum_quality" min="10" max="100" step="any" maxlength="3" name="imcger_imgupload_tum_quality" value="{{ IMCGER_TUM_QUALITY }}" /></dd>
+			<dd><input type="number" id="imcger_imgupload_tum_quality" min="50" max="90" step="any" maxlength="3" name="imcger_imgupload_tum_quality" value="{{ IMCGER_TUM_QUALITY }}" /></dd>
 		</dl>
+	</fieldset>
 
+	<fieldset>
+		<legend>{{ lang('ACP_IMCGER_SETTINGS_IMAGE') }}</legend>
 		<dl>
 			<dt><label for="imcger_imgupload_img_quality">{{ lang('ACP_IMCGER_IMAGE_QUALITY') ~ lang('COLON') }}</label><br/><span>{{ lang('ACP_IMCGER_IMAGE_QUALITY_DESC') }}</span></dt>
-			<dd><input type="number" id="imcger_imgupload_img_quality" min="10" max="100" step="any" maxlength="3" name="imcger_imgupload_img_quality" value="{{ IMCGER_IMG_QUALITY }}" /></dd>
+			<dd><input type="number" id="imcger_imgupload_img_quality" min="50" max="90" step="any" maxlength="3" name="imcger_imgupload_img_quality" value="{{ IMCGER_IMG_QUALITY }}" /></dd>
 		</dl>
 
 		<dl>
@@ -36,6 +41,18 @@
 			<dd>
 				<label><input type="radio" class="radio" id="imcger_imgupload_del_exif" name="imcger_imgupload_del_exif" value='1'{% if IMCGER_DEL_EXIF %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 				<label><input type="radio" class="radio" name="imcger_imgupload_del_exif" value='0'{% if not IMCGER_DEL_EXIF %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_IMCGER_SETTINGS_AVATAR') }}</legend>
+		<dl>
+			<dt><label for="imcger_imgupload_avatar_resize">{{ lang('ACP_IMCGER_AVATAR_RESIZE') }} {{ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_AVATAR_RESIZE_DESC') }}</span>
+				{% if IMCGER_AVATAR_FILESIZE_ISSET %}<br><span style="color: red">{{ lang('ACP_IMCGER_AVATAR_FILESIZE_ISSET') }}</span>{% endif %}</dt>
+			<dd>
+				<label><input type="radio" class="radio" id="imcger_imgupload_avatar_resize" name="imcger_imgupload_avatar_resize" value='1'{% if IMCGER_AVATAR_RESIZE %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="imcger_imgupload_avatar_resize" value='0'{% if not IMCGER_AVATAR_RESIZE %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 	</fieldset>
