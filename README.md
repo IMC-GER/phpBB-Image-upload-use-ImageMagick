@@ -18,6 +18,10 @@ This extension can change the image size and/or the image file size. It rotate i
 - Remove EXIF data
 - Resize avatar
 
+## Screenshots
+- [Administrations-Bereich](https://raw.githubusercontent.com/IMC-GER/images/main/screenshots/imgupload/de/imgupload_acp_de.jpg?raw=true)
+- [Persönlicher Bereich - Avatar ändern](https://raw.githubusercontent.com/IMC-GER/images/main/screenshots/imgupload/de/imgupload_ucp_de.jpg?raw=true)
+
 ## Requirements
 - phpBB 3.2.4 or higher
 - php 7.1 or higher
