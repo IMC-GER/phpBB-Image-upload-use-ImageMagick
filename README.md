@@ -19,8 +19,8 @@ This extension can change the image size and/or the image file size. It rotate i
 - Resize avatar
 
 ## Screenshots
-- [ACP](https://raw.githubusercontent.com/IMC-GER/images/main/screenshots/imgupload/en/imgupload_acp_de.jpg?raw=true)
-- [UCP - Edit avatar](https://raw.githubusercontent.com/IMC-GER/images/main/screenshots/imgupload/en/imgupload_ucp_de.jpg?raw=true)
+- [ACP](https://raw.githubusercontent.com/IMC-GER/images/main/screenshots/imgupload/en/imgupload_acp_en.jpg)
+- [UCP - Edit avatar](https://raw.githubusercontent.com/IMC-GER/images/main/screenshots/imgupload/en/imgupload_ucp_en.jpg)
 
 ## Requirements
 - phpBB 3.2.4 or higher
