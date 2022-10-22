@@ -20,19 +20,17 @@ class install_settings extends \phpbb\db\migration\migration
 
 	public static function depends_on()
 	{
-		return array(
-			'\imcger\imgupload\migrations\install_acp_module',
-		);
+		return ['\imcger\imgupload\migrations\install_acp_module'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('config.update', array('max_filesize', 0)),
-			array('config.update', array('img_max_width', 0)),
-			array('config.update', array('img_max_height', 0)),
+		return [
+			['config.update', ['max_filesize', 0]],
+			['config.update', ['img_max_width', 0]],
+			['config.update', ['img_max_height', 0]],
 
-			array('config.add', array('imcger_imgupload_version', '0.1.0')),
-		);
+			['config.add', ['imcger_imgupload_version', '0.1.0']],
+		];
 	}
 }

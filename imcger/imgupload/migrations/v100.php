@@ -20,17 +20,15 @@ class v100 extends \phpbb\db\migration\migration
 
 	public static function depends_on()
 	{
-		return array(
-			'\imcger\imgupload\migrations\install_settings',
-		);
+		return ['\imcger\imgupload\migrations\install_settings'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('config.update', array('imcger_imgupload_version', '1.0.0')),
-			array('config.update', array('avatar_filesize', 0)),
-			array('config.add', array('imcger_imgupload_avatar_resize', 1)),
-		);
+		return [
+			['config.update', ['imcger_imgupload_version', '1.0.0']],
+			['config.update', ['avatar_filesize', 0]],
+			['config.add', ['imcger_imgupload_avatar_resize', 1]],
+		];
 	}
 }

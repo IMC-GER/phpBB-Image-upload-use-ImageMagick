@@ -1,6 +1,6 @@
 services:
     imcger.imgupload.admin.controller:
-        class: 'imcger\imgupload\controller\admin_controller'
+        class: imcger\imgupload\controller\admin_controller
         arguments:
             - '@config'
             - '@template'
@@ -11,5 +11,6 @@ services:
         arguments:
             - '@config'
             - '@language'
+            - '@upload_imagesize'
         tags:
             - { name: event.listener }

@@ -58,12 +58,12 @@ class admin_controller
 	 */
 	public function display_options()
 	{
-		/* Add ACP lang file */
+		// Add ACP lang file
 		$this->language->add_lang('common', 'imcger/imgupload');
 
 		add_form_key('imcger/imgupload');
 
-		/* Is the form being submitted to us? */
+		// Is the form being submitted to us?
 		if ($this->request->is_set_post('submit'))
 		{
 			if (!check_form_key('imcger/imgupload'))
@@ -71,7 +71,7 @@ class admin_controller
 				trigger_error('FORM_INVALID' . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
-			/* Store the variable to the db */
+			// Store the variable to the db
 			$this->set_variable();
 
 			trigger_error($this->language->lang('ACP_IMCGER_SETTINGS_SAVED') . adm_back_link($this->u_action));

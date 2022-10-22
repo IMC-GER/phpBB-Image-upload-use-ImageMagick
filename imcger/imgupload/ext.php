@@ -23,7 +23,7 @@ class ext extends \phpbb\extension\base
 	 */
 	public function is_enableable()
 	{
-		/* If phpBB version 3.1 or less cancel */
+		// If phpBB version 3.1 or less cancel
 		if (phpbb_version_compare(PHPBB_VERSION, '3.2.0', '<'))
 		{
 			return false;
@@ -33,25 +33,25 @@ class ext extends \phpbb\extension\base
 		$language->add_lang('imgupload_acp', 'imcger/imgupload');
 		$error_message = [];
 
-		/* Imagick library installed? */
+		// Imagick library installed?
 		if (!class_exists('Imagick'))
 		{
 			$error_message += ['error1' => $language->lang('IMCGER_IM_REQUIRE_IMAGICK')];
 		}
 
-		/* phpBB version greater equal 3.2.4 and less then 4.0 */
+		// phpBB version greater equal 3.2.4 and less then 4.0
 		if (phpbb_version_compare(PHPBB_VERSION, '3.2.4', '<') || phpbb_version_compare(PHPBB_VERSION, '4.0.0', '>='))
 		{
 			$error_message += ['error2' => $language->lang('IMCGER_IM_REQUIRE_PHPBB'),];
 		}
 
-		/* php version equal or greater 7.1.0 and less 8.2 */
+		// php version equal or greater 7.1.0 and less 8.2
 		if (version_compare(PHP_VERSION, '7.1.0', '<') || version_compare(PHP_VERSION, '8.2', '>='))
 		{
 			$error_message += ['error3' => $language->lang('IMCGER_IM_REQUIRE_PHP'),];
 		}
 
-		/* When phpBB v3.2 use trigger_error() for message output. For v3.1 return false. */
+		// When phpBB v3.2 use trigger_error() for message output. For v3.1 return false.
 		if (phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') && !empty($error_message))
 		{
 			$message = implode('<br>', $error_message);

@@ -52,11 +52,8 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_IMAGE_QUALITY'		=> 'Bild Komprimierungsqualität',
 	'ACP_IMCGER_IMAGE_QUALITY_DESC'	=> 'Lege einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
 
-	'ACP_IMCGER_MAX_WIDTH'			=> 'Maximale Bildbreite',
-	'ACP_IMCGER_MAX_WIDTH_DESC'		=> 'Einstellung der maximalen Bildbreite in Pixel. Breite Bilder werden verkleinert und die Höhe proportional angepasst. Bei der Angabe von 0 wird keine Veränderung durchgeführt.',
-
-	'ACP_IMCGER_MAX_HEIGTH'			=> 'Maximale Bildhöhe',
-	'ACP_IMCGER_MAX_HEIGTH_DESC'	=> 'Einstellung der maximalen Bildhöhe in Pixel. Höhere Bilder werden verkleinert und die Breite proportional angepasst. Bei der Angabe von 0 wird keine Veränderung durchgeführt.',
+	'ACP_IMCGER_MAX_SIZE'			=> 'Maximale Bildgröße',
+	'ACP_IMCGER_MAX_SIZE_DESC'		=> 'Einstellung der maximalen Bildgröße in Pixel. Die Bilder werden auf die maximale Breite bzw. Höhe verkleinert. Die jeweils andere Seite wird proportional angepasst. Bei der Angabe von 0px x 0px wird keine Veränderung der Bildgröße durchgeführt.',
 
 	'ACP_IMCGER_MAX_FILESIZE'		=> 'Maximale Dateigröße',
 	'ACP_IMCGER_MAX_FILESIZE_DESC'	=> 'Einstellung der maximalen Dateigröße in Byte. Bei der Angabe von 0 findet keine Größenbeschränkung statt. Überschreitet die Größe der Bilddatei den eingestellten Wert wird diese angenähert verkleinert.',

@@ -45,18 +45,21 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
+### v1.0.1 (22-10-2022)
+- Code changes
+
 ### v1.0.0 (31-07-2022)
-- Add avatar resize
-- Version check
-- Check system requirement
-- Controller for ACP template
-- Bug in EXIF orientation handling 
+- Added avatar resize
+- Added version check
+- Added controller for ACP template
+- Update check system requirement
+- Fixed EXIF orientation handling 
 
 ### v0.1.0 (31-05-2022)
-- Error in migrations
+- Fixed migrations
 
 ### v0.0.4 (18-03-2022)
-- Cleanup Code
+- Cleanup code
 
 ### v0.0.3 (20-02-2022)
 - Code changes
