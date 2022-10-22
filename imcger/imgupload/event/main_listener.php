@@ -290,7 +290,7 @@ class main_listener implements EventSubscriberInterface
 				// store the avatar
 				$write = $avatar->writeImage($avatar_file);
 
-				if($write === false)
+				if ($write === false)
 				{
 					return false;
 				}
