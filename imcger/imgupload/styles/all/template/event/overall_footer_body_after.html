@@ -25,7 +25,7 @@
 
 			// If image add thumbnail to the link
 			if (isImage) {
-				link.attr('href', imgUrl).html('<img src="' + imgUrl + '&t=1" title="' + real_filename + '" alt="' + real_filename + '">');
+				link.html('<img src="' + imgUrl + '&t=1" title="' + real_filename + '" alt="' + real_filename + '">');
 
 				// If FancyBox aktive add FancyBox attribut to the link
 				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
@@ -36,9 +36,6 @@
 					// Do nothing wenn click on image
 					link.attr('onclick', 'return false;');
 				}
-			}
-			else {
-				link.attr('href', imgUrl).html(real_filename);
 			}
 		});
 	}
