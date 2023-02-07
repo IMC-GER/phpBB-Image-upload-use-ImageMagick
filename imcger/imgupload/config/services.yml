@@ -6,11 +6,14 @@ services:
             - '@template'
             - '@language'
             - '@request'
+
     imcger.imgupload.listener:
         class: imcger\imgupload\event\main_listener
         arguments:
             - '@config'
             - '@language'
             - '@upload_imagesize'
+            - '@dbal.conn'
+            - '@template'
         tags:
             - { name: event.listener }

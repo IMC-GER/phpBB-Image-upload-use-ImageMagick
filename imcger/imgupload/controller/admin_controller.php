@@ -68,7 +68,7 @@ class admin_controller
 		{
 			if (!check_form_key('imcger/imgupload'))
 			{
-				trigger_error('FORM_INVALID' . adm_back_link($this->u_action), E_USER_WARNING);
+				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
 			// Store the variable to the db
@@ -87,8 +87,8 @@ class admin_controller
 			'IMCGER_MAX_HEIGHT'		=> $this->config['imcger_imgupload_max_height'],
 			'IMCGER_MAX_FILESIZE'	=> $filesize['value'],
 			'IMCGER_UNIT'			=> $filesize['si_identifier'],
-			'IMCGER_DEL_EXIF'		=> $this->config['img_strip_metadata'],
-			'IMCGER_AVATAR_RESIZE'			=> $this->config['imcger_imgupload_avatar_resize'],
+			'IMCGER_DEL_EXIF'		=> (bool) $this->config['img_strip_metadata'],
+			'IMCGER_AVATAR_RESIZE'			=> (bool) $this->config['imcger_imgupload_avatar_resize'],
 			'IMCGER_AVATAR_FILESIZE_ISSET'	=> (bool) $this->config['avatar_filesize'],
 		]);
 	}
@@ -110,8 +110,8 @@ class admin_controller
 		$this->config->set('imcger_imgupload_max_width', $this->request->variable('imcger_imgupload_max_width', 0));
 		$this->config->set('imcger_imgupload_max_height', $this->request->variable('imcger_imgupload_max_height', 0));
 		$this->config->set('imcger_imgupload_max_filesize', $max_filesize);
-		$this->config->set('img_strip_metadata', $this->request->variable('imcger_imgupload_del_exif', 0));
-		$this->config->set('imcger_imgupload_avatar_resize', $this->request->variable('imcger_imgupload_avatar_resize', 1));
+		$this->config->set('img_strip_metadata', (bool) $this->request->variable('imcger_imgupload_del_exif', 0));
+		$this->config->set('imcger_imgupload_avatar_resize', (bool) $this->request->variable('imcger_imgupload_avatar_resize', 0));
 	}
 
 	/**

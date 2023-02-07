@@ -46,7 +46,7 @@ class ext extends \phpbb\extension\base
 		}
 
 		// php version equal or greater 7.1.0 and less 8.2
-		if (version_compare(PHP_VERSION, '7.1.0', '<') || version_compare(PHP_VERSION, '8.2', '>='))
+		if (version_compare(PHP_VERSION, '7.1.0', '<') || version_compare(PHP_VERSION, '8.3', '>='))
 		{
 			$error_message += ['error3' => $language->lang('IMCGER_IM_REQUIRE_PHP'),];
 		}

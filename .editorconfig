@@ -1,6 +1,6 @@
 # EditorConfig is awesome: https://EditorConfig.org
 
-# phpBB - Editor Vorgaben - https://www.phpbb.de/community/viewtopic.php?f=140&t=244063
+# phpBB - Editor Vorgaben v1.1 - https://www.phpbb.de/kb/viewarticle?a=93
 # 2020 LukeWCS, phpBB.de
 
 root = true
@@ -15,7 +15,7 @@ indent_style = tab
 indent_size = 4
 trim_trailing_whitespace = true
 
-[*.{html,txt,md,yml}]
+[*.{txt,md,yml}]
 trim_trailing_whitespace = false
 
 [*.yml]

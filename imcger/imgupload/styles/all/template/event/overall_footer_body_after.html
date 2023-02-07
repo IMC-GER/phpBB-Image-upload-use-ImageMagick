@@ -1,0 +1,93 @@
+{% if S_SHOW_ATTACH_BOX and FILTERS %}
+{% INCLUDECSS '@imcger_imgupload/imgupload.css' %}
+<script>
+(function($) {  // Avoid conflicts with other libraries
+
+'use strict';
+
+	/*
+	 * Update the relevant elements and hidden data for
+	 * an attachment when page load.
+	 *
+	 * @param void
+	 */
+	phpbb.plupload.imcgerUpdateRow = function() {
+		const allowedExt = [{{ IUL_ALLOWED_IMAGES }}];
+
+		$('.file-name.ellipsis-text a').each(function() {
+			let link			= $(this),
+				imgUrl			= $(this).attr('href'),
+				real_filename	= $(this).html(),
+				searchParams	= new URLSearchParams(imgUrl.split('?')[1]),
+				attach_id		= searchParams.get('id'),
+				filenameArray	= real_filename.split('.'),
+				isImage			= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase());
+
+			// If image add thumbnail to the link
+			if (isImage) {
+				link.attr('href', imgUrl).html('<img src="' + imgUrl + '&t=1" title="' + real_filename + '" alt="' + real_filename + '">');
+
+				// If FancyBox aktive add FancyBox attribut to the link
+				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
+					link.attr('data-fancybox', attach_id);
+					link.attr('data-caption', real_filename);
+				}
+				else {
+					// Do nothing wenn click on image
+					link.attr('onclick', 'return false;');
+				}
+			}
+			else {
+				link.attr('href', imgUrl).html(real_filename);
+			}
+		});
+	}
+
+	/*
+	 * Update the relevant elements and hidden data for an attachment.
+	 *
+	 * @param {int} index The index from phpbb.plupload.ids of the attachment to edit.
+	 * @param {Array} downloadUrl Optional array of download urls to update.
+	 */
+	phpbb.plupload.updateRow = function(index, downloadUrl) {
+		const allowedExt	= [{{ IUL_ALLOWED_IMAGES }}];
+		let   attach		= phpbb.plupload.data[index],
+			  row			= $('[data-attach-id="' + attach.attach_id + '"]'),
+			  filenameArray = attach.real_filename.split('.'),
+			  isImg			= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase());
+
+		// Add the link to the file
+		if (typeof downloadUrl !== 'undefined' && typeof downloadUrl[index] !== 'undefined') {
+			let url = downloadUrl[index].replace('&amp;', '&'),
+				link = $('<a></a>');
+
+			// If image add thumbnail to the link
+			if (isImg) {
+				link.attr('href', url).html('<img src="' + url + '&t=1" title="' + attach.real_filename + '" alt="' + attach.real_filename + '">');
+
+				// If FancyBox aktive add FancyBox attribut to the link
+				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
+					link.attr('data-fancybox', attach.attach_id);
+					link.attr('data-caption', attach.real_filename);
+				}
+				else {
+					// Do nothing wenn click on image
+					link.attr('onclick', 'return false;');
+				}
+			}
+			else {
+				link.attr('href', url).html(attach.real_filename);
+			}
+
+			row.find('.file-name').html(link);
+		}
+
+		row.find('textarea').attr('name', 'comment_list[' + index + ']');
+		phpbb.plupload.updateHiddenData(row, attach, index);
+	};
+
+	phpbb.plupload.imcgerUpdateRow();
+
+})(jQuery); // Avoid conflicts with other libraries
+</script>
+{% endif %}

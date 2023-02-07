@@ -31,12 +31,20 @@ class main_listener implements EventSubscriberInterface
 	/** @var \FastImageSize\FastImageSize */
 	protected $imagesize;
 
+	/** @var \phpbb\db\driver\driver_interface */
+	protected $db;
+
+	/** @var \phpbb\template\template */
+	protected $template;
+
 	/**
 	 * Constructor for listener
 	 *
-	 * @param \phpbb\config\config			$config		phpBB config
-	 * @param \phpbb\language\language		$language	phpBB language
-	 * @param \FastImageSize\FastImageSize	$imagesize	FastImageSize object
+	 * @param \phpbb\config\config				$config		phpBB config
+	 * @param \phpbb\language\language			$language	phpBB language
+	 * @param \FastImageSize\FastImageSize		$imagesize	FastImageSize object
+	 * @param \phpbb\db\driver\driver_interface	$db			phpBB DataBase
+	 * Qparam \phpbb\template\template			$template	phpBB template
 	 *
 	 * @access public
 	 */
@@ -44,17 +52,22 @@ class main_listener implements EventSubscriberInterface
 	(
 		\phpbb\config\config $config,
 		\phpbb\language\language $language,
-		\FastImageSize\FastImageSize $imagesize
+		\FastImageSize\FastImageSize $imagesize,
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\template\template $template
 	)
 	{
-		$this->config = $config;
-		$this->language = $language;
+		$this->config	 = $config;
+		$this->language	 = $language;
 		$this->imagesize = $imagesize;
+		$this->db		 = $db;
+		$this->template  = $template;
 	}
 
 	public static function getSubscribedEvents()
 	{
 		return [
+			'core.page_header'							 => 'set_template_vars',
 			'core.ucp_display_module_before'			 => 'new_profil_avatar_text',
 			'core.thumbnail_create_before'				 => 'imcger_create_tumbnail',
 			'core.modify_uploaded_file'					 => 'imcger_modify_uploaded_file',
@@ -71,6 +84,30 @@ class main_listener implements EventSubscriberInterface
 		{
 			$this->language->add_lang('ucp','imcger/imgupload');
 		}
+	}
+
+	/**
+	 * Set template vars
+	 *
+	 * @return null
+	 * @access public
+	 */
+	public function set_template_vars()
+	{
+		$allowed_images = '';
+
+		$sql = 'SELECT extension FROM ' . EXTENSIONS_TABLE . ' WHERE group_id = 1';
+		$result = $this->db->sql_query($sql);
+
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$allowed_images .= '"' . $row['extension'] . '", ';
+		}
+		$this->db-> sql_freeresult();
+
+		$this->template->assign_vars([
+			'IUL_ALLOWED_IMAGES' => $allowed_images,
+		]);
 	}
 
 	/**

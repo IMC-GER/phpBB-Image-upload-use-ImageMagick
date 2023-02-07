@@ -25,17 +25,16 @@
 			<dt><label for="imcger_imgupload_max_width">{{ lang('ACP_IMCGER_MAX_SIZE') ~ lang('COLON') }}</label><br/><span>{{ lang('ACP_IMCGER_MAX_SIZE_DESC') }}</span></dt>
 			<dd><input type="number" id="imcger_imgupload_max_width" min="0" max="9999999999" step="any" maxlength="10" name="imcger_imgupload_max_width" value="{{ IMCGER_MAX_WIDTH }}"> x <input type="number" id="imcger_imgupload_max_height" min="0" max="9999999999" step="any" maxlength="10" name="imcger_imgupload_max_height" value="{{ IMCGER_MAX_HEIGHT }}"> px</dd>
 		</dl>
-		
+
 		<dl>
 			<dt><label for="imcger_imgupload_max_filesize">{{ lang('ACP_IMCGER_MAX_FILESIZE') ~ lang('COLON') }}</label><br/><span>{{ lang('ACP_IMCGER_MAX_FILESIZE_DESC') }}</span></dt>
 			<dd><input type="number" id="imcger_imgupload_max_filesize" min="0" max="9999999999" step="any" name="imcger_imgupload_max_filesize" value="{{ IMCGER_MAX_FILESIZE }}"/> <select name="size_select"><option value="b" {% if IMCGER_UNIT == 'b' %} selected="selected"{% endif %}>Bytes</option><option value="kb" {% if IMCGER_UNIT == 'kb' %} selected="selected"{% endif %}>KiB</option><option value="mb" {% if IMCGER_UNIT == 'mb' %} selected="selected"{% endif %}>MiB</option></select></dd>
 		</dl>
 
 		<dl>
-			<dt><label for="imcger_imgupload_del_exif">{{ lang('ACP_IMCGER_DEL_EXIF') }} {{ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_DEL_EXIF_DESC') }}</span></dt>
+			<dt><label for="imcger_imgupload_del_exif">{{ lang('ACP_IMCGER_DEL_EXIF') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_DEL_EXIF_DESC') }}</span></dt>
 			<dd>
-				<label><input type="radio" class="radio" id="imcger_imgupload_del_exif" name="imcger_imgupload_del_exif" value='1'{% if IMCGER_DEL_EXIF %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
-				<label><input type="radio" class="radio" name="imcger_imgupload_del_exif" value='0'{% if not IMCGER_DEL_EXIF %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
+				{{ _self.switch('imcger_imgupload_del_exif', IMCGER_DEL_EXIF) }}
 			</dd>
 		</dl>
 	</fieldset>
@@ -43,20 +42,25 @@
 	<fieldset>
 		<legend>{{ lang('ACP_IMCGER_SETTINGS_AVATAR') }}</legend>
 		<dl>
-			<dt><label for="imcger_imgupload_avatar_resize">{{ lang('ACP_IMCGER_AVATAR_RESIZE') }} {{ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_AVATAR_RESIZE_DESC') }}</span>
+			<dt><label for="imcger_imgupload_avatar_resize">{{ lang('ACP_IMCGER_AVATAR_RESIZE') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_AVATAR_RESIZE_DESC') }}</span>
 				{% if IMCGER_AVATAR_FILESIZE_ISSET %}<br><span style="color: red">{{ lang('ACP_IMCGER_AVATAR_FILESIZE_ISSET') }}</span>{% endif %}</dt>
 			<dd>
-				<label><input type="radio" class="radio" id="imcger_imgupload_avatar_resize" name="imcger_imgupload_avatar_resize" value='1'{% if IMCGER_AVATAR_RESIZE %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
-				<label><input type="radio" class="radio" name="imcger_imgupload_avatar_resize" value='0'{% if not IMCGER_AVATAR_RESIZE %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
+				{{ _self.switch('imcger_imgupload_avatar_resize', IMCGER_AVATAR_RESIZE) }}
 			</dd>
 		</dl>
 	</fieldset>
 
 	<fieldset class="submit-buttons">
 		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}">
-		{{ S_FORM_TOKEN }}
 	</fieldset>
 	
+	{{ S_FORM_TOKEN }}
 </form>
 
 {% INCLUDE 'overall_footer.html' %}
+
+{% INCLUDECSS '@imcger_imgupload/acp_toggle.css' %}
+
+{% macro switch(name, checked = false) -%}
+	<input type="checkbox" class="toggle" name="{{ name }}" value="1"{{ checked ? ' checked' }}>
+{%- endmacro %}

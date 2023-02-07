@@ -1,0 +1,19 @@
+/* Image upload use ImageMagick
+-----------------------------------*/
+.file-name {
+  vertical-align: middle;
+ }
+
+.file-name img {
+  max-height: 150px;
+  max-width: 150px;
+ }
+
+.attach-name span {
+  padding-left: 0.5em;
+}
+
+.attach-controls {
+  float: none;
+  padding-top: 1em;
+}
