@@ -31,8 +31,11 @@
 				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
 					link.attr('data-fancybox', attach_id);
 					link.attr('data-caption', real_filename);
-				}
-				else {
+				} else if ({{ S_LIGHTBOX_ALL_IMAGES || LIGHTBOX_RESIZE_WIDTH || LIGHTBOX_RESIZE_HEIGHT ? 1 : 0 }}) {
+					// If LightBox aktive add LightBox attribut to the link
+					link.attr('data-lightbox', attach_id);
+					link.attr('data-title', real_filename);
+				} else {
 					// Do nothing wenn click on image
 					link.attr('onclick', 'return false;');
 				}
@@ -44,7 +47,7 @@
 	 * Update the relevant elements and hidden data for an attachment.
 	 *
 	 * @param {int} index The index from phpbb.plupload.ids of the attachment to edit.
-	 * @param {Array} downloadUrl Optional array of download urls to update.
+	 * @param {array} downloadUrl Optional array of download urls to update.
 	 */
 	phpbb.plupload.updateRow = function(index, downloadUrl) {
 		const allowedExt	= [{{ IUL_ALLOWED_IMAGES }}];
@@ -58,21 +61,23 @@
 			let url = downloadUrl[index].replace('&amp;', '&'),
 				link = $('<a></a>');
 
-			// If image add thumbnail to the link
 			if (isImg) {
+				// If image add thumbnail to the link
 				link.attr('href', url).html('<img src="' + url + '&t=1" title="' + attach.real_filename + '" alt="' + attach.real_filename + '">');
 
 				// If FancyBox aktive add FancyBox attribut to the link
 				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
 					link.attr('data-fancybox', attach.attach_id);
 					link.attr('data-caption', attach.real_filename);
-				}
-				else {
+				} else if ({{ S_LIGHTBOX_ALL_IMAGES || LIGHTBOX_RESIZE_WIDTH || LIGHTBOX_RESIZE_HEIGHT ? 1 : 0 }}) {
+					// If LightBox aktive add LightBox attribut to the link
+					link.attr('data-lightbox', attach.attach_id);
+					link.attr('data-title', attach.real_filename);
+				} else {
 					// Do nothing wenn click on image
 					link.attr('onclick', 'return false;');
 				}
-			}
-			else {
+			} else {
 				link.attr('href', url).html(attach.real_filename);
 			}
 
