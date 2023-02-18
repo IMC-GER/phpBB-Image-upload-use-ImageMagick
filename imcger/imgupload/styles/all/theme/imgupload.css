@@ -1,19 +1,22 @@
-/* Image upload use ImageMagick
+/*
+ Image upload use ImageMagick
+ Changes for plupload.css
 -----------------------------------*/
+
 .file-name {
-  vertical-align: middle;
- }
+	vertical-align: middle;
+}
 
 .file-name img {
-  max-height: 150px;
-  max-width: 150px;
- }
+	max-height: 150px;
+	max-width: 150px;
+}
 
 .attach-name span {
-  padding-left: 0.5em;
+	padding-left: 0.5em;
 }
 
 .attach-controls {
-  float: none;
-  padding-top: 1em;
+	float: none;
+	padding-top: 1em;
 }
