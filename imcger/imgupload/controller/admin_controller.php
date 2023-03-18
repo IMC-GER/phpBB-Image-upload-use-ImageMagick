@@ -25,29 +25,35 @@ class admin_controller
 	/** @var request */
 	protected $request;
 
+	/** @var \phpbb\extension\manager */
+	protected $ext_manager;
+
 	/** @var string Custom form action */
 	protected $u_action;
 
 	/**
 	 * Constructor
 	 *
-	 * @param config	$config
-	 * @param template	$template
-	 * @param language	$language
-	 * @param request	$request
+	 * @param \phpbb\config\config		$config
+	 * @param \phpbb\template\template	$template
+	 * @param \phpbb\language\language	$language
+	 * @param \phpbb\request\request	$request
+	 * @param \phpbb\extension\manager	$ext_manager
 	 *
 	 */
 	public function __construct(
 		\phpbb\config\config $config,
 		\phpbb\template\template $template,
 		\phpbb\language\language $language,
-		\phpbb\request\request $request
+		\phpbb\request\request $request,
+		\phpbb\extension\manager $ext_manager
 	)
 	{
-		$this->config	= $config;
-		$this->template	= $template;
-		$this->language	= $language;
-		$this->request	= $request;
+		$this->config		= $config;
+		$this->template		= $template;
+		$this->language		= $language;
+		$this->request		= $request;
+		$this->ext_manager	= $ext_manager;
 	}
 
 	/**
@@ -77,10 +83,14 @@ class admin_controller
 			trigger_error($this->language->lang('ACP_IMCGER_SETTINGS_SAVED') . adm_back_link($this->u_action));
 		}
 
+		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
+
 		$filesize = get_formatted_filesize($this->config['imcger_imgupload_max_filesize'], false, array('mb', 'kb', 'b'));
 
 		$this->template->assign_vars([
 			'U_ACTION'				=> $this->u_action,
+			'IMGUPLOAD_TITLE'		=> $metadata_manager->get_metadata('display-name'),
+			'IMGUPLOAD_EXT_VER'		=> $metadata_manager->get_metadata('version'),
 			'IMCGER_TUM_QUALITY'	=> $this->config['imcger_imgupload_tum_quality'],
 			'IMCGER_IMG_QUALITY'	=> $this->config['imcger_imgupload_img_quality'],
 			'IMCGER_MAX_WIDTH'		=> $this->config['imcger_imgupload_max_width'],

@@ -96,7 +96,12 @@ class main_listener implements EventSubscriberInterface
 	{
 		$allowed_images = '';
 
-		$sql = 'SELECT extension FROM ' . EXTENSIONS_TABLE . ' WHERE group_id = 1';
+		$sql = 'SELECT group_id FROM ' . EXTENSION_GROUPS_TABLE . ' WHERE group_name = "IMAGES"';
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db-> sql_freeresult();
+
+		$sql = 'SELECT extension FROM ' . EXTENSIONS_TABLE . ' WHERE group_id = ' . $row["group_id"];
 		$result = $this->db->sql_query($sql);
 
 		while ($row = $this->db->sql_fetchrow($result))
@@ -107,6 +112,7 @@ class main_listener implements EventSubscriberInterface
 
 		$this->template->assign_vars([
 			'IUL_ALLOWED_IMAGES' => $allowed_images,
+			'IUL_GET_THUMBNAIL'	 => $this->config['img_create_thumbnail'],
 		]);
 	}
 

@@ -50,16 +50,26 @@
 		</dl>
 	</fieldset>
 
-	<fieldset class="submit-buttons">
-		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}">
+	<fieldset>
+		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+			<input class="button2" type="reset"  id="reset" name="reset" value="{{ lang('RESET') }}">
+		</p>
 	</fieldset>
-	
+
 	{{ S_FORM_TOKEN }}
 </form>
+
+<p class="imcger_copyright">
+	{{ IMGUPLOAD_TITLE }} v{{ IMGUPLOAD_EXT_VER }} &copy; IMC-Ger<br>
+	{{ lang('ACP_IMCGER_LANG_DESC') }} v{{ lang('ACP_IMCGER_LANG_EXT_VER') }} &bull; {{ lang('ACP_IMCGER_LANG_AUTHOR') }}
+</p>
 
 {% INCLUDE 'overall_footer.html' %}
 
 {% INCLUDECSS '@imcger_imgupload/acp_toggle.css' %}
+{% INCLUDECSS '@imcger_imgupload/acp_imgupload.css' %}
 
 {% macro switch(name, checked = false) -%}
 	<input type="checkbox" class="toggle" name="{{ name }}" value="1"{{ checked ? ' checked' }}>

@@ -6,6 +6,7 @@ services:
             - '@template'
             - '@language'
             - '@request'
+            - '@ext.manager'
 
     imcger.imgupload.listener:
         class: imcger\imgupload\event\main_listener

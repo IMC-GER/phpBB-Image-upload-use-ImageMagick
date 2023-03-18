@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,7 +35,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
+	// UCP settings
 	'AVATAR_EXPLAIN'			 => 'Maximale Abmessungen: Breite: %1$s, Höhe: %2$s; maximale Dateigröße: %3$.2f KiB.<br>Die Abmessungen des Bildes werden beim Hochladen automatisch auf die maximalen Werte verkleinert. Die maximale Dateigröße muss eingehalten werden.',
 	'AVATAR_EXPLAIN_NO_FILESIZE' => 'Maximale Abmessungen: Breite: %1$s, Höhe: %2$s.<br>Die Abmessungen des Bildes werden beim Hochladen automatisch auf die maximalen Werte verkleinert.',
-));
+]);

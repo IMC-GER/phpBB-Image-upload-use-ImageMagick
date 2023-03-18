@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,12 +35,19 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 
+	// Language pack author
+	'ACP_IMCGER_LANG_DESC'			=> 'Deutsch (Du)',
+	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.1.1',
+	'ACP_IMCGER_LANG_AUTHOR' 		=> 'IMC-Ger',
+
+	// Messages
 	'ACP_IMCGER_SETTINGS_SAVED'		=> 'Einstellungen wurden erfolgreich gespeichert.',
 
+	// ACP settings
 	'ACP_IMCGER_IMGUPLOAD_TITLE'	=> 'Image upload use ImageMagick',
-	'ACP_IMCGER_IMGUPLOAD_DESC'		=> 'Die Erweiterung verwendet die PHP Imagick Klasse, um hochgeladene Bilder, Thumbnails und Avatars zu verändern. Wenn die im ACP eingestellten Werte von der Bilddatei überschritten werden, wird die Größe des Bildes von der Erweiterung angepasst.<br>Die Erweiterung unterstützt JPEG, WEBP, GIF und PNG Bilder. Andere Bildformate, z. B. BMP, werden beim Ändern der Größe in JPEG umgewandelt.<br>Diese Erweiterung kann die Bildgröße und/oder die Größe der Bilddatei ändern. Es dreht Bilder, Thumbnails und Avatare entsprechend ihrer EXIF Informationen und kann die EXIF Daten aus JPEG und WEBP Dateien entfernen.',
+	'ACP_IMCGER_IMGUPLOAD_DESC'		=> 'Die Erweiterung verwendet die PHP Imagick Klasse, um hochgeladene Bilder, Thumbnails und Avatars zu verändern. Wenn die im ACP eingestellten Werte von der Bilddatei überschritten werden, wird die Größe des Bildes von der Erweiterung angepasst. Die Erweiterung unterstützt JPEG, WEBP, GIF und PNG Bilder. Andere Bildformate, z. B. BMP, werden beim Ändern der Größe in JPEG umgewandelt. Diese Erweiterung kann die Bildgröße und/oder die Größe der Bilddatei ändern. Es dreht Bilder, Thumbnails und Avatare entsprechend ihrer EXIF Informationen und kann die EXIF Daten aus JPEG und WEBP Dateien entfernen.',
 
 	'ACP_IMCGER_SETTINGS_THUMB'		=> 'Vorschaubild Einstellungen',
 	'ACP_IMCGER_SETTINGS_IMAGE'		=> 'Bild Einstellungen',
@@ -64,4 +71,4 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_AVATAR_RESIZE'			=> 'Avatar Größe anpassen',
 	'ACP_IMCGER_AVATAR_RESIZE_DESC'		=> 'Die Bilddatei des Avatar wird beim Hochladen automatisch verkleinert.',
 	'ACP_IMCGER_AVATAR_FILESIZE_ISSET'	=> 'Für diese Funktion muss die "Maximale Dateigröße" des Avatars auf 0 gesetzt werden.',
-));
+]);

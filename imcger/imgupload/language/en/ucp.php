@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,7 +35,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
+	// UCP settings
 	'AVATAR_EXPLAIN'			 => 'Maximum dimensions; width: %1$s, height: %2$s, file size: %3$.2f KiB.<br>The dimensions of the image are automatically resized to the maximum values when uploading. The maximum filesize must be respected.',
 	'AVATAR_EXPLAIN_NO_FILESIZE' => 'Maximum dimensions; width: %1$s, height: %2$s.<br>The dimensions of the image are automatically resized to the maximum values when uploading.',
-));
+]);

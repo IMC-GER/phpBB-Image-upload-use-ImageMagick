@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,10 +35,17 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 
+	// language pack author
+	'ACP_IMCGER_LANG_DESC'			=> 'British English',
+	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.1.1',
+	'ACP_IMCGER_LANG_AUTHOR' 		=> 'IMC-Ger',
+
+	// Messages
 	'ACP_IMCGER_SETTINGS_SAVED'		=> 'Settings have been saved successfully.',
 
+	// ACP settings
 	'ACP_IMCGER_IMGUPLOAD_TITLE'	=> 'Image upload use ImageMagick',
 	'ACP_IMCGER_IMGUPLOAD_DESC'		=> 'The extension uses the PHP Imagick class to modify upload​ed image​s. If the values set in the ACP are exceeded by the image file, the image ​is being ​resized by the extension.<br>The extension sup​port​s JPEG, WEBP, GIF and PNG images. Other image formats, for example BMP, ​are ​convert​ed​ to JPEG when resize​d.<br>This extension can change the image size and/or the image file size. It rotate images, thumbnails and avatars according to their EXIF information and it can remove the EXIF data from JPEG and WEBP files.',
 
@@ -64,4 +71,4 @@ $lang = array_merge($lang, array(
 	'ACP_IMCGER_AVATAR_RESIZE'			=> 'Resize avatar',
 	'ACP_IMCGER_AVATAR_RESIZE_DESC'		=> 'The image file of the avatar will be automatically resize during the upload.',
 	'ACP_IMCGER_AVATAR_FILESIZE_ISSET'	=> 'For this function the "Maximum avatar file size" must be set to 0.',
-));
+]);

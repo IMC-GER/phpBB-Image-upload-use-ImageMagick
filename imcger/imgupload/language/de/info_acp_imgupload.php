@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,7 +35,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_IMCGER_IMGUPLOAD_TITLE'	=> 'Image upload use ImageMagick',
-	'ACP_IMCGER_SETTINGS'			=> 'Einstellungen',
-));
+$lang = array_merge($lang, [
+	'ACP_IMCGER_IMGUPLOAD_TITLE' => 'Image upload use ImageMagick',
+	'ACP_IMCGER_SETTINGS'		 => 'Einstellungen',
+
+	// Messages requirement check
+	'IMCGER_REQUIRE_IMAGICK' => 'Diese Erweiterung benötigt die PHP-Bibliothek ImageMagick für die Installation. Bitte aktualisiere deine PHP-Installation',
+	'IMCGER_REQUIRE_PHPBB'   => 'Diese Erweiterung benötigt eine phpBB Version gleich oder grösser %1$s und kleiner %2$s. Deine Version ist %3$s.',
+	'IMCGER_REQUIRE_PHP'     => 'Diese Erweiterung benötigt eine php Version gleich oder grösser %1$s und kleiner %2$s. Deine Version ist %3$s.',
+]);

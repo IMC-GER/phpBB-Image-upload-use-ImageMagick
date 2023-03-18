@@ -2,8 +2,8 @@
 
 ## Description
 This extension is a further development of [canonknipser](https://www.phpbb.com/customise/db/author/canonknipser) [ImageMagick Thumbnailer](https://www.phpbb.com/customise/db/extension/imagemagick_thumbnailer).
-The extension uses the PHP imagick class to modify uploaded images, thumbnails and avatars. If the values set in the ACP are exceeded by the image file, the image ​is being resized by the extension.
-The extension supports JPEG, WEBP, GIF and PNG images. Other image formats, for example BMP, ​are ​convert​ed​ to JPEG when resize​d.
+The extension uses the PHP imagick class to modify uploaded images, thumbnails and avatars. It shows a preview image in attachments upload. If the values set in the ACP are exceeded by the image file, the image is being resized by the extension.
+The extension supports JPEG, WEBP, GIF and PNG images. Other image formats, for example BMP, are converted to JPEG when resized.
 This extension can change the image size and/or the image file size. It rotate images, thumbnails and avatars according to their EXIF information and it can remove the EXIF data from JPEG and WEBP files.
 
 #### Settings in User Control Panel
@@ -28,6 +28,11 @@ This extension can change the image size and/or the image file size. It rotate i
 - php 7.1 or higher
 - php ImageMagick library installed
 
+## Compatible with
+- Fancybox (`lotusjeff/fancybox`)
+- Fancybox (`imcger/fancybox`)
+- Lightbox (`vse/lightbox`)
+
 ## Installation
 Copy the extension to `phpBB3/ext/imcger/imgupload`.
 Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
@@ -45,6 +50,12 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 - Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
 
 ## Changelog
+
+### v1.1.1 (18-03-2023)
+- Fixed don't show preview thumbnail in attachments upload
+- Added support for Lightbox and Fancybox
+- Added show language author in ACP dialog
+- Changed check system requirement
 
 ### v1.1.0 (06-02-2023)
 - Added preview image in attachments upload

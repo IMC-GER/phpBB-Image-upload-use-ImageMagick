@@ -12,9 +12,8 @@
 	 * @param void
 	 */
 	phpbb.plupload.imcgerUpdateRow = function() {
-		const allowedExt = [{{ IUL_ALLOWED_IMAGES }}];
-
 		$('.file-name.ellipsis-text a').each(function() {
+			const allowedExt = [{{ IUL_ALLOWED_IMAGES }}];
 			let link			= $(this),
 				imgUrl			= $(this).attr('href'),
 				real_filename	= $(this).html(),
@@ -25,12 +24,18 @@
 
 			// If image add thumbnail to the link
 			if (isImage) {
-				link.html('<img src="' + imgUrl + '&t=1" title="' + real_filename + '" alt="' + real_filename + '">');
+				let getThumbnail = {{ IUL_GET_THUMBNAIL }} ? '&t=1' : '';
+				link.html('<img src="' + imgUrl + getThumbnail + '" title="' + real_filename + '" alt="' + real_filename + '">');
 
-				// If FancyBox aktive add FancyBox attribut to the link
 				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
+					// If FancyBox 3, 4 or 5 aktive add FancyBox attribut to the link
 					link.attr('data-fancybox', attach_id);
 					link.attr('data-caption', real_filename);
+				} else if (typeof $.fancybox != 'undefined') {
+					// If FancyBox 2 aktive add FancyBox attribut to the link
+					link.attr('class', 'fancybox');
+					link.attr('rel', 'gallery' + attach_id);
+					link.attr('title', real_filename);
 				} else if ({{ S_LIGHTBOX_ALL_IMAGES || LIGHTBOX_RESIZE_WIDTH || LIGHTBOX_RESIZE_HEIGHT ? 1 : 0 }}) {
 					// If LightBox aktive add LightBox attribut to the link
 					link.attr('data-lightbox', attach_id);
@@ -54,21 +59,36 @@
 		let   attach		= phpbb.plupload.data[index],
 			  row			= $('[data-attach-id="' + attach.attach_id + '"]'),
 			  filenameArray = attach.real_filename.split('.'),
-			  isImg			= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase());
+			  isImage		= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase());
 
 		// Add the link to the file
 		if (typeof downloadUrl !== 'undefined' && typeof downloadUrl[index] !== 'undefined') {
 			let url = downloadUrl[index].replace('&amp;', '&'),
 				link = $('<a></a>');
 
-			if (isImg) {
+			if (isImage) {
 				// If image add thumbnail to the link
-				link.attr('href', url).html('<img src="' + url + '&t=1" title="' + attach.real_filename + '" alt="' + attach.real_filename + '">');
+				let getThumbnail = {{ IUL_GET_THUMBNAIL }} ? '&t=1' : '';
+				link.attr('href', url).html('<img src="' + url + getThumbnail + '" title="' + attach.real_filename + '" alt="' + attach.real_filename + '">');
 
-				// If FancyBox aktive add FancyBox attribut to the link
 				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
+					// If FancyBox 3 or 4 aktive add FancyBox attribut to the link
 					link.attr('data-fancybox', attach.attach_id);
 					link.attr('data-caption', attach.real_filename);
+				} else if (typeof $.fancybox != 'undefined') {
+					// If FancyBox 2 aktive add FancyBox attribut to the link
+					link.attr('class', 'fancybox');
+					link.attr('rel', 'gallery' + attach.attach_id);
+					link.attr('title', attach.real_filename);
+					// Inizialisiere Fancybox 2
+					link.fancybox({
+						openEffect: 'none',
+						closeEffect: 'none',
+						helpers: {
+							title: {type: 'inside'},
+							buttons: {}
+						}
+					});
 				} else if ({{ S_LIGHTBOX_ALL_IMAGES || LIGHTBOX_RESIZE_WIDTH || LIGHTBOX_RESIZE_HEIGHT ? 1 : 0 }}) {
 					// If LightBox aktive add LightBox attribut to the link
 					link.attr('data-lightbox', attach.attach_id);
