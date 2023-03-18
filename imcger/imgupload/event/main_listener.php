@@ -101,7 +101,7 @@ class main_listener implements EventSubscriberInterface
 		$row = $this->db->sql_fetchrow($result);
 		$this->db-> sql_freeresult();
 
-		$sql = 'SELECT extension FROM ' . EXTENSIONS_TABLE . ' WHERE group_id = ' . $row["group_id"];
+		$sql = 'SELECT extension FROM ' . EXTENSIONS_TABLE . ' WHERE group_id = ' . (int) $row["group_id"];
 		$result = $this->db->sql_query($sql);
 
 		while ($row = $this->db->sql_fetchrow($result))
