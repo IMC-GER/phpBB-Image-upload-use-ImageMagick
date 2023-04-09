@@ -39,7 +39,7 @@ $lang = array_merge($lang, [
 
 	// Language pack author
 	'ACP_IMCGER_LANG_DESC'			=> 'Deutsch (Du)',
-	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.1.1',
+	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.2.0-alpha',
 	'ACP_IMCGER_LANG_AUTHOR' 		=> 'IMC-Ger',
 
 	// Messages
@@ -49,25 +49,27 @@ $lang = array_merge($lang, [
 	'ACP_IMCGER_IMGUPLOAD_TITLE'	=> 'Image upload use ImageMagick',
 	'ACP_IMCGER_IMGUPLOAD_DESC'		=> 'Die Erweiterung verwendet die PHP Imagick Klasse, um hochgeladene Bilder, Thumbnails und Avatars zu verändern. Wenn die im ACP eingestellten Werte von der Bilddatei überschritten werden, wird die Größe des Bildes von der Erweiterung angepasst. Die Erweiterung unterstützt JPEG, WEBP, GIF und PNG Bilder. Andere Bildformate, z. B. BMP, werden beim Ändern der Größe in JPEG umgewandelt. Diese Erweiterung kann die Bildgröße und/oder die Größe der Bilddatei ändern. Es dreht Bilder, Thumbnails und Avatare entsprechend ihrer EXIF Informationen und kann die EXIF Daten aus JPEG und WEBP Dateien entfernen.',
 
-	'ACP_IMCGER_SETTINGS_THUMB'		=> 'Vorschaubild Einstellungen',
-	'ACP_IMCGER_SETTINGS_IMAGE'		=> 'Bild Einstellungen',
-	'ACP_IMCGER_SETTINGS_AVATAR'	=> 'Avatar Einstellungen',
+	// Attachment settings
+	'ACP_IMCGER_THUMB_QUALITY'			=> 'Vorschaubilder Komprimierungsqualität',
+	'ACP_IMCGER_THUMB_QUALITY_DESC'		=> 'Lege einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
+	'ACP_IMCGER_IMAGE_INLINE'			=> 'Bild einfügen',
+	'ACP_IMCGER_IMAGE_INLINE_DESC'		=> 'Bildanhang kann mit dem BBCode "[img]url[/img]" in dem Beitragseditor mittels eines Button eingefügt werden.',
+	'ACP_IMCGER_IMAGE_INLINE_MAXWIDTH'		=> 'Maximale Bildbreite',
+	'ACP_IMCGER_IMAGE_INLINE_MAXWIDTH_DESC'	=> 'Maximale Breite in Pixel, mit der Bilder in Beiträgen angezeigt werden. Bei der Eingabe von 0 wird die Größe nicht begrenzt.',
 
-	'ACP_IMCGER_THUMB_QUALITY'		=> 'Vorschaubilder Komprimierungsqualität',
-	'ACP_IMCGER_THUMB_QUALITY_DESC'	=> 'Lege einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
+	// Image settings
+	'ACP_IMCGER_SETTINGS_IMAGE'			=> 'Bild Einstellungen',
+	'ACP_IMCGER_IMAGE_QUALITY'			=> 'Bild Komprimierungsqualität',
+	'ACP_IMCGER_IMAGE_QUALITY_DESC'		=> 'Lege einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
+	'ACP_IMCGER_MAX_SIZE'				=> 'Maximale Bildgröße',
+	'ACP_IMCGER_MAX_SIZE_DESC'			=> 'Einstellung der maximalen Bildgröße in Pixel. Die Bilder werden auf die maximale Breite bzw. Höhe verkleinert. Die jeweils andere Seite wird proportional angepasst. Bei der Angabe von 0px x 0px wird keine Veränderung der Bildgröße durchgeführt.',
+	'ACP_IMCGER_MAX_FILESIZE'			=> 'Maximale Dateigröße',
+	'ACP_IMCGER_MAX_FILESIZE_DESC'		=> 'Einstellung der maximalen Dateigröße in Byte. Bei der Angabe von 0 findet keine Größenbeschränkung statt. Überschreitet die Größe der Bilddatei den eingestellten Wert wird diese angenähert verkleinert.',
+	'ACP_IMCGER_DEL_EXIF'				=> 'Entferne Metadaten (JPEG & WEBP)',
+	'ACP_IMCGER_DEL_EXIF_DESC'			=> 'Entfernt die Exif-Metadaten wie Name des Autors, GPS-Koordinaten und Kamera-Details.',
 
-	'ACP_IMCGER_IMAGE_QUALITY'		=> 'Bild Komprimierungsqualität',
-	'ACP_IMCGER_IMAGE_QUALITY_DESC'	=> 'Lege einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
-
-	'ACP_IMCGER_MAX_SIZE'			=> 'Maximale Bildgröße',
-	'ACP_IMCGER_MAX_SIZE_DESC'		=> 'Einstellung der maximalen Bildgröße in Pixel. Die Bilder werden auf die maximale Breite bzw. Höhe verkleinert. Die jeweils andere Seite wird proportional angepasst. Bei der Angabe von 0px x 0px wird keine Veränderung der Bildgröße durchgeführt.',
-
-	'ACP_IMCGER_MAX_FILESIZE'		=> 'Maximale Dateigröße',
-	'ACP_IMCGER_MAX_FILESIZE_DESC'	=> 'Einstellung der maximalen Dateigröße in Byte. Bei der Angabe von 0 findet keine Größenbeschränkung statt. Überschreitet die Größe der Bilddatei den eingestellten Wert wird diese angenähert verkleinert.',
-
-	'ACP_IMCGER_DEL_EXIF'			=> 'Entferne Metadaten (JPEG & WEBP)',
-	'ACP_IMCGER_DEL_EXIF_DESC'		=> 'Entfernt die Exif-Metadaten wie Name des Autors, GPS-Koordinaten und Kamera-Details.',
-
+	// Avatar settings
+	'ACP_IMCGER_SETTINGS_AVATAR'		=> 'Avatar Einstellungen',
 	'ACP_IMCGER_AVATAR_RESIZE'			=> 'Avatar Größe anpassen',
 	'ACP_IMCGER_AVATAR_RESIZE_DESC'		=> 'Die Bilddatei des Avatar wird beim Hochladen automatisch verkleinert.',
 	'ACP_IMCGER_AVATAR_FILESIZE_ISSET'	=> 'Für diese Funktion muss die "Maximale Dateigröße" des Avatars auf 0 gesetzt werden.',

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Images upload use ImageMagick
+ * Image upload use ImageMagick
  * An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2022, Thorsten Ahlers
@@ -66,6 +66,7 @@ class admin_controller
 	{
 		// Add ACP lang file
 		$this->language->add_lang('common', 'imcger/imgupload');
+		$this->language->add_lang('acp/attachments');
 
 		add_form_key('imcger/imgupload');
 
@@ -100,6 +101,9 @@ class admin_controller
 			'IMCGER_DEL_EXIF'		=> (bool) $this->config['img_strip_metadata'],
 			'IMCGER_AVATAR_RESIZE'			=> (bool) $this->config['imcger_imgupload_avatar_resize'],
 			'IMCGER_AVATAR_FILESIZE_ISSET'	=> (bool) $this->config['avatar_filesize'],
+			'CREATE_THUMBNAIL'				=> (bool) $this->config['img_create_thumbnail'],
+			'IMCGER_IMGUPLOAD_IMAGE_INLINE'	=> (bool) $this->config['imcger_imgupload_image_inline'],
+			'IMCGER_IMAGE_INLINE_MAXWIDTH'	=>  $this->config['imcger_imgupload_image_inline_maxwidth'],
 		]);
 	}
 
@@ -120,8 +124,10 @@ class admin_controller
 		$this->config->set('imcger_imgupload_max_width', $this->request->variable('imcger_imgupload_max_width', 0));
 		$this->config->set('imcger_imgupload_max_height', $this->request->variable('imcger_imgupload_max_height', 0));
 		$this->config->set('imcger_imgupload_max_filesize', $max_filesize);
-		$this->config->set('img_strip_metadata', (bool) $this->request->variable('imcger_imgupload_del_exif', 0));
-		$this->config->set('imcger_imgupload_avatar_resize', (bool) $this->request->variable('imcger_imgupload_avatar_resize', 0));
+		$this->config->set('img_strip_metadata', $this->request->variable('imcger_imgupload_del_exif', 0));
+		$this->config->set('img_create_thumbnail', $this->request->variable('img_create_thumbnail', 0));
+		$this->config->set('imcger_imgupload_image_inline', $this->request->variable('imcger_imgupload_image_inline', 0));
+		$this->config->set('imcger_imgupload_image_inline_maxwidth', $this->request->variable('imcger_imgupload_image_inline_maxwidth', 0));
 	}
 
 	/**

@@ -94,7 +94,14 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function set_template_vars()
 	{
+		// Load language vars for buttons in post editor
+		if ($this->config['img_create_thumbnail'])
+		{
+			$this->language->add_lang('attachment','imcger/imgupload');
+		}
+
 		$allowed_images = '';
+		$img_maxwidth = $this->config['imcger_imgupload_image_inline_maxwidth'];
 
 		$sql = 'SELECT extension FROM ' . EXTENSIONS_TABLE . ' WHERE group_id = (SELECT group_id FROM ' . EXTENSION_GROUPS_TABLE . ' WHERE group_name = "IMAGES")';
 		$result = $this->db->sql_query($sql);
@@ -107,7 +114,8 @@ class main_listener implements EventSubscriberInterface
 
 		$this->template->assign_vars([
 			'IUL_ALLOWED_IMAGES' => $allowed_images,
-			'IUL_GET_THUMBNAIL'	 => $this->config['img_create_thumbnail'],
+			'IUL_IMG_SET_INLINE' => $this->config['imcger_imgupload_image_inline'],
+			'IUL_IMG_MAXWIDTH'	 => $img_maxwidth ? $img_maxwidth . 'px' : 'none',
 		]);
 	}
 
@@ -441,8 +449,8 @@ class main_listener implements EventSubscriberInterface
 				break;
 
 			case 'PNG':
-				$image->setOption('png:compression-method', 0);
-				$image->setOption('png:compression-filter', 0);
+				$image->setOption('png:compression-strategy', 1);
+				$image->setOption('png:compression-filter', 5);
 				$image->setOption('png:compression-level', 9);
 				break;
 

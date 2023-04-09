@@ -7,10 +7,30 @@
 <form id="acp_board" method="post" action="{{ U_ACTION }}">
 
 	<fieldset>
-		<legend>{{ lang('ACP_IMCGER_SETTINGS_THUMB') }}</legend>
+		<legend>{{ lang('ACP_ATTACHMENT_SETTINGS') }}</legend>
+		<dl>
+			<dt><label for="img_create_thumbnail">{{ lang('CREATE_THUMBNAIL') ~ lang('COLON') }}</label><br/><span>{{ lang('CREATE_THUMBNAIL_EXPLAIN') }}</span></dt>
+			<dd>
+				{{ _self.switch('img_create_thumbnail', CREATE_THUMBNAIL) }}
+			</dd>
+		</dl>
 		<dl>
 			<dt><label for="imcger_imgupload_tum_quality">{{ lang('ACP_IMCGER_THUMB_QUALITY') ~ lang('COLON') }}</label><br/><span>{{ lang('ACP_IMCGER_THUMB_QUALITY_DESC') }}</span></dt>
-			<dd><input type="number" id="imcger_imgupload_tum_quality" min="50" max="90" step="any" maxlength="3" name="imcger_imgupload_tum_quality" value="{{ IMCGER_TUM_QUALITY }}"></dd>
+			<dd>
+				<input type="number" id="imcger_imgupload_tum_quality" min="50" max="90" step="any" maxlength="3" name="imcger_imgupload_tum_quality" value="{{ IMCGER_TUM_QUALITY }}">
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="imcger_imgupload_image_inline">{{ lang('ACP_IMCGER_IMAGE_INLINE') ~ lang('COLON') }}</label><br/><span>{{ lang('ACP_IMCGER_IMAGE_INLINE_DESC') }}</span></dt>
+			<dd>
+				{{ _self.switch('imcger_imgupload_image_inline', IMCGER_IMGUPLOAD_IMAGE_INLINE) }}
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="imcger_imgupload_image_inline_maxwidth">{{ lang('ACP_IMCGER_IMAGE_INLINE_MAXWIDTH') ~ lang('COLON') }}</label><br/><span>{{ lang('ACP_IMCGER_IMAGE_INLINE_MAXWIDTH_DESC') }}</span></dt>
+			<dd>
+				<input type="number" id="imcger_imgupload_image_inline_maxwidth" min="0" max="99999" step="any" maxlength="3" name="imcger_imgupload_image_inline_maxwidth" value="{{ IMCGER_IMAGE_INLINE_MAXWIDTH }}"> px
+			</dd>
 		</dl>
 	</fieldset>
 
@@ -70,7 +90,8 @@
 
 {% INCLUDECSS '@imcger_imgupload/acp_toggle.css' %}
 {% INCLUDECSS '@imcger_imgupload/acp_imgupload.css' %}
+{% INCLUDEJS '@imcger_imgupload/acp_imgupload.js' %}
 
 {% macro switch(name, checked = false) -%}
-	<input type="checkbox" class="toggle" name="{{ name }}" value="1"{{ checked ? ' checked' }}>
+	<input type="checkbox" class="toggle" id="{{ name }}" name="{{ name }}" value="1"{{ checked ? ' checked' }}>
 {%- endmacro %}

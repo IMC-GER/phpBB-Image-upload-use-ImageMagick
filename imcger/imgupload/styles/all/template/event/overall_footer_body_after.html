@@ -1,11 +1,62 @@
 {% if S_SHOW_ATTACH_BOX and FILTERS %}
 {% INCLUDECSS '@imcger_imgupload/imgupload.css' %}
 <script>
+/**
+ * Add inline attachment at position as image
+ * AddOn for editor.js
+ */
+function imcgerAttachImage(fileUrl) {
+	insert_text('[img]' + fileUrl + '[/img]');
+	document.forms[form_name].elements[text_name].focus();
+}
+
 (function($) {  // Avoid conflicts with other libraries
 
-'use strict';
+	'use strict';
 
-	/*
+	/**
+	 * Insert inline image bbcode.
+	 */
+	$('#file-list').on('click', '.image-inline-bbcode', function(e) {
+		let attachId = $(this).parents('.attach-row').attr('data-attach-id');
+
+		imcgerAttachImage('./download/file.php?mode=view&id=' + attachId);
+		e.preventDefault();
+	});
+
+	/**
+	 * Delete a attached file.
+	 */
+	$('#file-list').on('click', '.file-delete', function(e) {
+		var row = $(this).parents('.attach-row'),
+			attachId = row.attr('data-attach-id');
+
+		phpbb.plupload.deleteFile(row, attachId);
+		phpbb.plupload.imcgerDelImgBbcode(attachId);
+		e.preventDefault();
+	});
+
+	/**
+	 * Delete image BBcodes from message body when attached image is delete.
+	 *
+	 * @param int	attachId	The id of the attachment.
+	 */
+	phpbb.plupload.imcgerDelImgBbcode = function(attachId) {
+		let	textarea = $('#message', phpbb.plupload.form),
+			text = textarea.val();
+
+		// Return if the bbcode isn't used at all.
+		if (text.indexOf('[img') === -1) {
+			return;
+		}
+
+		let regex = new RegExp('\\[img\\](.*?)(id=' + attachId + ')\\[\\/img\\]', 'g');
+		text = text.replace(regex, '');
+
+		textarea.val(text);
+	};
+
+	/**
 	 * Update the relevant elements and hidden data for
 	 * an attachment when page load.
 	 *
@@ -24,8 +75,13 @@
 
 			// If image add thumbnail to the link
 			if (isImage) {
-				let getThumbnail = {{ IUL_GET_THUMBNAIL }} ? '&t=1' : '';
-				link.html('<img src="' + imgUrl + getThumbnail + '" title="' + real_filename + '" alt="' + real_filename + '">');
+				let getThumbnail = '&t=1';
+				link.html('<img src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '" alt="' + real_filename + '">');
+
+				if ({{ IUL_IMG_SET_INLINE }}) {
+					// Add button for img BBCode
+					$('[data-attach-id="' + attach_id + '"]').find('.attach-controls').prepend('<input type="button" value="{{ lang("IMAGE_PLACE_INLINE")|e("js") }}" class="button2 image-inline-bbcode">&nbsp;');
+				}
 
 				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
 					// If FancyBox 3, 4 or 5 aktive add FancyBox attribut to the link
@@ -48,7 +104,7 @@
 		});
 	}
 
-	/*
+	/**
 	 * Update the relevant elements and hidden data for an attachment.
 	 *
 	 * @param {int} index The index from phpbb.plupload.ids of the attachment to edit.
@@ -68,8 +124,13 @@
 
 			if (isImage) {
 				// If image add thumbnail to the link
-				let getThumbnail = {{ IUL_GET_THUMBNAIL }} ? '&t=1' : '';
-				link.attr('href', url).html('<img src="' + url + getThumbnail + '" title="' + attach.real_filename + '" alt="' + attach.real_filename + '">');
+				let getThumbnail = '&t=1';
+				link.attr('href', url).html('<img src="' + url + getThumbnail + '" onerror="this.src=\'' + url + '\';" title="' + attach.real_filename + '" alt="' + attach.real_filename + '">');
+
+				if ({{ IUL_IMG_SET_INLINE }}) {
+					// Add button for img BBCode
+					row.find('.attach-controls').prepend('<input type="button" value="{{ lang("IMAGE_PLACE_INLINE")|e("js") }}" class="button2 image-inline-bbcode">&nbsp;');
+				}
 
 				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
 					// If FancyBox 3 or 4 aktive add FancyBox attribut to the link
@@ -113,3 +174,47 @@
 })(jQuery); // Avoid conflicts with other libraries
 </script>
 {% endif %}
+
+<script>
+/**
+ *	Set maximum width for images in posts
+ */
+const imcgerImgUpload = {
+	initialImage: function() {
+		let postImageArray = document.querySelectorAll(".content img.postimage"),
+			postbodyWidth  = window.getComputedStyle(document.getElementsByClassName("content")[0]).width;
+
+		postImageArray.forEach((image) => {
+			if (parseInt(image.naturalWidth) > parseInt(postbodyWidth)) {
+				image.style.width = '100%';
+				image.style.maxWidth = '{{ IUL_IMG_MAXWIDTH }}';
+			} else {
+				image.style.width = 'auto';
+				image.style.maxWidth = 'none';
+			}
+
+		});
+	},
+}
+
+// Adjust the size of images when loaded
+let postImageArray = document.querySelectorAll(".content img.postimage");
+postImageArray.forEach((image) => {
+	image.onload = (event) => {
+		let postbodyWidth  = window.getComputedStyle(document.getElementsByClassName("content")[0]).width;
+		if (parseInt(image.naturalWidth) > parseInt(postbodyWidth)) {
+			image.style.width = '100%';
+			image.style.maxWidth = '{{ IUL_IMG_MAXWIDTH }}';
+		} else {
+			image.style.width = 'auto';
+			image.style.maxWidth = 'none';
+		}
+	};
+});
+
+// When load the document, adjust the size of images
+document.addEventListener ("DOMContentLoaded", () => {imcgerImgUpload.initialImage();});
+
+// When resize the window, adjust the size of images
+window.onresize = (event) => {imcgerImgUpload.initialImage();};
+</script>
