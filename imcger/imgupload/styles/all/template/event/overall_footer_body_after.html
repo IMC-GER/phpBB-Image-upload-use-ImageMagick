@@ -10,6 +10,35 @@ function imcgerAttachImage(fileUrl) {
 	document.forms[form_name].elements[text_name].focus();
 }
 
+/**
+ * Remove attachment in preview when insert as img BBcode in message
+ * AddOn for editor.js
+ *
+ * @var array notDisplayedAttachments	Attachments that insert in the message
+ * @var array notDisplayAttachmentBox	Don't show any attachment
+ */
+function imcgerShowAttachImage() {
+	// Return when no attachments present
+	if (typeof notDisplayAttachmentBox == 'undefined' || notDisplayAttachmentBox && !notDisplayedAttachments.length) {
+		return;
+	}
+
+	if (notDisplayAttachmentBox) {
+		document.getElementsByClassName('attachbox')[0].style.display = 'none';
+	} else {
+		let attachments = document.querySelectorAll(".attachbox .thumbnail");
+
+		attachments.forEach((attachment) => {
+			let link = attachment.getElementsByTagName('a')[0].getAttribute("href");
+			if (notDisplayedAttachments.includes(link.match('id=([0-9]+)')[1])) {
+				attachment.parentElement.style.display = 'none';
+			}
+		});
+	}
+}
+// When load the document, update AttatmentBox in preview
+document.addEventListener ("DOMContentLoaded", () => {imcgerShowAttachImage();});
+
 (function($) {  // Avoid conflicts with other libraries
 
 	'use strict';
@@ -181,6 +210,11 @@ function imcgerAttachImage(fileUrl) {
  */
 const imcgerImgUpload = {
 	initialImage: function() {
+		// Return if no content is displayed
+		if (!document.getElementsByClassName("content").length) {
+			return;
+		}
+
 		let postImageArray = document.querySelectorAll(".content img.postimage"),
 			postbodyWidth  = window.getComputedStyle(document.getElementsByClassName("content")[0]).width;
 

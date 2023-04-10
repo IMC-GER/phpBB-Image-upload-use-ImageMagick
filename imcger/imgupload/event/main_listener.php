@@ -72,6 +72,8 @@ class main_listener implements EventSubscriberInterface
 			'core.thumbnail_create_before'				 => 'imcger_create_tumbnail',
 			'core.modify_uploaded_file'					 => 'imcger_modify_uploaded_file',
 			'core.avatar_driver_upload_move_file_before' => 'imcger_modify_uploaded_avatar',
+			'core.viewtopic_modify_post_row'			 => 'imcger_viewtopic_modify_post_row',
+			'core.posting_modify_template_vars'			 => 'imcger_posting_modify_template_vars',
 		];
 	}
 
@@ -349,6 +351,87 @@ class main_listener implements EventSubscriberInterface
 				$avatar->clear();
 			}
 		}
+	}
+
+	/**
+	 * Modify post data
+	 * Don't display attachments when shown as image in post message
+	 *
+	 * @param \phpbb\event\data	$event	Event object
+	 */
+	function imcger_viewtopic_modify_post_row($event)
+	{
+		$row				= $event['row'];
+		$post_attachments	= $event['attachments'];
+
+		// Do nothing when no attachment
+		if (!count($post_attachments))
+		{
+			return;
+		}
+
+		// Post message text
+		preg_match_all('#\[img\][\w\<\>\/\.?=&;]*[^\[](id=\d+)\<e\>\[\/img\]#', $row['post_text'], $matches);
+
+		foreach ($matches[1] as $image)
+		{
+			foreach ($post_attachments[$row['post_id']] as $key => $attachment)
+			{
+				if (strpos($attachment, $image))
+				{
+					unset($post_attachments[$row['post_id']][$key]);
+				}
+			}
+		}
+
+		if (count($post_attachments[$row['post_id']]))
+		{
+			$event['attachments'] = $post_attachments;
+		}
+		else
+		{
+			$post_row = $event['post_row'];
+			$post_row['S_HAS_ATTACHMENTS'] = false;
+			$post_row['S_MULTIPLE_ATTACHMENTS'] = false;
+			$event['post_row'] = $post_row;
+
+			$event['attachments'] = $post_attachments;
+		}
+	}
+
+	/**
+	 * Modify post data for post editor preview
+	 * Don't display attachments when shown as image in post message
+	 *
+	 * @param \phpbb\event\data	$event	Event object
+	 */
+	function imcger_posting_modify_template_vars($event)
+	{
+		// Get message text and attachment data
+		$message_parser = $event['message_parser'];
+		$message = $message_parser->message;
+		$attachment_data = $message_parser->attachment_data;
+
+		// Create array with attachment id that insert in post message
+		preg_match_all('#\[img\][\w\<\>\/\.?=&;]*[^\[]id=(\d+)\[\/img\]#', $message, $matches);
+		$matches[1] = array_unique($matches[1]);
+
+		// Check if all attachments insert in post message
+		$display_attachmentbox = false;
+		foreach ($attachment_data as $attachment)
+		{
+			if (!in_array($attachment['attach_id'], $matches[1]))
+			{
+				$display_attachmentbox = true;
+				break;
+			}
+		}
+
+		// Set variable for JS to hide attachment in post editors preview
+		$this->template->assign_vars([
+			'IUL_NOT_DISPLAYED_ATTACHMENTS' => json_encode($matches[1]),
+			'IUL_NOT_DISPLAY_ATTACHMENTBOX' => (int) !$display_attachmentbox,
+		]);
 	}
 
 	/**

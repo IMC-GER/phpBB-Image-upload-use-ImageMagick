@@ -10,9 +10,12 @@ This extension can change the image size and/or the image file size. It rotate i
 - No settings. 
 
 #### Settings in Administration Control Panel
+- Create thumbnail
 - Thumbnail compression quality. 
-- Image compression quality. 
-- Maximum image width.
+- Insert full size image in post
+- Maximum image width (Displayed in post)
+- Image compression quality.
+- Maximum image width. (Store on Server)
 - Maximum image heigth.
 - Maximum image file size.
 - Remove EXIF data
@@ -51,7 +54,7 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
-### v1.2.0-alpha (09-04-2023)
+### v1.2.0-beta (10-04-2023)
 - Changed sql query for allowed image extensions
 - Changed compression method for png images
 - Added possibility to insert the attachment as an fullsize image in the post message
