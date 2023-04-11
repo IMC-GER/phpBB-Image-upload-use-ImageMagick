@@ -4,6 +4,8 @@
 /**
  * Add inline attachment at position as image
  * AddOn for editor.js
+ *
+ * @param	string	fileUrl	Image file URL
  */
 function imcgerAttachImage(fileUrl) {
 	insert_text('[img]' + fileUrl + '[/img]');
@@ -14,29 +16,34 @@ function imcgerAttachImage(fileUrl) {
  * Remove attachment in preview when insert as img BBcode in message
  * AddOn for editor.js
  *
- * @var array notDisplayedAttachments	Attachments that insert in the message
- * @var array notDisplayAttachmentBox	Don't show any attachment
+ * @var	array	notDisplayedAttachments	Attachments that insert in the message
+ * @var	bool	notDisplayAttachmentBox	Don't show any attachment
  */
 function imcgerShowAttachImage() {
+	const notDisplayedAttachments = {{ IUL_NOT_DISPLAYED_ATTACHMENTS }},
+		  notDisplayAttachmentBox = {{ IUL_NOT_DISPLAY_ATTACHMENTBOX }};
+
 	// Return when no attachments present
 	if (typeof notDisplayAttachmentBox == 'undefined' || notDisplayAttachmentBox && !notDisplayedAttachments.length) {
 		return;
 	}
 
 	if (notDisplayAttachmentBox) {
+		// Hide attachment box
 		document.getElementsByClassName('attachbox')[0].style.display = 'none';
 	} else {
 		let attachments = document.querySelectorAll(".attachbox .thumbnail");
-
+		// Hide attachments that present in array
 		attachments.forEach((attachment) => {
 			let link = attachment.getElementsByTagName('a')[0].getAttribute("href");
+
 			if (notDisplayedAttachments.includes(link.match('id=([0-9]+)')[1])) {
 				attachment.parentElement.style.display = 'none';
 			}
 		});
 	}
 }
-// When load the document, update AttatmentBox in preview
+// When load the document, update AttachmentBox in preview
 document.addEventListener ("DOMContentLoaded", () => {imcgerShowAttachImage();});
 
 (function($) {  // Avoid conflicts with other libraries
@@ -93,7 +100,7 @@ document.addEventListener ("DOMContentLoaded", () => {imcgerShowAttachImage();})
 	 */
 	phpbb.plupload.imcgerUpdateRow = function() {
 		$('.file-name.ellipsis-text a').each(function() {
-			const allowedExt = [{{ IUL_ALLOWED_IMAGES }}];
+			const allowedExt	= {{ IUL_ALLOWED_IMAGES }};
 			let link			= $(this),
 				imgUrl			= $(this).attr('href'),
 				real_filename	= $(this).html(),
@@ -136,11 +143,11 @@ document.addEventListener ("DOMContentLoaded", () => {imcgerShowAttachImage();})
 	/**
 	 * Update the relevant elements and hidden data for an attachment.
 	 *
-	 * @param {int} index The index from phpbb.plupload.ids of the attachment to edit.
-	 * @param {array} downloadUrl Optional array of download urls to update.
+	 * @param	int		index The index from phpbb.plupload.ids of the attachment to edit.
+	 * @param	array	downloadUrl Optional array of download urls to update.
 	 */
 	phpbb.plupload.updateRow = function(index, downloadUrl) {
-		const allowedExt	= [{{ IUL_ALLOWED_IMAGES }}];
+		const allowedExt	= {{ IUL_ALLOWED_IMAGES }};
 		let   attach		= phpbb.plupload.data[index],
 			  row			= $('[data-attach-id="' + attach.attach_id + '"]'),
 			  filenameArray = attach.real_filename.split('.'),

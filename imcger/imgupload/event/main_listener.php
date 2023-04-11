@@ -102,7 +102,7 @@ class main_listener implements EventSubscriberInterface
 			$this->language->add_lang('attachment','imcger/imgupload');
 		}
 
-		$allowed_images = '';
+		$allowed_images = [];
 		$img_maxwidth = $this->config['imcger_imgupload_image_inline_maxwidth'];
 
 		$sql = 'SELECT extension FROM ' . EXTENSIONS_TABLE . ' WHERE group_id = (SELECT group_id FROM ' . EXTENSION_GROUPS_TABLE . ' WHERE group_name = "IMAGES")';
@@ -110,12 +110,12 @@ class main_listener implements EventSubscriberInterface
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$allowed_images .= '"' . $row['extension'] . '", ';
+			$allowed_images[] = $row['extension'];
 		}
 		$this->db-> sql_freeresult();
 
 		$this->template->assign_vars([
-			'IUL_ALLOWED_IMAGES' => $allowed_images,
+			'IUL_ALLOWED_IMAGES' => json_encode($allowed_images),
 			'IUL_IMG_SET_INLINE' => $this->config['imcger_imgupload_image_inline'],
 			'IUL_IMG_MAXWIDTH'	 => $img_maxwidth ? $img_maxwidth . 'px' : 'none',
 		]);
@@ -370,9 +370,10 @@ class main_listener implements EventSubscriberInterface
 			return;
 		}
 
-		// Post message text
+		// Create array with image id that insert in post message
 		preg_match_all('#\[img\][\w\<\>\/\.?=&;]*[^\[](id=\d+)\<e\>\[\/img\]#', $row['post_text'], $matches);
 
+		// Find image in attachment, delete atachment
 		foreach ($matches[1] as $image)
 		{
 			foreach ($post_attachments[$row['post_id']] as $key => $attachment)
@@ -384,19 +385,20 @@ class main_listener implements EventSubscriberInterface
 			}
 		}
 
-		if (count($post_attachments[$row['post_id']]))
+		$post_row = $event['post_row'];
+
+		// Set template vars
+		if (!empty($post_attachments[$row['post_id']]) && count($post_attachments[$row['post_id']]))
 		{
-			$event['attachments'] = $post_attachments;
+			$post_row['S_MULTIPLE_ATTACHMENTS'] = (bool) (count($post_attachments[$row['post_id']]) > 1);
 		}
 		else
 		{
-			$post_row = $event['post_row'];
 			$post_row['S_HAS_ATTACHMENTS'] = false;
 			$post_row['S_MULTIPLE_ATTACHMENTS'] = false;
-			$event['post_row'] = $post_row;
-
-			$event['attachments'] = $post_attachments;
 		}
+		$event['post_row'] = $post_row;
+		$event['attachments'] = $post_attachments;
 	}
 
 	/**
