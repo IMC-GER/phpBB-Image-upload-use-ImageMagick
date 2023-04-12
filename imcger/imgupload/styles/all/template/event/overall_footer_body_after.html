@@ -217,6 +217,8 @@ document.addEventListener ("DOMContentLoaded", () => {imcgerShowAttachImage();})
  */
 const imcgerImgUpload = {
 	initialImage: function() {
+		const maxImageWidth = '{{ IUL_IMG_MAXWIDTH }}';
+		
 		// Return if no content is displayed
 		if (!document.getElementsByClassName("content").length) {
 			return;
@@ -226,9 +228,9 @@ const imcgerImgUpload = {
 			postbodyWidth  = window.getComputedStyle(document.getElementsByClassName("content")[0]).width;
 
 		postImageArray.forEach((image) => {
-			if (parseInt(image.naturalWidth) > parseInt(postbodyWidth)) {
+			if (parseInt(image.naturalWidth) > parseInt(postbodyWidth) || parseInt(image.naturalWidth) > parseInt(maxImageWidth)) {
 				image.style.width = '100%';
-				image.style.maxWidth = '{{ IUL_IMG_MAXWIDTH }}';
+				image.style.maxWidth = maxImageWidth;
 			} else {
 				image.style.width = 'auto';
 				image.style.maxWidth = 'none';
@@ -242,10 +244,12 @@ const imcgerImgUpload = {
 let postImageArray = document.querySelectorAll(".content img.postimage");
 postImageArray.forEach((image) => {
 	image.onload = (event) => {
-		let postbodyWidth  = window.getComputedStyle(document.getElementsByClassName("content")[0]).width;
-		if (parseInt(image.naturalWidth) > parseInt(postbodyWidth)) {
+		const maxImageWidth = '{{ IUL_IMG_MAXWIDTH }}';
+		let  postbodyWidth  = window.getComputedStyle(document.getElementsByClassName("content")[0]).width;
+
+		if (parseInt(image.naturalWidth) > parseInt(postbodyWidth) || parseInt(image.naturalWidth) > parseInt(maxImageWidth)) {
 			image.style.width = '100%';
-			image.style.maxWidth = '{{ IUL_IMG_MAXWIDTH }}';
+			image.style.maxWidth = maxImageWidth;
 		} else {
 			image.style.width = 'auto';
 			image.style.maxWidth = 'none';
