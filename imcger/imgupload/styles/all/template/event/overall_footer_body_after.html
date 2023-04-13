@@ -44,7 +44,7 @@ function imcgerShowAttachImage() {
 	}
 }
 // When load the document, update AttachmentBox in preview
-document.addEventListener ("DOMContentLoaded", () => {imcgerShowAttachImage();});
+document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 
 (function($) {  // Avoid conflicts with other libraries
 
@@ -217,49 +217,41 @@ document.addEventListener ("DOMContentLoaded", () => {imcgerShowAttachImage();})
  */
 const imcgerImgUpload = {
 	initialImage: function() {
-		const maxImageWidth = '{{ IUL_IMG_MAXWIDTH }}';
-		
 		// Return if no content is displayed
 		if (!document.getElementsByClassName("content").length) {
 			return;
 		}
 
-		let postImageArray = document.querySelectorAll(".content img.postimage"),
-			postbodyWidth  = window.getComputedStyle(document.getElementsByClassName("content")[0]).width;
+		let postImageArray = document.querySelectorAll(".content img.postimage");
 
 		postImageArray.forEach((image) => {
-			if (parseInt(image.naturalWidth) > parseInt(postbodyWidth) || parseInt(image.naturalWidth) > parseInt(maxImageWidth)) {
-				image.style.width = '100%';
-				image.style.maxWidth = maxImageWidth;
-			} else {
-				image.style.width = 'auto';
-				image.style.maxWidth = 'none';
-			}
-
+			this.setImageStyle(image);
 		});
+	},
+	setImageStyle: function(img) {
+		const maxImageWidth = '{{ IUL_IMG_MAXWIDTH }}';
+		let	  postbodyWidth = window.getComputedStyle(document.getElementsByClassName("content")[0]).width,
+			  maxWidth		= maxImageWidth == 'none' ? parseInt(postbodyWidth) : Math.min(parseInt(postbodyWidth), parseInt(maxImageWidth));
+
+		if (parseInt(img.naturalWidth) > maxWidth) {
+			img.style.width	   = '100%';
+			img.style.maxWidth = maxImageWidth;
+		} else {
+			img.style.width    = 'auto';
+			img.style.maxWidth = 'none';
+		}
 	},
 }
 
 // Adjust the size of images when loaded
 let postImageArray = document.querySelectorAll(".content img.postimage");
 postImageArray.forEach((image) => {
-	image.onload = (event) => {
-		const maxImageWidth = '{{ IUL_IMG_MAXWIDTH }}';
-		let  postbodyWidth  = window.getComputedStyle(document.getElementsByClassName("content")[0]).width;
-
-		if (parseInt(image.naturalWidth) > parseInt(postbodyWidth) || parseInt(image.naturalWidth) > parseInt(maxImageWidth)) {
-			image.style.width = '100%';
-			image.style.maxWidth = maxImageWidth;
-		} else {
-			image.style.width = 'auto';
-			image.style.maxWidth = 'none';
-		}
-	};
+	image.addEventListener("load", () => {imcgerImgUpload.setImageStyle(image)}, {once: true,});
 });
 
 // When load the document, adjust the size of images
-document.addEventListener ("DOMContentLoaded", () => {imcgerImgUpload.initialImage();});
+document.addEventListener("DOMContentLoaded", () => {imcgerImgUpload.initialImage();});
 
 // When resize the window, adjust the size of images
-window.onresize = (event) => {imcgerImgUpload.initialImage();};
+window.addEventListener("resize", () => {imcgerImgUpload.initialImage();});
 </script>
