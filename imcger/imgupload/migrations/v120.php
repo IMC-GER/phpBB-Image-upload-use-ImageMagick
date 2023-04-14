@@ -11,7 +11,7 @@
 
 namespace imcger\imgupload\migrations;
 
-class v112 extends \phpbb\db\migration\migration
+class v120 extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{

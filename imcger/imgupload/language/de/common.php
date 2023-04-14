@@ -39,7 +39,7 @@ $lang = array_merge($lang, [
 
 	// Language pack author
 	'ACP_IMCGER_LANG_DESC'			=> 'Deutsch (Du)',
-	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.2.0-beta',
+	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.2.0',
 	'ACP_IMCGER_LANG_AUTHOR' 		=> 'IMC-Ger',
 
 	// Messages
@@ -53,7 +53,7 @@ $lang = array_merge($lang, [
 	'ACP_IMCGER_THUMB_QUALITY'			=> 'Vorschaubilder Komprimierungsqualität',
 	'ACP_IMCGER_THUMB_QUALITY_DESC'		=> 'Lege einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
 	'ACP_IMCGER_IMAGE_INLINE'			=> 'Bild einfügen',
-	'ACP_IMCGER_IMAGE_INLINE_DESC'		=> 'Bildanhang kann mit dem BBCode "[img]url[/img]" in dem Beitragseditor mittels eines Button eingefügt werden.',
+	'ACP_IMCGER_IMAGE_INLINE_DESC'		=> 'Der Bildanhang kann mit dem BBCode „[img]url[/img]“ in dem Beitragseditor mittels eines Button eingefügt werden. Die Auswahl „Vorschaubild erstellen“ muss aktiviert sein.',
 	'ACP_IMCGER_IMAGE_INLINE_MAXWIDTH'		=> 'Maximale Bildbreite',
 	'ACP_IMCGER_IMAGE_INLINE_MAXWIDTH_DESC'	=> 'Maximale Breite in Pixel, mit der Bilder in Beiträgen angezeigt werden. Bei der Eingabe von 0 wird die Größe nicht begrenzt.',
 

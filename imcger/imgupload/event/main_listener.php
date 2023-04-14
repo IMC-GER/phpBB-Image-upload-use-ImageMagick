@@ -388,15 +388,9 @@ class main_listener implements EventSubscriberInterface
 		$post_row = $event['post_row'];
 
 		// Set template vars
-		if (!empty($post_attachments[$row['post_id']]) && count($post_attachments[$row['post_id']]))
-		{
-			$post_row['S_MULTIPLE_ATTACHMENTS'] = (bool) (count($post_attachments[$row['post_id']]) > 1);
-		}
-		else
-		{
-			$post_row['S_HAS_ATTACHMENTS'] = false;
-			$post_row['S_MULTIPLE_ATTACHMENTS'] = false;
-		}
+		$post_row['S_HAS_ATTACHMENTS']		= !empty($post_attachments[$row['post_id']]) ? true : false;
+		$post_row['S_MULTIPLE_ATTACHMENTS'] = !empty($post_attachments[$row['post_id']]) && count($post_attachments[$row['post_id']]) > 1;
+
 		$event['post_row'] = $post_row;
 		$event['attachments'] = $post_attachments;
 	}
