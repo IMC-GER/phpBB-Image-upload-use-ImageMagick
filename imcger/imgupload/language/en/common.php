@@ -37,9 +37,9 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 
-	// language pack author
+	// Language pack author
 	'ACP_IMCGER_LANG_DESC'			=> 'British English',
-	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.2.0',
+	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.2.1',
 	'ACP_IMCGER_LANG_AUTHOR' 		=> 'IMC-Ger',
 
 	// Messages
@@ -53,9 +53,9 @@ $lang = array_merge($lang, [
 	'ACP_IMCGER_THUMB_QUALITY'			=> 'Thumbnail compression quality',
 	'ACP_IMCGER_THUMB_QUALITY_DESC'		=> 'Specify value between 50% (smaller file size) and 90% (higher quality). Quality higher than 90% increases filesize and is disabled. Lower values will generate smaller files.',
 	'ACP_IMCGER_IMAGE_INLINE'			=> 'Insert full size image',
-	'ACP_IMCGER_IMAGE_INLINE_DESC'		=> 'Image attachment can be inserted with the BBCode "[img]url[/img]" in the post editor using a button. The selection "Insert full size image" must be activated.',
-	'ACP_IMCGER_IMAGE_INLINE_MAXWIDTH'		=> 'Maximum image width',
-	'ACP_IMCGER_IMAGE_INLINE_MAXWIDTH_DESC'	=> 'Maximum width in pixels with which images are displayed in posts. If you enter 0, the size is not limited.',
+	'ACP_IMCGER_IMAGE_INLINE_DESC'		=> 'Image attachment can be inserted with the BBCode "[img]url[/img]" in the post editor using a button. The selection "Create thumbnail" must be activated.',
+	'ACP_IMCGER_IMG_MAX_THUMB_WIDTH'	  => 'Maximum width/height of thumbnails:',
+	'ACP_IMCGER_IMG_MAX_THUMB_WIDTH_DESC' => 'Maximum width/height in pixels with which images are displayed in the file attachment box. If 0 is entered, the size is not changed.',
 
 	// Image settings
 	'ACP_IMCGER_SETTINGS_IMAGE'			=> 'Image Settings',

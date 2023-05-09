@@ -103,7 +103,7 @@ class main_listener implements EventSubscriberInterface
 		}
 
 		$allowed_images = [];
-		$img_maxwidth = $this->config['imcger_imgupload_image_inline_maxwidth'];
+		$img_max_thumb_width = $this->config['imcger_imgupload_img_max_thumb_width'];
 
 		$sql = 'SELECT extension FROM ' . EXTENSIONS_TABLE . ' WHERE group_id = (SELECT group_id FROM ' . EXTENSION_GROUPS_TABLE . ' WHERE group_name = "IMAGES")';
 		$result = $this->db->sql_query($sql);
@@ -115,9 +115,9 @@ class main_listener implements EventSubscriberInterface
 		$this->db-> sql_freeresult();
 
 		$this->template->assign_vars([
-			'IUL_ALLOWED_IMAGES' => json_encode($allowed_images),
-			'IUL_IMG_SET_INLINE' => $this->config['imcger_imgupload_image_inline'],
-			'IUL_IMG_MAXWIDTH'	 => $img_maxwidth ? $img_maxwidth . 'px' : 'none',
+			'IUL_ALLOWED_IMAGES'	  => json_encode($allowed_images),
+			'IUL_IMG_SET_INLINE'	  => $this->config['imcger_imgupload_image_inline'],
+			'IUL_IMG_MAX_THUMB_WIDTH' => $img_max_thumb_width ? $img_max_thumb_width . 'px' : false,
 		]);
 	}
 

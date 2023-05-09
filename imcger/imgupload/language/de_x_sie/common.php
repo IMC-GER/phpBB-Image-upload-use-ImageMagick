@@ -37,9 +37,9 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 
-	// language pack author
+	// Language pack author
 	'ACP_IMCGER_LANG_DESC'			=> 'Deutsch (Sie)',
-	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.2.0',
+	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.2.1',
 	'ACP_IMCGER_LANG_AUTHOR' 		=> 'IMC-Ger',
 
 	// Messages
@@ -51,21 +51,21 @@ $lang = array_merge($lang, [
 
 	// Attachment settings
 	'ACP_IMCGER_THUMB_QUALITY'			=> 'Vorschaubilder Komprimierungsqualität',
-	'ACP_IMCGER_THUMB_QUALITY_DESC'		=> 'Lege einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
+	'ACP_IMCGER_THUMB_QUALITY_DESC'		=> 'Legen sie einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
 	'ACP_IMCGER_IMAGE_INLINE'			=> 'Bild einfügen',
 	'ACP_IMCGER_IMAGE_INLINE_DESC'		=> 'Der Bildanhang kann mit dem BBCode „[img]url[/img]“ in dem Beitragseditor mittels eines Button eingefügt werden. Die Auswahl „Vorschaubild erstellen“ muss aktiviert sein.',
-	'ACP_IMCGER_IMAGE_INLINE_MAXWIDTH'		=> 'Maximale Bildbreite',
-	'ACP_IMCGER_IMAGE_INLINE_MAXWIDTH_DESC'	=> 'Maximale Breite in Pixel, mit der Bilder in Beiträgen angezeigt werden. Bei der Eingabe von 0 wird die Größe nicht begrenzt.',
+	'ACP_IMCGER_IMG_MAX_THUMB_WIDTH'	  => 'Maximale Breite/Höhe der Vorschaubilder:',
+	'ACP_IMCGER_IMG_MAX_THUMB_WIDTH_DESC' => 'Maximale Breite/Höhe in Pixel, mit der Bilder in der Box für Dateianhänge angezeigt werden. Bei der Eingabe von 0 wird die Größe nicht verändert.',
 
 	// Image settings
 	'ACP_IMCGER_SETTINGS_IMAGE'			=> 'Bild Einstellungen',
 	'ACP_IMCGER_IMAGE_QUALITY'			=> 'Bild Komprimierungsqualität',
-	'ACP_IMCGER_IMAGE_QUALITY_DESC'		=> 'Lege einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
+	'ACP_IMCGER_IMAGE_QUALITY_DESC'		=> 'Legen sie einen Wert zwischen 50% (kleinere Dateigröße) und 90% (höhere Qualität) fest. Werte größer als 90% erhöhen die Dateigröße und sind daher deaktiviert. Durch niedrigere Werte werden kleinere Dateien erzeugt.',
 	'ACP_IMCGER_MAX_SIZE'				=> 'Maximale Bildgröße',
 	'ACP_IMCGER_MAX_SIZE_DESC'			=> 'Einstellung der maximalen Bildgröße in Pixel. Die Bilder werden auf die maximale Breite bzw. Höhe verkleinert. Die jeweils andere Seite wird proportional angepasst. Bei der Angabe von 0px x 0px wird keine Veränderung der Bildgröße durchgeführt.',
 	'ACP_IMCGER_MAX_FILESIZE'			=> 'Maximale Dateigröße',
 	'ACP_IMCGER_MAX_FILESIZE_DESC'		=> 'Einstellung der maximalen Dateigröße in Byte. Bei der Angabe von 0 findet keine Größenbeschränkung statt. Überschreitet die Größe der Bilddatei den eingestellten Wert wird diese angenähert verkleinert.',
-	'ACP_IMCGER_DEL_EXIF'				=> 'Entferne Metadaten (JPEG & WEBP)',
+	'ACP_IMCGER_DEL_EXIF'				=> 'Entfernt Metadaten (JPEG & WEBP)',
 	'ACP_IMCGER_DEL_EXIF_DESC'			=> 'Entfernt die Exif-Metadaten wie Name des Autors, GPS-Koordinaten und Kamera-Details.',
 
 	// Avatar settings

@@ -37,6 +37,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// Post editor settings
-	'PLACE_INLINE'		 => 'Thumbnail im Beitrag anzeigen',
-	'IMAGE_PLACE_INLINE' => 'Bild im Beitrag anzeigen',
+	'IUL_PLACE_INLINE'	 => 'Vorschaubild im Beitrag anzeigen',
+	'IUL_IMAGE_PLACE_INLINE' => 'Bild im Beitrag anzeigen',
 ]);

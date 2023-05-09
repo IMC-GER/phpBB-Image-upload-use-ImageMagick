@@ -103,7 +103,7 @@ class admin_controller
 			'IMCGER_AVATAR_FILESIZE_ISSET'	=> (bool) $this->config['avatar_filesize'],
 			'CREATE_THUMBNAIL'				=> (bool) $this->config['img_create_thumbnail'],
 			'IMCGER_IMGUPLOAD_IMAGE_INLINE'	=> (bool) $this->config['imcger_imgupload_image_inline'],
-			'IMCGER_IMAGE_INLINE_MAXWIDTH'	=>  $this->config['imcger_imgupload_image_inline_maxwidth'],
+			'IMCGER_IMG_MAX_THUMB_WIDTH'	=>  $this->config['imcger_imgupload_img_max_thumb_width'],
 		]);
 	}
 
@@ -127,7 +127,7 @@ class admin_controller
 		$this->config->set('img_strip_metadata', $this->request->variable('imcger_imgupload_del_exif', 0));
 		$this->config->set('img_create_thumbnail', $this->request->variable('img_create_thumbnail', 0));
 		$this->config->set('imcger_imgupload_image_inline', $this->request->variable('imcger_imgupload_image_inline', 0));
-		$this->config->set('imcger_imgupload_image_inline_maxwidth', $this->request->variable('imcger_imgupload_image_inline_maxwidth', 0));
+		$this->config->set('imcger_imgupload_img_max_thumb_width', $this->request->variable('imcger_imgupload_img_max_thumb_width', 0));
 	}
 
 	/**

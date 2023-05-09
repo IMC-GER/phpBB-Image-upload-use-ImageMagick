@@ -112,11 +112,16 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 			// If image add thumbnail to the link
 			if (isImage) {
 				let getThumbnail = '&t=1';
-				link.html('<img src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '" alt="' + real_filename + '">');
+				{% if IUL_IMG_SET_INLINE %}
+				link.html('<img src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\'; $(\'[data-attach-id=' + attach_id + ']\').find(\'.button2.file-inline-bbcode\').hide();" title="' + real_filename + '; " alt="' + real_filename + '">');
+				{% else %}
+				link.html('<img src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '; " alt="' + real_filename + '">');
+				{% endif %}
 
 				if ({{ IUL_IMG_SET_INLINE }}) {
 					// Add button for img BBCode
-					$('[data-attach-id="' + attach_id + '"]').find('.attach-controls').prepend('<input type="button" value="{{ lang("IMAGE_PLACE_INLINE")|e("js") }}" class="button2 image-inline-bbcode">&nbsp;');
+					$('[data-attach-id="' + attach_id + '"]').find('.attach-controls').prepend('<input type="button" value="{{ lang("IUL_IMAGE_PLACE_INLINE")|e("js") }}" class="button2 image-inline-bbcode">&nbsp;');
+					$('[data-attach-id="' + attach_id + '"]').find('.button2.file-inline-bbcode').attr('value', '{{ lang("IUL_PLACE_INLINE")|e("js") }}');
 				}
 
 				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
@@ -165,7 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 
 				if ({{ IUL_IMG_SET_INLINE }}) {
 					// Add button for img BBCode
-					row.find('.attach-controls').prepend('<input type="button" value="{{ lang("IMAGE_PLACE_INLINE")|e("js") }}" class="button2 image-inline-bbcode">&nbsp;');
+					row.find('.attach-controls').prepend('<input type="button" value="{{ lang("IUL_IMAGE_PLACE_INLINE")|e("js") }}" class="button2 image-inline-bbcode">&nbsp;');
+					row.find('.button2.file-inline-bbcode').attr('value', '{{ lang("IUL_PLACE_INLINE")|e("js") }}');
 				}
 
 				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
@@ -210,48 +216,27 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 })(jQuery); // Avoid conflicts with other libraries
 </script>
 {% endif %}
-
+{% if IUL_IMG_MAX_THUMB_WIDTH %}
 <script>
 /**
- *	Set maximum width for images in posts
+ * Image upload use ImageMagick
+ * If max Thumbnail width set, add link to ".attach-image"
  */
-const imcgerImgUpload = {
-	initialImage: function() {
-		// Return if no content is displayed
-		if (!document.getElementsByClassName("content").length) {
-			return;
-		}
+document.querySelectorAll(".attachbox .attach-image").forEach((attachment) => {
+	let image		= attachment.getElementsByTagName('img')[0],
+		imageUrl	= image.getAttribute('src'),
+		imageTitle	= attachment.parentElement.getElementsByTagName('dd')[0].innerHTML,
+		link		= document.createElement('a');
 
-		let postImageArray = document.querySelectorAll(".content img.postimage");
+	image.removeAttribute('onclick');
+	image.style.cursor = 'pointer';
+	link.setAttribute('href', imageUrl);
+	link.setAttribute('title', imageTitle);
 
-		postImageArray.forEach((image) => {
-			this.setImageStyle(image);
-		});
-	},
-	setImageStyle: function(img) {
-		const maxImageWidth = '{{ IUL_IMG_MAXWIDTH }}';
-		let	  postbodyWidth = window.getComputedStyle(document.getElementsByClassName("content")[0]).width,
-			  maxWidth		= maxImageWidth == 'none' ? parseInt(postbodyWidth) : Math.min(parseInt(postbodyWidth), parseInt(maxImageWidth));
+	attachment.appendChild(link);
+	link.appendChild(image);
 
-		if (parseInt(img.naturalWidth) > maxWidth) {
-			img.style.width	   = '100%';
-			img.style.maxWidth = maxImageWidth;
-		} else {
-			img.style.width    = 'auto';
-			img.style.maxWidth = 'none';
-		}
-	},
-}
-
-// Adjust the size of images when loaded
-let postImageArray = document.querySelectorAll(".content img.postimage");
-postImageArray.forEach((image) => {
-	image.addEventListener("load", () => {imcgerImgUpload.setImageStyle(image)}, {once: true,});
+	attachment.parentElement.getElementsByTagName('dd')[0].remove();
 });
-
-// When load the document, adjust the size of images
-document.addEventListener("DOMContentLoaded", () => {imcgerImgUpload.initialImage();});
-
-// When resize the window, adjust the size of images
-window.addEventListener("resize", () => {imcgerImgUpload.initialImage();});
 </script>
+{% endif %}

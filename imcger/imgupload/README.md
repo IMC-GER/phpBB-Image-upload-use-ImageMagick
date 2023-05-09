@@ -54,11 +54,11 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
-### v1.2.0 (14-04-2023)
+### v1.2.1 (09-05-2023)
 - Changed sql query for allowed image extensions
 - Changed compression method for png images
 - Added possibility to insert the attachment as an fullsize image in the post message
-- Added max display size for post images
+- Added maximum display size for images in posts displayed in the attachment box without thumbnails
 
 ### v1.1.1 (18-03-2023)
 - Fixed don't show preview thumbnail in attachments upload
