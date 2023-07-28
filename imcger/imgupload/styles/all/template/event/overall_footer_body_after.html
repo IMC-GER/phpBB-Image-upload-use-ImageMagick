@@ -112,13 +112,13 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 			// If image add thumbnail to the link
 			if (isImage) {
 				let getThumbnail = '&t=1';
-				{% if IUL_IMG_SET_INLINE %}
+				{% if (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 %}
 				link.html('<img src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\'; $(\'[data-attach-id=' + attach_id + ']\').find(\'.button2.file-inline-bbcode\').hide();" title="' + real_filename + '; " alt="' + real_filename + '">');
 				{% else %}
 				link.html('<img src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '; " alt="' + real_filename + '">');
 				{% endif %}
 
-				if ({{ IUL_IMG_SET_INLINE }}) {
+				if ({{ (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 }}) {
 					// Add button for img BBCode
 					$('[data-attach-id="' + attach_id + '"]').find('.attach-controls').prepend('<input type="button" value="{{ lang("IUL_IMAGE_PLACE_INLINE")|e("js") }}" class="button2 image-inline-bbcode">&nbsp;');
 					$('[data-attach-id="' + attach_id + '"]').find('.button2.file-inline-bbcode').attr('value', '{{ lang("IUL_PLACE_INLINE")|e("js") }}');
@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 				let getThumbnail = '&t=1';
 				link.attr('href', url).html('<img src="' + url + getThumbnail + '" onerror="this.src=\'' + url + '\';" title="' + attach.real_filename + '" alt="' + attach.real_filename + '">');
 
-				if ({{ IUL_IMG_SET_INLINE }}) {
+				if ({{ (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 }}) {
 					// Add button for img BBCode
 					row.find('.attach-controls').prepend('<input type="button" value="{{ lang("IUL_IMAGE_PLACE_INLINE")|e("js") }}" class="button2 image-inline-bbcode">&nbsp;');
 					row.find('.button2.file-inline-bbcode').attr('value', '{{ lang("IUL_PLACE_INLINE")|e("js") }}');
