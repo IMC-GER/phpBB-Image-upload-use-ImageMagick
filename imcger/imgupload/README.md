@@ -54,6 +54,10 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
+### v1.2.2 (29-07-2023)
+- Conside BBCode Settings
+- Fixed scrollbar on large images in attachbox
+
 ### v1.2.1 (09-05-2023)
 - Changed sql query for allowed image extensions
 - Changed compression method for png images
