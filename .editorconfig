@@ -1,7 +1,8 @@
 # EditorConfig is awesome: https://EditorConfig.org
 
-# phpBB - Editor Vorgaben v1.1 - https://www.phpbb.de/kb/viewarticle?a=93
-# 2020 LukeWCS, phpBB.de
+# phpBB Programmierrichtlinien - Editor Vorgaben v1.2
+# Quelle: https://www.phpbb.de/kb/viewarticle?a=93
+# Autor : LukeWCS (phpBB.de), 2023-07-27
 
 root = true
 
@@ -18,5 +19,5 @@ trim_trailing_whitespace = true
 [*.{txt,md,yml}]
 trim_trailing_whitespace = false
 
-[*.yml]
+[*.{json,yml}]
 indent_style = space
