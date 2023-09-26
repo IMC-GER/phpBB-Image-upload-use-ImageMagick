@@ -37,6 +37,15 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// Post editor settings
-	'IUL_PLACE_INLINE'	 => 'Vorschaubild im Beitrag anzeigen',
+	'IUL_PLACE_INLINE'		 => 'Vorschaubild im Beitrag anzeigen',
 	'IUL_IMAGE_PLACE_INLINE' => 'Bild im Beitrag anzeigen',
+
+	// Errors from XMLHttpRequest
+	'IUL_REQUEST_ERROR'		  => 'Bei der Anfrage ist ein Fehler aufgetreten.',
+	'IUL_NO_DATA_SEND'		  => 'Es wurden keine Daten gesendet.',
+	'IUL_WRONG_PARAM'		  => 'Falsche Parameter gesendet.',
+	'IUL_NO_IMG_IN_DATABASE'  => 'Das Bild wurde nicht in der Datenbank gefunden.',
+	'IUL_IMG_NOT_EXIST'		  => 'Das Bild existiert nicht.',
+	'IUL_THUMB_NOT_EXIST'	  => 'Das Vorschaubild existiert nicht.',
+	'IUL_DATABASE_NOT_UPDATE' => 'Die Datenbank konnte nicht aktualisiert werden.',
 ]);

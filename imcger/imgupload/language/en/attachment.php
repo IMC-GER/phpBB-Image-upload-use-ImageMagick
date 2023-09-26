@@ -37,6 +37,15 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// Post editor settings
-	'IUL_PLACE_INLINE'	 => 'Place thumbnail inline',
+	'IUL_PLACE_INLINE'		 => 'Place thumbnail inline',
 	'IUL_IMAGE_PLACE_INLINE' => 'Place image inline',
+
+	// Errors from XMLHttpRequest
+	'IUL_REQUEST_ERROR'		  => 'The request encountered an error.',
+	'IUL_NO_DATA_SEND'		  => 'No data send.',
+	'IUL_WRONG_PARAM'		  => 'Wrong parameter.',
+	'IUL_NO_IMG_IN_DATABASE'  => 'Image not found in DataBase.',
+	'IUL_IMG_NOT_EXIST'		  => 'The image file does not exist.',
+	'IUL_THUMB_NOT_EXIST'	  => 'The thumbnail file does not exist.',
+	'IUL_DATABASE_NOT_UPDATE' => 'Database cannot be updated.',
 ]);

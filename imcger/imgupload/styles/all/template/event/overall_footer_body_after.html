@@ -2,6 +2,187 @@
 {% INCLUDECSS '@imcger_imgupload/imgupload.css' %}
 <script>
 /**
+ * Update row with new attachment id
+ *
+ * @param	string	returnStr	old and new attach id
+ */
+function imcgerIuplUpdateRow(returnStr) {
+	let attachIds	= returnStr.split('_'),
+		oldAttachId = parseInt(attachIds[1]),
+		newAttachId = parseInt(attachIds[2]),
+		rowId		= 0;
+
+	// Elements
+	let attachRows = document.querySelectorAll('tr.attach-row');
+
+	// Find attach row
+	for (rowId = 0; rowId < attachRows.length; rowId++) {
+		if (attachRows[rowId].getAttribute('data-attach-id') == oldAttachId) {
+			attachRows[rowId].setAttribute("data-attach-id", newAttachId);
+			break;
+		}
+	}
+
+	// Hidden input field
+	document.getElementsByName('attachment_data[' + rowId + '][attach_id]')[0].value = newAttachId;
+
+	// Find link from thumbnail
+	attachLink = attachRows[rowId].querySelectorAll('.file-name.ellipsis-text a')[0];
+	strDummy = attachLink.getAttribute('href').replace(oldAttachId, newAttachId);
+	attachLink.setAttribute('href', strDummy);
+
+	// Find thumbnail
+	thumbnail = attachLink.querySelectorAll('img')[0];
+	strDummy = thumbnail.getAttribute('id').replace(oldAttachId, newAttachId);
+	thumbnail.setAttribute('id', strDummy);
+	strDummy = thumbnail.getAttribute('src').replace(oldAttachId, newAttachId);
+	thumbnail.setAttribute('src', '');
+	thumbnail.style.webkitTransform = 'rotate(0deg)';
+	thumbnail.style.transform = 'rotate(0deg)';
+	thumbnail.setAttribute('src', strDummy);
+	strDummy = thumbnail.getAttribute('onerror').replace(oldAttachId, newAttachId);
+	thumbnail.setAttribute('onerror', strDummy);
+
+	// Find buttons for image rotate
+	rotateButtons = attachRows[rowId].querySelectorAll('.imcger-iupl-button button');
+	for (i = 0; i < rotateButtons.length; i++) {
+		strDummy = rotateButtons[i].getAttribute('onclick').replace(oldAttachId, newAttachId);
+		rotateButtons[i].setAttribute('onclick', strDummy);
+	}
+
+	// Update phpbb.plupload objekt
+	index = phpbb.plupload.ids.indexOf(oldAttachId);
+	phpbb.plupload.data[index].attach_id = newAttachId;
+	phpbb.plupload.ids[index] = parseInt(newAttachId);
+
+	// Order arrays by attach ids descending
+	phpbb.plupload.ids.sort(function(a,b) {
+		return b - a;
+	});
+    phpbb.plupload.data.sort(function(a,b) {
+        return parseInt(b.attach_id) - parseInt(a.attach_id);
+    });
+}
+
+/**
+ * Send a request to the Server to save the rotate image
+ *
+ * @param	int		attach_id	attach id from attach image
+ * @param	element	button		submit button
+ */
+function imcgerIuplSaveImg(attach_id, button) {
+	let index		= 0,
+		dataString  = '',
+		requestData = [];
+
+	const xhr = new XMLHttpRequest(),
+		  url = "{{ BOARD_URL }}ext/imcger/imgupload/core/save_rotated_img.php";
+
+	if (imcgerIupl.imgOrientationIndex.includes(attach_id)) {
+		index = imcgerIupl.imgOrientationIndex.indexOf(attach_id);
+	} else {
+		return;
+	}
+
+	if (!imcgerIupl.imgOrientationValue[index]) {
+		return;
+	}
+
+	// Set refresh symbol on button
+	button.children[0].className = 'icon fa-refresh fa-spin fa-fw';
+
+	// Disable buttons during the HttpRequest process
+	document.querySelectorAll('.imcger-iupl-button button').forEach((elem) => {
+		elem.disabled = true;
+	});
+
+	dataString = attach_id.toString() + ';' + imcgerIupl.imgOrientationValue[index].toString();
+	requestData.push('data' + '=' + dataString);
+
+	xhr.addEventListener('error', function() {
+		alert("{{ lang('IUL_REQUEST_ERROR')|e('js') }}");
+	});
+
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4) {
+		    if (xhr.responseText) {
+				if (xhr.responseText.startsWith('UPDATE-ROW_')) {
+					imcgerIuplUpdateRow(xhr.responseText);
+					imcgerIupl.imgOrientationValue[index] = 0;
+				} else {
+					alert(xhr.responseText);
+				}
+			}
+			button.children[0].className = 'icon fa-save fa-fw';
+
+			document.querySelectorAll('.imcger-iupl-button button').forEach((elem) => {
+				elem.disabled = false;
+			});
+		}
+	}
+
+	xhr.open('POST', url);
+	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xhr.send(requestData);
+}
+
+/**
+ * Rotate image object
+ */
+const imcgerIupl = {
+	imgOrientationIndex: [],
+	imgOrientationValue: [],
+
+	rotate: function(attach_id, deg) {
+		let image = document.getElementById('img-' + attach_id);
+
+		image.style.webkitTransform = 'rotate(' + deg + 'deg)';
+    	image.style.mozTransform    = 'rotate(' + deg + 'deg)';
+    	image.style.msTransform     = 'rotate(' + deg + 'deg)';
+    	image.style.oTransform      = 'rotate(' + deg + 'deg)';
+		image.style.transform		= 'rotate(' + deg + 'deg)';
+	},
+
+	rotateRight: function(attach_id) {
+		let index = 0;
+
+		if (this.imgOrientationIndex.includes(attach_id)) {
+			index = this.imgOrientationIndex.indexOf(attach_id);
+		} else {
+			this.imgOrientationIndex.unshift(attach_id);
+			this.imgOrientationValue.unshift(0);
+		}
+		this.imgOrientationValue[index] += 90;
+
+		if (this.imgOrientationValue[index] > 270) {
+			this.imgOrientationValue[index] = 0;
+		}
+
+		this.rotate(attach_id, this.imgOrientationValue[index]);
+	},
+
+	rotateLeft: function(attach_id) {
+		let index = 0;
+
+		if (this.imgOrientationIndex.includes(attach_id)) {
+			index = this.imgOrientationIndex.indexOf(attach_id);
+		} else {
+			this.imgOrientationIndex.unshift(attach_id);
+			this.imgOrientationValue.unshift(0);
+		}
+
+		this.imgOrientationValue[index] -= 90;
+
+		if (this.imgOrientationValue[index] < 0) {
+			this.imgOrientationValue[index] += 360;
+		}
+
+		this.rotate(attach_id, this.imgOrientationValue[index]);
+	},
+}
+
+
+/**
  * Add inline attachment at position as image
  * AddOn for editor.js
  *
@@ -32,10 +213,10 @@ function imcgerShowAttachImage() {
 		// Hide attachment box
 		document.getElementsByClassName('attachbox')[0].style.display = 'none';
 	} else {
-		let attachments = document.querySelectorAll(".attachbox .thumbnail");
+		let attachments = document.querySelectorAll('.attachbox .thumbnail');
 		// Hide attachments that present in array
 		attachments.forEach((attachment) => {
-			let link = attachment.getElementsByTagName('a')[0].getAttribute("href");
+			let link = attachment.getElementsByTagName('a')[0].getAttribute('href');
 
 			if (notDisplayedAttachments.includes(link.match('id=([0-9]+)')[1])) {
 				attachment.parentElement.style.display = 'none';
@@ -43,8 +224,67 @@ function imcgerShowAttachImage() {
 		});
 	}
 }
+
 // When load the document, update AttachmentBox in preview
-document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
+document.addEventListener('DOMContentLoaded', () => {imcgerShowAttachImage();});
+
+// When form send, update attachment row id in message text
+document.getElementById('postform').addEventListener('submit', function(e) {
+	imcgerIuplUpdateMessageBeforeSend(document.getElementById('postform').getAttribute('action').includes('#preview'));
+
+});
+
+/**
+ * When form send, update attachment row id in message text
+ *
+ * @param	bool	isPreview			Specify, preview or save submit
+ * @var		array	phpbb.plupload.ids	Array of attachment id's
+ * @var		array	phpbb.plupload.data
+ */
+function imcgerIuplUpdateMessageBeforeSend(isPreview) {
+	let messageText = document.getElementById('message').value,
+		attachRows	= document.querySelectorAll('.attach-row .attach-comment'),
+		rowIndex	= 0;
+
+	// Return if the bbcode isn't used at all.
+	if (messageText.indexOf('[attachment=') === -1) {
+		return;
+	}
+
+	// Order arrays by attach ids descending
+	phpbb.plupload.ids.sort(function(a,b) {
+		return b - a;
+	});
+	phpbb.plupload.data.sort(function(a,b) {
+		return parseInt(b.attach_id) - parseInt(a.attach_id);
+	});
+
+	attachRows.forEach((attachRow) => {
+		let attachId	 = document.getElementsByName('attachment_data[' + rowIndex + '][attach_id]')[0].value,
+			realFilename = document.getElementsByName('attachment_data[' + rowIndex + '][real_filename]')[0].value,
+			idsIndex	 = phpbb.plupload.ids.indexOf(parseInt(attachId));
+
+		if (isPreview) { // Order attatchments like rows
+			if (idsIndex >= 0) {
+				let	regex	  = new RegExp('\\[attachment=' + idsIndex + '\\]' + realFilename + '\\[\\/attachment\\]', 'gm'),
+					newAttach = '[attachment=' + rowIndex + ']' + realFilename + '[/attachment]';
+
+				messageText = messageText.replaceAll(regex, newAttach);
+			}
+		} else { // Order attachments like attach_id
+			if (idsIndex >= 0) {
+				let	regex	  = new RegExp('\\[attachment=' + rowIndex + '\\]' + realFilename + '\\[\\/attachment\\]', 'gm'),
+					newAttach = '[attachment=' + idsIndex + ']' + realFilename + '[/attachment]';
+
+				messageText = messageText.replaceAll(regex, newAttach);
+			}
+		}
+
+		rowIndex++;
+	});
+
+	document.getElementById('message').value = messageText;
+}
 
 (function($) {  // Avoid conflicts with other libraries
 
@@ -67,8 +307,12 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 		var row = $(this).parents('.attach-row'),
 			attachId = row.attr('data-attach-id');
 
-		phpbb.plupload.deleteFile(row, attachId);
-		phpbb.plupload.imcgerDelImgBbcode(attachId);
+		// Hack to avoid the error 503
+		setTimeout(() => {
+			phpbb.plupload.deleteFile(row, attachId);
+			phpbb.plupload.imcgerDelImgBbcode(attachId);
+		}, 1000);
+
 		e.preventDefault();
 	});
 
@@ -101,21 +345,26 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 	phpbb.plupload.imcgerUpdateRow = function() {
 		$('.file-name.ellipsis-text a').each(function() {
 			const allowedExt	= {{ IUL_ALLOWED_IMAGES }};
-			let link			= $(this),
+			let maxImgHeight,
+				link			= $(this),
 				imgUrl			= $(this).attr('href'),
 				real_filename	= $(this).html(),
 				searchParams	= new URLSearchParams(imgUrl.split('?')[1]),
 				attach_id		= searchParams.get('id'),
 				filenameArray	= real_filename.split('.'),
-				isImage			= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase());
+				isImage			= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase()),
+				imcgerButtonsForRotate = '<span class="imcger-iupl-button" >' +
+										 '<button class="button" type="button" onclick="imcgerIupl.rotateRight(' + attach_id + ')" ><i id="fa-redo" class="icon fa-undo fa-flip-horizontal fa-fw" aria-hidden="true"></i></button><br>' +
+										 '<button class="button" type="button" onclick="imcgerIupl.rotateLeft(' + attach_id + ')" ><i id="fa-undo" class="icon fa-undo fa-fw" aria-hidden="true"></i></button><br>' +
+										 '<button class="button" type="button" onclick="imcgerIuplSaveImg(' + attach_id + ', this)" ><i id="fa-save" class="icon fa-save fa-fw" aria-hidden="true"></i></button></span>';
 
 			// If image add thumbnail to the link
 			if (isImage) {
 				let getThumbnail = '&t=1';
 				{% if (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 %}
-				link.html('<img src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\'; $(\'[data-attach-id=' + attach_id + ']\').find(\'.button2.file-inline-bbcode\').hide();" title="' + real_filename + '; " alt="' + real_filename + '">');
+				link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\'; $(\'[data-attach-id=' + attach_id + ']\').find(\'.button2.file-inline-bbcode\').hide();" title="' + real_filename + '; " alt="' + real_filename + '">');
 				{% else %}
-				link.html('<img src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '; " alt="' + real_filename + '">');
+				link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '; " alt="' + real_filename + '">');
 				{% endif %}
 
 				if ({{ (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 }}) {
@@ -123,6 +372,13 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 					$('[data-attach-id="' + attach_id + '"]').find('.attach-controls').prepend('<input type="button" value="{{ lang("IUL_IMAGE_PLACE_INLINE")|e("js") }}" class="button2 image-inline-bbcode">&nbsp;');
 					$('[data-attach-id="' + attach_id + '"]').find('.button2.file-inline-bbcode').attr('value', '{{ lang("IUL_PLACE_INLINE")|e("js") }}');
 				}
+
+				// Add buttons to rotate images manually
+				link.after(imcgerButtonsForRotate);
+
+				// Set max height to Image
+				maxImgHeight = parseInt($('.file-name img').css('max-height').replace(/px/, ''));
+				link.height(maxImgHeight + 'px');
 
 				if ({{ S_IMCGER_FANCYBOX_VERSION > 2 ? 1 : 0 }}) {
 					// If FancyBox 3, 4 or 5 aktive add FancyBox attribut to the link
@@ -141,6 +397,18 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 					// Do nothing wenn click on image
 					link.attr('onclick', 'return false;');
 				}
+
+				// Hack for vertically centered image
+				$('#img-' + attach_id).on('load', function(e) {
+					let imgHeight = maxImgHeight;
+
+					// The $(this) element work not all time
+					if (e.target.height < e.target.width) {
+						imgHeight = maxImgHeight / e.target.width * e.target.height;
+					}
+
+					$(this).css('margin-top', ((maxImgHeight - parseInt(imgHeight)) / 2));
+				});
 			}
 		});
 	}
@@ -148,15 +416,21 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 	/**
 	 * Update the relevant elements and hidden data for an attachment.
 	 *
-	 * @param	int		index The index from phpbb.plupload.ids of the attachment to edit.
+	 * @param	int		index		The index from phpbb.plupload.ids of the attachment to edit.
 	 * @param	array	downloadUrl Optional array of download urls to update.
 	 */
 	phpbb.plupload.updateRow = function(index, downloadUrl) {
 		const allowedExt	= {{ IUL_ALLOWED_IMAGES }};
-		let   attach		= phpbb.plupload.data[index],
+		let   maxImgHeight,
+			  attach		= phpbb.plupload.data[index],
 			  row			= $('[data-attach-id="' + attach.attach_id + '"]'),
 			  filenameArray = attach.real_filename.split('.'),
-			  isImage		= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase());
+			  isImage		= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase()),
+			  imcgerButtonsForRotate = '<span class="imcger-iupl-button" >' +
+									   '<button class="button" type="button" onclick="imcgerIupl.rotateRight(' + attach.attach_id + ')" ><i id="fa-redo" class="icon fa-undo fa-flip-horizontal fa-fw" aria-hidden="true"></i></button><br>' +
+									   '<button class="button" type="button" onclick="imcgerIupl.rotateLeft(' + attach.attach_id + ')" ><i id="fa-undo" class="icon fa-undo fa-fw" aria-hidden="true"></i></button><br>' +
+									   '<button class="button" type="button" onclick="imcgerIuplSaveImg(' + attach.attach_id + ', this)" ><i id="fa-save" class="icon fa-save fa-fw" aria-hidden="true"></i></button></span>';
+
 
 		// Add the link to the file
 		if (typeof downloadUrl !== 'undefined' && typeof downloadUrl[index] !== 'undefined') {
@@ -166,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 			if (isImage) {
 				// If image add thumbnail to the link
 				let getThumbnail = '&t=1';
-				link.attr('href', url).html('<img src="' + url + getThumbnail + '" onerror="this.src=\'' + url + '\';" title="' + attach.real_filename + '" alt="' + attach.real_filename + '">');
+				link.attr('href', url).html('<img id="img-' + attach.attach_id + '" src="' + url + getThumbnail + '" onerror="this.src=\'' + url + '\';" title="' + attach.real_filename + '" alt="' + attach.real_filename + '">');
 
 				if ({{ (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 }}) {
 					// Add button for img BBCode
@@ -204,7 +478,25 @@ document.addEventListener("DOMContentLoaded", () => {imcgerShowAttachImage();});
 				link.attr('href', url).html(attach.real_filename);
 			}
 
+			// Add thumnail and buttons to rotate it
 			row.find('.file-name').html(link);
+			row.find('.file-name a').after(imcgerButtonsForRotate);
+
+			// Set max height to Image
+			maxImgHeight = parseInt($('.file-name img').css('max-height').replace(/px/, ''));
+			link.height(maxImgHeight + 'px');
+
+			// Hack for vertically centered image
+			$('#img-' + attach.attach_id).on('load', function(e) {
+				let imgHeight = maxImgHeight;
+
+				// The $(this) element work not all time
+				if (e.target.height < e.target.width) {
+					imgHeight = maxImgHeight / e.target.width * e.target.height;
+				}
+
+				$(this).css('margin-top', ((maxImgHeight - parseInt(imgHeight)) / 2));
+			});
 		}
 
 		row.find('textarea').attr('name', 'comment_list[' + index + ']');
