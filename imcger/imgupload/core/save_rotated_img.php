@@ -24,22 +24,28 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup('viewforum');
 
-/** @var \phpbb\language\language $language */
-$language->add_lang('attachment', 'imcger/imgupload');
+// No ajax request, redirect to forum index
+if (!$request->is_ajax())
+{
+	redirect(generate_board_url() . '/index.' . $phpEx);
+}
 
+// No user logged in, redirect in js to login page
 if ($user->data['user_id'] == ANONYMOUS)
 {
-//	redirect($phpbb_root_path . 'ucp.' . $phpEx . '?mode=login&redirect=index.' . $phpEx);
-	echo $language->lang('LOGIN_REQUIRED');
-	exit;
+	echo 'LOGIN_REQUIRED';
+	exit_handler();
 }
+
+// Add language file
+$language->add_lang('attachment', 'imcger/imgupload');
 
 $data = $request->variable('data', '');
 
 if (!$data)
 {
 	echo $language->lang('IUL_NO_DATA_SEND');
-	exit;
+	exit_handler();
 }
 
 list($img_attach_id, $img_rotate_deg) = explode(';', $data);
@@ -47,7 +53,7 @@ list($img_attach_id, $img_rotate_deg) = explode(';', $data);
 if (!$img_attach_id || !$img_rotate_deg)
 {
 	echo $language->lang('IUL_WRONG_PARAM');
-	exit;
+	exit_handler();
 }
 
 if ($auth->acl_gets('u_attach', 'a_attach', 'f_attach'))
@@ -64,7 +70,7 @@ if ($auth->acl_gets('u_attach', 'a_attach', 'f_attach'))
 if (!isset($img_data) || $img_data == false)
 {
 	echo $language->lang('IUL_NO_IMG_IN_DATABASE');
-	exit;
+	exit_handler();
 }
 
 // Get image file path
@@ -78,7 +84,7 @@ if (file_exists($image_file_path))
 else
 {
 	echo $language->lang('IUL_IMG_NOT_EXIST');
-	exit;
+	exit_handler();
 }
 
 if ($img_data['thumbnail'] && file_exists($thumb_file_path))
@@ -88,7 +94,7 @@ if ($img_data['thumbnail'] && file_exists($thumb_file_path))
 else if ($img_data['thumbnail'])
 {
 	echo $language->lang('IUL_THUMB_NOT_EXIST');
-	exit;
+	exit_handler();
 }
 
 // Update DataBase
@@ -96,7 +102,7 @@ unset($img_data['attach_id']);
 $sql = 'INSERT INTO ' . ATTACHMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $img_data);
 $db->sql_query($sql);
 
-// sql_nextid() to be removed in 4.1.0-a1,  sql_last_inserted_id() exsits since 3.3.11-RC1
+// sql_nextid() to be removed in 4.1.0-a1, in future use sql_last_inserted_id() it exsits since 3.3.11-RC1
 $new_attachID = $db->sql_nextid();
 
 if ($new_attachID) {
@@ -104,12 +110,12 @@ if ($new_attachID) {
 	$db->sql_query($sql);
 
 	echo 'UPDATE-ROW_' . $img_attach_id . '_' . $new_attachID;
-	exit;
+	exit_handler();
 }
 else
 {
 	echo $language->lang('IUL_DATABASE_NOT_UPDATE');
-	exit;
+	exit_handler();
 }
 
 

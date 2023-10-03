@@ -100,7 +100,7 @@ function imcgerIuplSaveImg(attach_id, button) {
 	requestData.push('data' + '=' + dataString);
 
 	xhr.addEventListener('error', function() {
-		alert("{{ lang('IUL_REQUEST_ERROR')|e('js') }}");
+		phpbb.alert('{{ IMGUPLOAD_TITLE }}', "{{ lang('IUL_REQUEST_ERROR')|e('js') }}");
 	});
 
 	xhr.onreadystatechange = function() {
@@ -109,8 +109,10 @@ function imcgerIuplSaveImg(attach_id, button) {
 				if (xhr.responseText.startsWith('UPDATE-ROW_')) {
 					imcgerIuplUpdateRow(xhr.responseText);
 					imcgerIupl.imgOrientationValue[index] = 0;
+				} else if (xhr.responseText == 'LOGIN_REQUIRED') {
+					window.location.assign(window.location.href.replace(window.location.hash, ''));
 				} else {
-					alert(xhr.responseText);
+					phpbb.alert('{{ IMGUPLOAD_TITLE }}', xhr.responseText);
 				}
 			}
 			button.children[0].className = 'icon fa-save fa-fw';
@@ -122,6 +124,7 @@ function imcgerIuplSaveImg(attach_id, button) {
 	}
 
 	xhr.open('POST', url);
+	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.send(requestData);
 }

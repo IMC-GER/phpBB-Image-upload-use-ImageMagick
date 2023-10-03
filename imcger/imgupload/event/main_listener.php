@@ -37,6 +37,9 @@ class main_listener implements EventSubscriberInterface
 	/** @var \phpbb\template\template */
 	protected $template;
 
+	/** @var \phpbb\extension\manager */
+	protected $ext_manager;
+
 	/**
 	 * Constructor for listener
 	 *
@@ -45,6 +48,7 @@ class main_listener implements EventSubscriberInterface
 	 * @param \FastImageSize\FastImageSize		$imagesize	FastImageSize object
 	 * @param \phpbb\db\driver\driver_interface	$db			phpBB DataBase
 	 * Qparam \phpbb\template\template			$template	phpBB template
+	 * @param \phpbb\extension\manager			$ext_manager
 	 *
 	 * @access public
 	 */
@@ -54,14 +58,16 @@ class main_listener implements EventSubscriberInterface
 		\phpbb\language\language $language,
 		\FastImageSize\FastImageSize $imagesize,
 		\phpbb\db\driver\driver_interface $db,
-		\phpbb\template\template $template
+		\phpbb\template\template $template,
+		\phpbb\extension\manager $ext_manager
 	)
 	{
-		$this->config	 = $config;
-		$this->language	 = $language;
-		$this->imagesize = $imagesize;
-		$this->db		 = $db;
-		$this->template  = $template;
+		$this->config		= $config;
+		$this->language		= $language;
+		$this->imagesize	= $imagesize;
+		$this->db			= $db;
+		$this->template		= $template;
+		$this->ext_manager	= $ext_manager;
 	}
 
 	public static function getSubscribedEvents()
@@ -114,7 +120,10 @@ class main_listener implements EventSubscriberInterface
 		}
 		$this->db-> sql_freeresult();
 
+		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
+
 		$this->template->assign_vars([
+			'IMGUPLOAD_TITLE'		  => $metadata_manager->get_metadata('display-name'),
 			'IUL_ALLOWED_IMAGES'	  => json_encode($allowed_images),
 			'IUL_IMG_SET_INLINE'	  => $this->config['imcger_imgupload_image_inline'],
 			'IUL_IMG_MAX_THUMB_WIDTH' => $img_max_thumb_width ? $img_max_thumb_width . 'px' : false,

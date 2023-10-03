@@ -16,5 +16,6 @@ services:
             - '@upload_imagesize'
             - '@dbal.conn'
             - '@template'
+            - '@ext.manager'
         tags:
             - { name: event.listener }
