@@ -105,7 +105,7 @@ function imcgerIuplSaveImg(attach_id, button) {
 
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4) {
-		    if (xhr.responseText) {		
+		    if (xhr.responseText) {
 				let respText = JSON.parse(xhr.responseText);
 
 				if (respText.MESSAGE_TEXT.startsWith('UPDATE-ROW_')) {
@@ -114,7 +114,7 @@ function imcgerIuplSaveImg(attach_id, button) {
 				} else if (respText.S_USER_WARNING == true) {
 					window.location.assign(window.location.href.replace(window.location.hash, ''));
 				} else {
-					phpbb.alert('{{ IMGUPLOAD_TITLE }}', xhr.responseText);
+					phpbb.alert('{{ IMGUPLOAD_TITLE }}', respText.MESSAGE_TEXT);
 				}
 			}
 			button.children[0].className = 'icon fa-save fa-fw';
