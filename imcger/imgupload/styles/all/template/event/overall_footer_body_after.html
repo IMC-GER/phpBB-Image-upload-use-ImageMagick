@@ -105,11 +105,13 @@ function imcgerIuplSaveImg(attach_id, button) {
 
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4) {
-		    if (xhr.responseText) {
-				if (xhr.responseText.startsWith('UPDATE-ROW_')) {
-					imcgerIuplUpdateRow(xhr.responseText);
+		    if (xhr.responseText) {		
+				let respText = JSON.parse(xhr.responseText);
+
+				if (respText.MESSAGE_TEXT.startsWith('UPDATE-ROW_')) {
+					imcgerIuplUpdateRow(respText.MESSAGE_TEXT);
 					imcgerIupl.imgOrientationValue[index] = 0;
-				} else if (xhr.responseText == 'LOGIN_REQUIRED') {
+				} else if (respText.S_USER_WARNING == true) {
 					window.location.assign(window.location.href.replace(window.location.hash, ''));
 				} else {
 					phpbb.alert('{{ IMGUPLOAD_TITLE }}', xhr.responseText);
