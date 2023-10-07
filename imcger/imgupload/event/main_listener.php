@@ -40,6 +40,9 @@ class main_listener implements EventSubscriberInterface
 	/** @var \phpbb\extension\manager */
 	protected $ext_manager;
 
+	/** @var \phpbb\controller\helper */
+	protected $helper;
+
 	/**
 	 * Constructor for listener
 	 *
@@ -49,6 +52,7 @@ class main_listener implements EventSubscriberInterface
 	 * @param \phpbb\db\driver\driver_interface	$db			phpBB DataBase
 	 * Qparam \phpbb\template\template			$template	phpBB template
 	 * @param \phpbb\extension\manager			$ext_manager
+	 * @param \phpbb\controller\helper			$helper
 	 *
 	 * @access public
 	 */
@@ -59,7 +63,8 @@ class main_listener implements EventSubscriberInterface
 		\FastImageSize\FastImageSize $imagesize,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\template\template $template,
-		\phpbb\extension\manager $ext_manager
+		\phpbb\extension\manager $ext_manager,
+		\phpbb\controller\helper $helper
 	)
 	{
 		$this->config		= $config;
@@ -68,6 +73,7 @@ class main_listener implements EventSubscriberInterface
 		$this->db			= $db;
 		$this->template		= $template;
 		$this->ext_manager	= $ext_manager;
+		$this->helper		= $helper;
 	}
 
 	public static function getSubscribedEvents()
@@ -127,6 +133,8 @@ class main_listener implements EventSubscriberInterface
 			'IUL_ALLOWED_IMAGES'	  => json_encode($allowed_images),
 			'IUL_IMG_SET_INLINE'	  => $this->config['imcger_imgupload_image_inline'],
 			'IUL_IMG_MAX_THUMB_WIDTH' => $img_max_thumb_width ? $img_max_thumb_width . 'px' : false,
+			'IMGUPLOAD_TITLE' 		  => $metadata_manager->get_metadata('display-name'),
+			'U_IUL_SAVE_IMAGE'  	  => $this->helper->route('imcger_imgupload_save_image_controller'),
 		]);
 	}
 

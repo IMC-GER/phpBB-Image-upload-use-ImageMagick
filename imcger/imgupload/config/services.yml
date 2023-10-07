@@ -8,6 +8,19 @@ services:
             - '@request'
             - '@ext.manager'
 
+    imcger.imgupload.save_rotated_img_controller:
+        class: imcger\imgupload\controller\save_rotated_img_controller
+        arguments:
+            - '@config'
+            - '@user'
+            - '@request'
+            - '@dbal.conn'
+            - '@auth'
+            - '@language'
+            - '@ext.manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
     imcger.imgupload.listener:
         class: imcger\imgupload\event\main_listener
         arguments:
@@ -17,5 +30,6 @@ services:
             - '@dbal.conn'
             - '@template'
             - '@ext.manager'
+            - '@controller.helper'
         tags:
             - { name: event.listener }

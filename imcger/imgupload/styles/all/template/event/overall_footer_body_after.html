@@ -6,11 +6,8 @@
  *
  * @param	string	returnStr	old and new attach id
  */
-function imcgerIuplUpdateRow(returnStr) {
-	let attachIds	= returnStr.split('_'),
-		oldAttachId = parseInt(attachIds[1]),
-		newAttachId = parseInt(attachIds[2]),
-		rowId		= 0;
+function imcgerIuplUpdateRow(oldAttachId, newAttachId) {
+	let rowId = 0;
 
 	// Elements
 	let attachRows = document.querySelectorAll('tr.attach-row');
@@ -71,12 +68,12 @@ function imcgerIuplUpdateRow(returnStr) {
  * @param	element	button		submit button
  */
 function imcgerIuplSaveImg(attach_id, button) {
-	let index		= 0,
-		dataString  = '',
-		requestData = [];
+	let index		= 0;
 
 	const xhr = new XMLHttpRequest(),
-		  url = "{{ BOARD_URL }}ext/imcger/imgupload/core/save_rotated_img.php";
+		  url = '{{ U_IUL_SAVE_IMAGE }}',
+		  requestData = 'attach_id' + '=' + attach_id + '&img_rotate_deg' + '=' + imcgerIupl.imgOrientationValue[index];
+
 
 	if (imcgerIupl.imgOrientationIndex.includes(attach_id)) {
 		index = imcgerIupl.imgOrientationIndex.indexOf(attach_id);
@@ -96,9 +93,6 @@ function imcgerIuplSaveImg(attach_id, button) {
 		elem.disabled = true;
 	});
 
-	dataString = attach_id.toString() + ';' + imcgerIupl.imgOrientationValue[index].toString();
-	requestData.push('data' + '=' + dataString);
-
 	xhr.addEventListener('error', function() {
 		phpbb.alert('{{ IMGUPLOAD_TITLE }}', "{{ lang('IUL_REQUEST_ERROR')|e('js') }}");
 	});
@@ -106,15 +100,15 @@ function imcgerIuplSaveImg(attach_id, button) {
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4) {
 		    if (xhr.responseText) {
-				let respText = JSON.parse(xhr.responseText);
+				let respText = JSON.parse(xhr.responseText.toString());
 
-				if (respText.MESSAGE_TEXT.startsWith('UPDATE-ROW_')) {
-					imcgerIuplUpdateRow(respText.MESSAGE_TEXT);
+				if (respText.status < 3) {
+					imcgerIuplUpdateRow(respText.oldAttachId, respText.newAttachId);
 					imcgerIupl.imgOrientationValue[index] = 0;
-				} else if (respText.S_USER_WARNING == true) {
+				} else if (respText.status == 3) {
 					window.location.assign(window.location.href.replace(window.location.hash, ''));
 				} else {
-					phpbb.alert('{{ IMGUPLOAD_TITLE }}', respText.MESSAGE_TEXT);
+					phpbb.alert(respText.title, respText.message);
 				}
 			}
 			button.children[0].className = 'icon fa-save fa-fw';

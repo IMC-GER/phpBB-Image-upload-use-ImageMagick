@@ -42,7 +42,6 @@ $lang = array_merge($lang, [
 
 	// Errors from XMLHttpRequest
 	'IUL_REQUEST_ERROR'		  => 'The request encountered an error.',
-	'IUL_NO_DATA_SEND'		  => 'No data send.',
 	'IUL_WRONG_PARAM'		  => 'Wrong parameter.',
 	'IUL_NO_IMG_IN_DATABASE'  => 'Image not found in DataBase.',
 	'IUL_IMG_NOT_EXIST'		  => 'The image file does not exist.',

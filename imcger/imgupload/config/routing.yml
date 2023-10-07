@@ -1,0 +1,4 @@
+imcger_imgupload_save_image_controller:
+    path: /imgupload/imgsave
+    defaults:
+        _controller: 'imcger.imgupload.save_rotated_img_controller:save_image'
