@@ -132,8 +132,27 @@ const imcgerIupl = {
 	imgOrientationIndex: [],
 	imgOrientationValue: [],
 
-	rotate: function(attach_id, deg) {
-		let image = document.getElementById('img-' + attach_id);
+	rotate: function(attach_id, deg, clockwise) {
+		let image = document.getElementById('img-' + attach_id),
+		deg_start, deg_ziel;
+
+		if (clockwise) {
+			deg_ziel  = deg == 0 ? 360 : deg;
+			deg_start = deg_ziel - 90;
+		} else {
+			deg_ziel  = (deg - 360) == (-360) ? 0 : (deg - 360);
+			deg_start = deg_ziel + 90;
+		}
+
+		image.animate(
+		  [
+			{ transform: 'rotate(' + deg_start + 'deg)' },
+			{ transform: 'rotate(' + deg_ziel + 'deg)' },
+		  ],
+		  {
+			duration: 150,
+		  },
+		);
 
 		image.style.webkitTransform = 'rotate(' + deg + 'deg)';
     	image.style.mozTransform    = 'rotate(' + deg + 'deg)';
@@ -157,7 +176,7 @@ const imcgerIupl = {
 			this.imgOrientationValue[index] = 0;
 		}
 
-		this.rotate(attach_id, this.imgOrientationValue[index]);
+		this.rotate(attach_id, this.imgOrientationValue[index], true);
 	},
 
 	rotateLeft: function(attach_id) {
@@ -176,7 +195,7 @@ const imcgerIupl = {
 			this.imgOrientationValue[index] += 360;
 		}
 
-		this.rotate(attach_id, this.imgOrientationValue[index]);
+		this.rotate(attach_id, this.imgOrientationValue[index], false);
 	},
 }
 

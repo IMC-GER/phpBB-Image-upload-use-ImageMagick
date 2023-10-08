@@ -192,25 +192,25 @@ class save_rotated_img_controller
 	}
 
 	/**
-	 * Generate json return
+	 * Generate json string
 	 *
 	 * @param 	int		$status			Status 0=id's, 3=redirect, 4=file not found, 5=error
 	 * @param	string	$title			Messagebox title
 	 * @param 	string	$message		Messagebox message
-	 * @param	int		$old_attach_id	Rotation angle
-	 * @param 	int		$new_attach_id	Path to the image file
+	 * @param	int		$old_attach_id	Previous attachment id
+	 * @param 	int		$new_attach_id	New attachment id
 	 *
 	 * @return	string	$json
 	 */
 	private function json_response($status, $title = '', $message = '', $old_attach_id = 0, $new_attach_id = 0)
 	{
-		$json = new JsonResponse(array(
+		$json = new JsonResponse([
 			'status'		=> (int) $status,
 			'title'			=> $title,
 			'message'		=> $message,
 			'oldAttachId'	=> (int) $old_attach_id,
 			'newAttachId'	=> (int) $new_attach_id,
-		));
+		]);
 
 		return $json;
 	}
