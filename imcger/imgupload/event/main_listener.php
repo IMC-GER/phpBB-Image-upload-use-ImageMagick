@@ -507,19 +507,23 @@ class main_listener implements EventSubscriberInterface
 		{
 			case 'image/jpeg':
 				$imageformat = 'JPEG';
-				break;
+			break;
+
 			case 'image/png':
 				$imageformat = 'PNG';
-				break;
+			break;
+
 			case 'image/gif':
 				$imageformat = 'GIF';
-				break;
+			break;
+
 			case 'image/webp':
 				$imageformat = 'WEBP';
-				break;
+			break;
+
 			default:
 				$imageformat = 'JPEG';
-				break;
+			break;
 		}
 
 		$image->setImageFormat($imageformat);
@@ -542,23 +546,24 @@ class main_listener implements EventSubscriberInterface
 			case 'JPEG':
 				$image->setImageCompression(\Imagick::COMPRESSION_JPEG);
 				$image->setImageCompressionQuality($quality);
-				break;
+			break;
 
 			case 'PNG':
 				$image->setOption('png:compression-strategy', 1);
 				$image->setOption('png:compression-filter', 5);
 				$image->setOption('png:compression-level', 9);
-				break;
+				$image->setImageType(\Imagick::IMGTYPE_PALETTEMATTE);
+			break;
 
 			case 'WEBP':
 				$image->setOption('webp:alpha-compression', 1);
 				$image->setOption('webp:method', 6);
 				$image->setImageCompressionQuality($quality);
-				break;
+			break;
 
 			default:
 				// do nothing
-				break;
+			break;
 		}
 	}
 
@@ -587,40 +592,49 @@ class main_listener implements EventSubscriberInterface
 			case \Imagick::ORIENTATION_UNDEFINED:
 				// do nothing
 				$is_changed = false;
-				break;
+			break;
+
 			case \Imagick::ORIENTATION_TOPLEFT:
 				// do nothing
 				$is_changed = false;
-				break;
+			break;
+
 			case \Imagick::ORIENTATION_TOPRIGHT:
 				$image->flopImage();
-				break;
+			break;
+
 			case \Imagick::ORIENTATION_BOTTOMRIGHT:
 				$image->rotateImage("#000", 180);
-				break;
+			break;
+
 			case \Imagick::ORIENTATION_BOTTOMLEFT:
 				$image->flipImage();
-				break;
+			break;
+
 			case \Imagick::ORIENTATION_LEFTTOP:
 				$image->transposeImage();
 				$is_rotate = true;
-				break;
+			break;
+
 			case \Imagick::ORIENTATION_RIGHTTOP:
 				$image->rotateImage("#000", 90);
 				$is_rotate = true;
-				break;
+			break;
+
 			case \Imagick::ORIENTATION_RIGHTBOTTOM:
 				$image->transverseImage();
 				$is_rotate = true;
-				break;
+			break;
+
 			case \Imagick::ORIENTATION_LEFTBOTTOM:
 				$image->rotateImage("#000", 270);
 				$is_rotate = true;
-				break;
+			break;
+
 			default:
 				// do nothing
 				$is_changed = false;
-				break;
+			break;
 		}
 
 		// set the orientation from the Image

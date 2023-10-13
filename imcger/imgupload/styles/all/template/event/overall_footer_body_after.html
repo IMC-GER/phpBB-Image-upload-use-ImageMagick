@@ -140,18 +140,18 @@ const imcgerIupl = {
 			deg_ziel  = deg == 0 ? 360 : deg;
 			deg_start = deg_ziel - 90;
 		} else {
-			deg_ziel  = (deg - 360) == (-360) ? 0 : (deg - 360);
+			deg_ziel  = deg == 0 ? 0 : deg - 360;
 			deg_start = deg_ziel + 90;
 		}
 
 		image.animate(
-		  [
-			{ transform: 'rotate(' + deg_start + 'deg)' },
-			{ transform: 'rotate(' + deg_ziel + 'deg)' },
-		  ],
-		  {
-			duration: 150,
-		  },
+			[
+				{ transform: 'rotate(' + deg_start + 'deg)' },
+				{ transform: 'rotate(' + deg_ziel + 'deg)' },
+			],
+			{
+				duration: 150,
+			},
 		);
 
 		image.style.webkitTransform = 'rotate(' + deg + 'deg)';

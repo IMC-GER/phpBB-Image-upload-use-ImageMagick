@@ -9,6 +9,9 @@
 
 namespace imcger\imgupload\controller;
 
+/**
+ * @ignore
+ */
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**

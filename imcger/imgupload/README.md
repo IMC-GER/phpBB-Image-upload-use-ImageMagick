@@ -4,7 +4,7 @@
 This extension is a further development of [canonknipser](https://www.phpbb.com/customise/db/author/canonknipser) [ImageMagick Thumbnailer](https://www.phpbb.com/customise/db/extension/imagemagick_thumbnailer).
 The extension uses the PHP imagick class to modify uploaded images, thumbnails and avatars. It shows a preview image in attachments upload. If the values set in the ACP are exceeded by the image file, the image is being resized by the extension.
 The extension supports JPEG, WEBP, GIF and PNG images. Other image formats, for example BMP, are converted to JPEG when resized.
-This extension can change the image size and/or the image file size. It rotate images, thumbnails and avatars according to their EXIF information and it can remove the EXIF data from JPEG and WEBP files.
+This extension can change the image size and/or the image file size. It rotate images, thumbnails and avatars according to their EXIF information and it can remove the EXIF data from JPEG and WEBP files. Images and thumbnails can also be rotated manually.
 
 #### Settings in User Control Panel
 - No settings. 
@@ -53,6 +53,9 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 - Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
 
 ## Changelog
+
+### v1.3.0 (13-10-2023)
+- Added manual image rotation
 
 ### v1.2.2 (29-07-2023)
 - Conside BBCode Settings
