@@ -60,6 +60,23 @@ function imcgerIuplUpdateRow(oldAttachId, newAttachId) {
         return parseInt(b.attach_id) - parseInt(a.attach_id);
     });
 
+	// Replace [attachment=index] with [attachment=imc-ger]
+	let messageText = document.getElementById('message').value,
+		regex		= new RegExp('\\[attachment=' + index + '\\]', 'gm');
+
+	messageText = messageText.replaceAll(regex, '[attachment=imc-ger]');
+	document.getElementById('message').value = messageText;
+
+	// update attach index in message text
+	phpbb.plupload.updateBbcode('removal', index);
+	phpbb.plupload.updateBbcode('add', 0);
+
+	// Replace [attachment=imc-ger] with [attachment=0]
+	messageText = document.getElementById('message').value;
+	messageText = messageText.replaceAll(/\[attachment=imc-ger\]/gm, '[attachment=0]');
+	document.getElementById('message').value = messageText;
+
+	phpbb.plupload.updateRows();
 	phpbb.plupload.clearParams();
 	phpbb.plupload.updateMultipartParams(phpbb.plupload.getSerializedData());
 }
@@ -248,63 +265,6 @@ function imcgerShowAttachImage() {
 
 // When load the document, update AttachmentBox in preview
 document.addEventListener('DOMContentLoaded', () => {imcgerShowAttachImage();});
-
-// When form send, update attachment row id in message text
-document.getElementById('postform').addEventListener('submit', function(e) {
-	imcgerIuplUpdateMessageBeforeSend(document.getElementById('postform').getAttribute('action').includes('#preview'));
-});
-
-/**
- * When form send, update attachment row id in message text
- *
- * @param	bool	isPreview			Specify, preview or save submit
- * @var		array	phpbb.plupload.ids	Array of attachment id's
- * @var		array	phpbb.plupload.data
- */
-function imcgerIuplUpdateMessageBeforeSend(isPreview) {
-	let messageText = document.getElementById('message').value,
-		attachRows	= document.querySelectorAll('.attach-row .attach-comment'),
-		rowIndex	= 0;
-
-	// Return if the bbcode isn't used at all.
-	if (messageText.indexOf('[attachment=') === -1) {
-		return;
-	}
-
-	// Order arrays by attach ids descending
-	phpbb.plupload.ids.sort(function(a,b) {
-		return b - a;
-	});
-	phpbb.plupload.data.sort(function(a,b) {
-		return parseInt(b.attach_id) - parseInt(a.attach_id);
-	});
-
-	attachRows.forEach((attachRow) => {
-		let attachId	 = document.getElementsByName('attachment_data[' + rowIndex + '][attach_id]')[0].value,
-			realFilename = document.getElementsByName('attachment_data[' + rowIndex + '][real_filename]')[0].value,
-			idsIndex	 = phpbb.plupload.ids.indexOf(parseInt(attachId));
-
-		if (isPreview) { // Order attatchments like rows
-			if (idsIndex >= 0) {
-				let	regex	  = new RegExp('\\[attachment=' + idsIndex + '\\]' + realFilename + '\\[\\/attachment\\]', 'gm'),
-					newAttach = '[attachment=' + rowIndex + ']' + realFilename + '[/attachment]';
-
-				messageText = messageText.replaceAll(regex, newAttach);
-			}
-		} else { // Order attachments like attach_id
-			if (idsIndex >= 0) {
-				let	regex	  = new RegExp('\\[attachment=' + rowIndex + '\\]' + realFilename + '\\[\\/attachment\\]', 'gm'),
-					newAttach = '[attachment=' + idsIndex + ']' + realFilename + '[/attachment]';
-
-				messageText = messageText.replaceAll(regex, newAttach);
-			}
-		}
-
-		rowIndex++;
-	});
-
-	document.getElementById('message').value = messageText;
-}
 
 (function($) {  // Avoid conflicts with other libraries
 
