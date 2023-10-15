@@ -55,7 +55,9 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 ## Changelog
 
 ### v1.3.1 (15-10-2023)
+- Fixed typos
 - Fixed error when upload file after store rotated image
+- Changed function for renumbering the attachmend BBCode
 
 ### v1.3.0 (13-10-2023)
 - Added manual image rotation
