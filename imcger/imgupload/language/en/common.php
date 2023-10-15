@@ -54,7 +54,7 @@ $lang = array_merge($lang, [
 	'ACP_IMCGER_THUMB_QUALITY_DESC'		=> 'Specify value between 50% (smaller file size) and 90% (higher quality). Quality higher than 90% increases filesize and is disabled. Lower values will generate smaller files.',
 	'ACP_IMCGER_IMAGE_INLINE'			=> 'Insert full size image',
 	'ACP_IMCGER_IMAGE_INLINE_DESC'		=> 'Image attachment can be inserted with the BBCode "[img]url[/img]" in the post editor using a button. The selection "Create thumbnail" must be activated.',
-	'ACP_IMCGER_IMG_MAX_THUMB_WIDTH'	  => 'Maximum width/height of thumbnails:',
+	'ACP_IMCGER_IMG_MAX_THUMB_WIDTH'	  => 'Maximum width/height of thumbnails',
 	'ACP_IMCGER_IMG_MAX_THUMB_WIDTH_DESC' => 'Maximum width/height in pixels with which images are displayed in the file attachment box. If 0 is entered, the size is not changed.',
 
 	// Image settings

@@ -64,7 +64,7 @@ function imcgerIuplUpdateRow(oldAttachId, newAttachId) {
 	let messageText = document.getElementById('message').value,
 		regex		= new RegExp('\\[attachment=' + index + '\\]', 'gm');
 
-	messageText = messageText.replaceAll(regex, '[attachment=imc-ger]');
+	messageText = messageText.replace(regex, '[attachment=imc-ger]');
 	document.getElementById('message').value = messageText;
 
 	// update attach index in message text
@@ -73,7 +73,7 @@ function imcgerIuplUpdateRow(oldAttachId, newAttachId) {
 
 	// Replace [attachment=imc-ger] with [attachment=0]
 	messageText = document.getElementById('message').value;
-	messageText = messageText.replaceAll(/\[attachment=imc-ger\]/gm, '[attachment=0]');
+	messageText = messageText.replace(/\[attachment=imc-ger\]/gm, '[attachment=0]');
 	document.getElementById('message').value = messageText;
 
 	phpbb.plupload.updateRows();
@@ -88,12 +88,11 @@ function imcgerIuplUpdateRow(oldAttachId, newAttachId) {
  * @param	element	button		submit button
  */
 function imcgerIuplSaveImg(attach_id, button) {
-	let index		= 0;
+	let index = 0;
 
 	const xhr = new XMLHttpRequest(),
 		  url = '{{ U_IUL_SAVE_IMAGE }}',
 		  requestData = 'attach_id' + '=' + attach_id + '&img_rotate_deg' + '=' + imcgerIupl.imgOrientationValue[index];
-
 
 	if (imcgerIupl.imgOrientationIndex.includes(attach_id)) {
 		index = imcgerIupl.imgOrientationIndex.indexOf(attach_id);
