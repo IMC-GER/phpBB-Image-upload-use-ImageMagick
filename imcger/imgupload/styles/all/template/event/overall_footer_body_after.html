@@ -59,6 +59,9 @@ function imcgerIuplUpdateRow(oldAttachId, newAttachId) {
     phpbb.plupload.data.sort(function(a,b) {
         return parseInt(b.attach_id) - parseInt(a.attach_id);
     });
+
+	phpbb.plupload.clearParams();
+	phpbb.plupload.updateMultipartParams(phpbb.plupload.getSerializedData());
 }
 
 /**
@@ -249,7 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {imcgerShowAttachImage();});
 // When form send, update attachment row id in message text
 document.getElementById('postform').addEventListener('submit', function(e) {
 	imcgerIuplUpdateMessageBeforeSend(document.getElementById('postform').getAttribute('action').includes('#preview'));
-
 });
 
 /**
@@ -380,7 +382,7 @@ function imcgerIuplUpdateMessageBeforeSend(isPreview) {
 			if (isImage) {
 				let getThumbnail = '&t=1';
 				{% if (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 %}
-				link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\'; $(\'[data-attach-id=' + attach_id + ']\').find(\'.button2.file-inline-bbcode\').hide();" title="' + real_filename + '; " alt="' + real_filename + '">');
+				link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\'; $(\'[data-attach-id=' + attach_id + ']\').find(\'.button2.file-inline-bbcode\').hide();" title="' + real_filename + '" alt="' + real_filename + '">');
 				{% else %}
 				link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '; " alt="' + real_filename + '">');
 				{% endif %}
