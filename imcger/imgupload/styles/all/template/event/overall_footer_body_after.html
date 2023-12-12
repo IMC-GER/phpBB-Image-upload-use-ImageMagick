@@ -3,6 +3,7 @@
 <script>
 /**
  * Update row with new attachment id
+ * when save image after rotate
  *
  * @param	string	returnStr	old and new attach id
  */
@@ -74,6 +75,11 @@ function imcgerIuplUpdateRow(oldAttachId, newAttachId) {
 	// Replace [attachment=imc-ger] with [attachment=0]
 	messageText = document.getElementById('message').value;
 	messageText = messageText.replace(/\[attachment=imc-ger\]/gm, '[attachment=0]');
+
+	// Replace [img]oldURL[/img] with [img]newURL[/img]
+	regex		= new RegExp('view&id=' + oldAttachId + '\\[\\/img\\]', 'gm');
+	messageText = messageText.replace(regex, 'view&id=' + newAttachId + '[/img]');
+
 	document.getElementById('message').value = messageText;
 
 	phpbb.plupload.updateRows();
@@ -153,7 +159,7 @@ const imcgerIupl = {
 
 	rotate: function(attach_id, deg, clockwise) {
 		let image = document.getElementById('img-' + attach_id),
-		deg_start, deg_ziel;
+			deg_start, deg_ziel;
 
 		if (clockwise) {
 			deg_ziel  = deg == 0 ? 360 : deg;
@@ -283,16 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {imcgerShowAttachImage();});
 	 * Delete a attached file.
 	 */
 	$('#file-list').on('click', '.file-delete', function(e) {
-		var row = $(this).parents('.attach-row'),
+		var row		 = $(this).parents('.attach-row'),
 			attachId = row.attr('data-attach-id');
 
-		// Hack to avoid the error 503
-		setTimeout(() => {
-			phpbb.plupload.deleteFile(row, attachId);
 			phpbb.plupload.imcgerDelImgBbcode(attachId);
-		}, 1000);
-
-		e.preventDefault();
 	});
 
 	/**
@@ -410,7 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {imcgerShowAttachImage();});
 									   '<button class="button" type="button" onclick="imcgerIupl.rotateLeft(' + attach.attach_id + ')" ><i id="fa-undo" class="icon fa-undo fa-fw" aria-hidden="true"></i></button><br>' +
 									   '<button class="button" type="button" onclick="imcgerIuplSaveImg(' + attach.attach_id + ', this)" ><i id="fa-save" class="icon fa-save fa-fw" aria-hidden="true"></i></button></span>';
 
-
 		// Add the link to the file
 		if (typeof downloadUrl !== 'undefined' && typeof downloadUrl[index] !== 'undefined') {
 			let url = downloadUrl[index].replace('&amp;', '&'),
@@ -453,29 +452,30 @@ document.addEventListener('DOMContentLoaded', () => {imcgerShowAttachImage();});
 					// Do nothing wenn click on image
 					link.attr('onclick', 'return false;');
 				}
+
+				// Add thumnail and buttons to rotate it
+				row.find('.file-name').html(link);
+				row.find('.file-name a').after(imcgerButtonsForRotate);
+
+				// Set max height to Image
+				maxImgHeight = parseInt($('.file-name img').css('max-height').replace(/px/, ''));
+				link.height(maxImgHeight + 'px');
+
+				// Hack for vertically centered image
+				$('#img-' + attach.attach_id).on('load', function(e) {
+					let imgHeight = maxImgHeight;
+
+					// The $(this) element work not all time
+					if (e.target.height < e.target.width) {
+						imgHeight = maxImgHeight / e.target.width * e.target.height;
+					}
+
+					$(this).css('margin-top', ((maxImgHeight - parseInt(imgHeight)) / 2));
+				});
 			} else {
 				link.attr('href', url).html(attach.real_filename);
+				row.find('.file-name').html(link);
 			}
-
-			// Add thumnail and buttons to rotate it
-			row.find('.file-name').html(link);
-			row.find('.file-name a').after(imcgerButtonsForRotate);
-
-			// Set max height to Image
-			maxImgHeight = parseInt($('.file-name img').css('max-height').replace(/px/, ''));
-			link.height(maxImgHeight + 'px');
-
-			// Hack for vertically centered image
-			$('#img-' + attach.attach_id).on('load', function(e) {
-				let imgHeight = maxImgHeight;
-
-				// The $(this) element work not all time
-				if (e.target.height < e.target.width) {
-					imgHeight = maxImgHeight / e.target.width * e.target.height;
-				}
-
-				$(this).css('margin-top', ((maxImgHeight - parseInt(imgHeight)) / 2));
-			});
 		}
 
 		row.find('textarea').attr('name', 'comment_list[' + index + ']');

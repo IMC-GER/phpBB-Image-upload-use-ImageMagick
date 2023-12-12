@@ -128,6 +128,7 @@ class admin_controller
 		$this->config->set('img_create_thumbnail', $this->request->variable('img_create_thumbnail', 0));
 		$this->config->set('imcger_imgupload_image_inline', $this->request->variable('imcger_imgupload_image_inline', 0));
 		$this->config->set('imcger_imgupload_img_max_thumb_width', $this->request->variable('imcger_imgupload_img_max_thumb_width', 0));
+		$this->config->set('imcger_imgupload_avatar_resize', $this->request->variable('imcger_imgupload_avatar_resize', 0));
 	}
 
 	/**

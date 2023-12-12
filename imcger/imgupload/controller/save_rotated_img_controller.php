@@ -12,7 +12,6 @@ namespace imcger\imgupload\controller;
 /**
  * @ignore
  */
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Main controller
@@ -101,7 +100,7 @@ class save_rotated_img_controller
 		// No user logged in, redirect in js to login page
 		if ($this->user->data['user_id'] == ANONYMOUS)
 		{
-			return $this->json_response(3);
+			$this->json_response(3);
 		}
 
 		$img_attach_id	= $this->request->variable('attach_id', '');
@@ -113,7 +112,7 @@ class save_rotated_img_controller
 
 		if (!$img_attach_id || !$img_rotate_deg)
 		{
-			return $this->json_response(5, $ext_display_name, $this->language->lang('IUL_WRONG_PARAM'));
+			$this->json_response(5, $ext_display_name, $this->language->lang('IUL_WRONG_PARAM'));
 		}
 
 		if ($this->auth->acl_gets('u_attach', 'a_attach', 'f_attach'))
@@ -129,7 +128,7 @@ class save_rotated_img_controller
 
 		if (!isset($img_data) || $img_data == false)
 		{
-			return $this->json_response(4, $ext_display_name, $this->language->lang('IUL_NO_IMG_IN_DATABASE'));
+			$this->json_response(4, $ext_display_name, $this->language->lang('IUL_NO_IMG_IN_DATABASE'));
 		}
 
 		// Get image file path
@@ -142,7 +141,7 @@ class save_rotated_img_controller
 		}
 		else
 		{
-			return $this->json_response(4, $ext_display_name, $this->language->lang('IUL_IMG_NOT_EXIST'));
+			$this->json_response(4, $ext_display_name, $this->language->lang('IUL_IMG_NOT_EXIST'));
 		}
 
 		if ($img_data['thumbnail'] && file_exists($thumb_file_path))
@@ -151,7 +150,7 @@ class save_rotated_img_controller
 		}
 		else if ($img_data['thumbnail'])
 		{
-			return $this->json_response(4, $ext_display_name, $this->language->lang('IUL_THUMB_NOT_EXIST'));
+			$this->json_response(4, $ext_display_name, $this->language->lang('IUL_THUMB_NOT_EXIST'));
 		}
 
 		// Update DataBase
@@ -167,11 +166,11 @@ class save_rotated_img_controller
 			$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . (int) $img_attach_id;
 			$this->db->sql_query($sql);
 
-			return $this->json_response(0, $ext_display_name, '', $img_attach_id, $new_attach_id);
+			$this->json_response(0, $ext_display_name, '', $img_attach_id, $new_attach_id);
 		}
 		else
 		{
-			return $this->json_response(5, $ext_display_name, $this->language->lang('IUL_DATABASE_NOT_UPDATE'));
+			$this->json_response(5, $ext_display_name, $this->language->lang('IUL_DATABASE_NOT_UPDATE'));
 		}
 	}
 
@@ -207,14 +206,13 @@ class save_rotated_img_controller
 	 */
 	private function json_response($status, $title = '', $message = '', $old_attach_id = 0, $new_attach_id = 0)
 	{
-		$json = new JsonResponse([
+		$json_response = new \phpbb\json_response;
+		$json_response->send([
 			'status'		=> (int) $status,
 			'title'			=> $title,
 			'message'		=> $message,
 			'oldAttachId'	=> (int) $old_attach_id,
 			'newAttachId'	=> (int) $new_attach_id,
 		]);
-
-		return $json;
 	}
 }
