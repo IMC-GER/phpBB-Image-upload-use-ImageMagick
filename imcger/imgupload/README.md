@@ -54,6 +54,13 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
+### v1.3.2 (13-12-2023)
+- Fixed error when upload none image file
+- Fixed upload aborts sporadically with large files
+- Fixed don't change attachment id in IMG bbCode after image rotated
+- Changed Symfony json response tp phpBB response
+- Added support for Toggle Control from LukeWCS
+
 ### v1.3.1 (15-10-2023)
 - Fixed typos
 - Fixed error when upload file after store rotated image
