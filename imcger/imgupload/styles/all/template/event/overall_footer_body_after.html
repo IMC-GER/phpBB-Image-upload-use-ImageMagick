@@ -1,7 +1,7 @@
 {% if S_SHOW_ATTACH_BOX and FILTERS %}
 {% INCLUDECSS '@imcger_imgupload/imgupload.css' %}
 <script>
-// (function($) {  // Avoid conflicts with other libraries
+(function($) {  // Avoid conflicts with other libraries
 
 	'use strict';
 
@@ -49,12 +49,6 @@
 		$thumbnail.attr('src', strDummy);
 		strDummy = $thumbnail.attr('onerror').replace(oldAttachId, newAttachId);
 		$thumbnail.attr('onerror', strDummy);
-
-		// Set new attachment id to buttons for image rotate
-		$attachRow.find('.imcger-iupl-button button').each(function() {
-			strDummy = $(this).attr('onclick').replace(oldAttachId, newAttachId);
-			$(this).attr('onclick', strDummy);
-		});
 
 		// Update phpbb.plupload objekt
 		let index = phpbb.plupload.ids.indexOf(oldAttachId);
@@ -230,11 +224,6 @@
 		});
 	}
 
-
-// })(jQuery); // Avoid conflicts with other libraries
-
-
-
 	/**
 	 * Remove attachment in preview when insert as img BBcode in message
 	 * AddOn for editor.js
@@ -242,7 +231,7 @@
 	 * @var	array	notDisplayedAttachments	Attachments that insert in the message
 	 * @var	bool	notDisplayAttachmentBox	Don't show any attachment
 	 */
-	function imcgerShowAttachImage() {
+	imcger.imgUpload.showAttachImage = function() {
 		const notDisplayedAttachments = {{ IUL_NOT_DISPLAYED_ATTACHMENTS }},
 			  notDisplayAttachmentBox = {{ IUL_NOT_DISPLAY_ATTACHMENTBOX }};
 
@@ -253,26 +242,51 @@
 
 		if (notDisplayAttachmentBox) {
 			// Hide attachment box
-			document.getElementsByClassName('attachbox')[0].style.display = 'none';
+			$('.attachbox').css('display', 'none');
 		} else {
-			let attachments = document.querySelectorAll('.attachbox .thumbnail');
 			// Hide attachments that present in array
-			attachments.forEach((attachment) => {
-				let link = attachment.getElementsByTagName('a')[0].getAttribute('href');
+			$('.attachbox .thumbnail').each(function() {
+				let url = $(this).find('a').attr('href');
 
-				if (notDisplayedAttachments.includes(link.match('id=([0-9]+)')[1])) {
-					attachment.parentElement.style.display = 'none';
+				if (notDisplayedAttachments.includes(url.match('id=([0-9]+)')[1])) {
+					$(this).parent().css('display', 'none');
 				}
 			});
 		}
 	}
 
-// When load the document, update AttachmentBox in preview
-document.addEventListener('DOMContentLoaded', () => {imcgerShowAttachImage();});
+	// When load the document, update AttachmentBox in preview
+	$(document).ready(imcger.imgUpload.showAttachImage());
 
-(function($) {  // Avoid conflicts with other libraries
+	/**
+	 * Rotate the image clockwise.
+	 */
+	$('#file-list').on('click', '.rotate-right', function(e) {
+		let attachId = $(this).parents('.attach-row').attr('data-attach-id');
 
-	'use strict';
+		imcger.imgUpload.image.rotateRight(attachId);
+		e.preventDefault();
+	});
+
+	/**
+	 * Rotate the image anticlockwise.
+	 */
+	$('#file-list').on('click', '.rotate-left', function(e) {
+		let attachId = $(this).parents('.attach-row').attr('data-attach-id');
+
+		imcger.imgUpload.image.rotateLeft(attachId);
+		e.preventDefault();
+	});
+
+	/**
+	 * Save image after it rotated.
+	 */
+	$('#file-list').on('click', '.save-image', function(e) {
+		let attachId = $(this).parents('.attach-row').attr('data-attach-id');
+
+		imcger.imgUpload.saveImg(attachId, this);
+		e.preventDefault();
+	});
 
 	/**
 	 * Insert inline image bbcode.
@@ -290,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {imcgerShowAttachImage();});
 	 *
 	 * @param	string	fileUrl	Image file URL
 	 */
-	function imcger.imgUpload.attachImage(fileUrl) {
+	imcger.imgUpload.attachImage = function(fileUrl) {
 		insert_text('[img]' + fileUrl + '[/img]');
 		document.forms[form_name].elements[text_name].focus();
 	}
@@ -343,9 +357,9 @@ document.addEventListener('DOMContentLoaded', () => {imcgerShowAttachImage();});
 				filenameArray	= real_filename.split('.'),
 				isImage			= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase()),
 				imcgerButtonsForRotate = '<span class="imcger-iupl-button" >' +
-										 '<button class="button" type="button" onclick="imcger.imgUpload.image.rotateRight(' + attach_id + ')" ><i id="fa-redo" class="icon fa-undo fa-flip-horizontal fa-fw" aria-hidden="true"></i></button><br>' +
-										 '<button class="button" type="button" onclick="imcger.imgUpload.image.rotateLeft(' + attach_id + ')" ><i id="fa-undo" class="icon fa-undo fa-fw" aria-hidden="true"></i></button><br>' +
-										 '<button class="button" type="button" onclick="imcger.imgUpload.saveImg(' + attach_id + ', this)" ><i id="fa-save" class="icon fa-save fa-fw" aria-hidden="true"></i></button></span>';
+										 '<button class="button rotate-right" type="button"><i id="fa-redo" class="icon fa-undo fa-flip-horizontal fa-fw" aria-hidden="true"></i></button><br>' +
+										 '<button class="button rotate-left" type="button"><i id="fa-undo" class="icon fa-undo fa-fw" aria-hidden="true"></i></button><br>' +
+										 '<button class="button save-image" type="button"><i id="fa-save" class="icon fa-save fa-fw" aria-hidden="true"></i></button></span>';
 
 			// If image add thumbnail to the link
 			if (isImage) {
@@ -416,9 +430,9 @@ document.addEventListener('DOMContentLoaded', () => {imcgerShowAttachImage();});
 			  filenameArray = attach.real_filename.split('.'),
 			  isImage		= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase()),
 			  imcgerButtonsForRotate = '<span class="imcger-iupl-button" >' +
-									   '<button class="button" type="button" onclick="imcger.imgUpload.image.rotateRight(' + attach.attach_id + ')" ><i id="fa-redo" class="icon fa-undo fa-flip-horizontal fa-fw" aria-hidden="true"></i></button><br>' +
-									   '<button class="button" type="button" onclick="imcger.imgUpload.image.rotateLeft(' + attach.attach_id + ')" ><i id="fa-undo" class="icon fa-undo fa-fw" aria-hidden="true"></i></button><br>' +
-									   '<button class="button" type="button" onclick="imcger.imgUpload.saveImg(' + attach.attach_id + ', this)" ><i id="fa-save" class="icon fa-save fa-fw" aria-hidden="true"></i></button></span>';
+									   '<button class="button rotate-right" type="button"><i id="fa-redo" class="icon fa-undo fa-flip-horizontal fa-fw" aria-hidden="true"></i></button><br>' +
+									   '<button class="button rotate-left" type="button"><i id="fa-undo" class="icon fa-undo fa-fw" aria-hidden="true"></i></button><br>' +
+									   '<button class="button save-image" type="button"><i id="fa-save" class="icon fa-save fa-fw" aria-hidden="true"></i></button></span>';
 
 		// Add the link to the file
 		if (typeof downloadUrl !== 'undefined' && typeof downloadUrl[index] !== 'undefined') {
