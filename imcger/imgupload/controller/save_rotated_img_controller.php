@@ -85,9 +85,10 @@ class save_rotated_img_controller
 	/**
 	 * Rotate Image with ImageMagick
 	 *
-	 * @var 	string	$data	String contain attach id and rotate degree
+	 * @var 	int		attach_id		contain attach id
+	 * @var 	int		img_rotate_deg	contain rotate degree
 	 *
-	 * @return	array			Json arry with old and new attach id or error message
+	 * @return	array	Json arry with status, old and new attach id or error message
 	 */
 	public function save_image()
 	{
@@ -103,12 +104,19 @@ class save_rotated_img_controller
 			$this->json_response(3);
 		}
 
-		$img_attach_id	= $this->request->variable('attach_id', '');
-		$img_rotate_deg	= $this->request->variable('img_rotate_deg', '');
-
 		// Get name of the extension
 		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
 		$ext_display_name = $metadata_manager->get_metadata('display-name');
+
+		// Check form token
+		if (!check_form_key('posting'))
+		{
+			$this->json_response(5, $ext_display_name, $this->language->lang('FORM_INVALID'));
+		}
+
+		// Get variable
+		$img_attach_id	= intval($this->request->variable('attach_id', ''));
+		$img_rotate_deg	= intval($this->request->variable('img_rotate_deg', ''));
 
 		if (!$img_attach_id || !$img_rotate_deg)
 		{

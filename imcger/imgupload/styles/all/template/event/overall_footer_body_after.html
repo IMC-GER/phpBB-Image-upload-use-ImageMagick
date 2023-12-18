@@ -44,8 +44,10 @@
 		$thumbnail.attr('id', strDummy);
 		strDummy = $thumbnail.attr('src').replace(oldAttachId, newAttachId);
 		$thumbnail.attr('src', '');
-		$thumbnail.css('-webkit-transform','rotate(0deg)');
-		$thumbnail.css('transform','rotate(0deg)');
+		$thumbnail.css({
+			'-webkit-transform': 'rotate(0deg)',
+			'transform': 'rotate(0deg)'
+		});
 		$thumbnail.attr('src', strDummy);
 		strDummy = $thumbnail.attr('onerror').replace(oldAttachId, newAttachId);
 		$thumbnail.attr('onerror', strDummy);
@@ -113,7 +115,8 @@
 				duration: 150,
 				step: function(now) {
 					$image.css({
-						transform: 'rotate(' + now + 'deg)'
+						'-webkit-transform': 'rotate(' + now + 'deg)',
+						'transform': 'rotate(' + now + 'deg)'
 					});
 				}
 			});
@@ -176,8 +179,11 @@
 			return;
 		}
 
-		const url = '{{ U_IUL_SAVE_IMAGE }}',
-			  requestData = 'attach_id' + '=' + attach_id + '&img_rotate_deg' + '=' + imcger.imgUpload.image.imgOrientationValue[index];
+		const url		  = '{{ U_IUL_SAVE_IMAGE }}',
+			  requestData = 'attach_id=' + attach_id +
+							'&img_rotate_deg=' + imcger.imgUpload.image.imgOrientationValue[index] +
+							'&creation_time=' + $('input[name="creation_time"]').val() +
+							'&form_token=' + $('input[name="form_token"]').val();
 
 		let ajaxReq = $.ajax(url, {
 			// The data to send
@@ -214,7 +220,7 @@
 		// Code to run if the request fails
 		ajaxReq.fail(function(xhr, status, errorThrown) {
 			phpbb.alert('{{ IMGUPLOAD_TITLE }}', '{{ lang("IUL_REQUEST_ERROR")|e("js") }}<br>' +
-												 'Error: ' + errorThrown + ' Status: ' + status);
+												 ' Status: ' + status + 'Error: ' + errorThrown);
 		});
 
 		// Code to run regardless of success or failure;
