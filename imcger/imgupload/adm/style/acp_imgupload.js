@@ -3,13 +3,14 @@
 ------------------------------------- */
 
 function imcgerImgInlineDisabled() {
-	if (document.getElementById('img_create_thumbnail').checked) {
-		document.getElementById('imcger_imgupload_image_inline').disabled = false;
+	if ($('input[name=img_create_thumbnail]:checked').last().val() == 1) {
+		$('input[name=imcger_imgupload_image_inline]').prop('disabled', false);
 	} else {
-		document.getElementById('imcger_imgupload_image_inline').checked = false;
-		setTimeout(document.getElementById('imcger_imgupload_image_inline').disabled = true, 1000);
+		$('input[name=imcger_imgupload_image_inline]').attr('type') == 'radio' ?
+			$('input[name=imcger_imgupload_image_inline]').last().click() : $('input[name=imcger_imgupload_image_inline]').prop('checked', false);
+		$('input[name=imcger_imgupload_image_inline]').prop('disabled', true);
 	}
 }
 
-document.getElementById('img_create_thumbnail').addEventListener('click', imcgerImgInlineDisabled);
+$('input[name=img_create_thumbnail]').on('click', imcgerImgInlineDisabled);
 imcgerImgInlineDisabled();
