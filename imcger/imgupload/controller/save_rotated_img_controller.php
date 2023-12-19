@@ -87,6 +87,8 @@ class save_rotated_img_controller
 	 *
 	 * @var 	int		attach_id		contain attach id
 	 * @var 	int		img_rotate_deg	contain rotate degree
+	 * @var 	int		creation_time	creation time of token
+	 * @var 	string	form_token		form token
 	 *
 	 * @return	array	Json arry with status, old and new attach id or error message
 	 */
@@ -114,11 +116,11 @@ class save_rotated_img_controller
 			$this->json_response(5, $ext_display_name, $this->language->lang('FORM_INVALID'));
 		}
 
-		// Get variable
+		// Get variable, accept only integer
 		$img_attach_id	= intval($this->request->variable('attach_id', ''));
 		$img_rotate_deg	= intval($this->request->variable('img_rotate_deg', ''));
 
-		if (!$img_attach_id || !$img_rotate_deg)
+		if (!$img_attach_id || $img_rotate_deg < 1 || $img_rotate_deg > 360)
 		{
 			$this->json_response(5, $ext_display_name, $this->language->lang('IUL_WRONG_PARAM'));
 		}

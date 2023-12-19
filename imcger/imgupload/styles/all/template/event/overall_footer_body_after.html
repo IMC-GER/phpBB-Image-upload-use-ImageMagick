@@ -1,17 +1,19 @@
 {% if S_SHOW_ATTACH_BOX and FILTERS %}
 {% INCLUDECSS '@imcger_imgupload/imgupload.css' %}
 <script>
+
+/**
+ * imcger object for pphpBB.
+ */
+if (typeof imcger != 'object') {
+	var imcger = {};
+}
+
 (function($) {  // Avoid conflicts with other libraries
 
 	'use strict';
 
-	/**
-	 * imcger objects for pphpBB attachment upload.
-	 */
-	if (typeof imcger != 'object') {
-		var imcger = {};
-	}
-
+	// imcger object for pphpBB extension Image upload use ImageMagick
 	imcger.imgUpload = {};
 
 	/**
@@ -99,6 +101,13 @@
 		imgOrientationIndex: [],
 		imgOrientationValue: [],
 
+		/**
+		 * Subroutine from rotateRight() and rotateLeft()
+		 *
+		 * @param	int		attach_id	attach id from image
+		 * @param	int		deg			angle to rotated
+		 * @param	bool	clockwise	true rotated clockwise
+		 */
 		rotate: function(attach_id, deg, clockwise) {
 			let $image = $('#img-' + attach_id),
 				deg_start, deg_ziel;
@@ -122,6 +131,11 @@
 			});
 		},
 
+		/**
+		 * Rotate the image clockwiese
+		 *
+		 * @param	int		attach_id	attach id from attach image
+		 */
 		rotateRight: function(attach_id) {
 			let index = 0;
 
@@ -140,6 +154,11 @@
 			this.rotate(attach_id, this.imgOrientationValue[index], true);
 		},
 
+		/**
+		 * Rotate the image anticlockwiese
+		 *
+		 * @param	int		attach_id	attach id from attach image
+		 */
 		rotateLeft: function(attach_id) {
 			let index = 0;
 
@@ -158,76 +177,79 @@
 
 			this.rotate(attach_id, this.imgOrientationValue[index], false);
 		},
-	}
 
-	/**
-	 * Send a request to the Server to save the rotate image
-	 *
-	 * @param	int		attach_id	attach id from attach image
-	 * @param	element	button		submit button
-	 */
-	imcger.imgUpload.saveImg = function(attach_id, button) {
-		let index = 0;
+		/**
+		 * Send a request to the Server to save the rotate image
+		 *
+		 * @param	int		attach_id	attach id from attach image
+		 * @param	element	button		submit button
+		 */
+		saveImg: function(attach_id, button) {
+			let index = 0;
 
-		if (imcger.imgUpload.image.imgOrientationIndex.includes(attach_id)) {
-			index = imcger.imgUpload.image.imgOrientationIndex.indexOf(attach_id);
-		} else {
-			return;
-		}
-
-		if (!imcger.imgUpload.image.imgOrientationValue[index]) {
-			return;
-		}
-
-		const url		  = '{{ U_IUL_SAVE_IMAGE }}',
-			  requestData = 'attach_id=' + attach_id +
-							'&img_rotate_deg=' + imcger.imgUpload.image.imgOrientationValue[index] +
-							'&creation_time=' + $('input[name="creation_time"]').val() +
-							'&form_token=' + $('input[name="form_token"]').val();
-
-		let ajaxReq = $.ajax(url, {
-			// The data to send
-			data: requestData,
-
-			// Whether this is a POST or GET request
-			type: 'POST',
-
-			// The type of data we expect back
-			dataType: "json",
-
-			// Set a timeout (in milliseconds) for the request
-			timeout: 5000,
-
-			// Code to run before the request is send
-			beforeSend: function(xhr, settings) {
-				$(button).find('>:first-child').attr('class', 'icon fa-refresh fa-spin fa-fw');
-				$('.imcger-iupl-button button').attr('disabled', true).css('cursor','not-allowed');
-			},
-		});
-
-		// Code to run if the request succeeds (is done);
-		ajaxReq.done(function(json) {
-			if (json.status < 3) {
-				imcger.imgUpload.updateAttId(json.oldAttachId, json.newAttachId);
-				imcger.imgUpload.image.imgOrientationValue[index] = 0;
-			} else if (json.status == 3) {
-				window.location.assign(window.location.href.replace(window.location.hash, ''));
+			if (this.imgOrientationIndex.includes(attach_id)) {
+				index = this.imgOrientationIndex.indexOf(attach_id);
 			} else {
-				phpbb.alert(json.title, json.message);
+				return;
 			}
-		});
 
-		// Code to run if the request fails
-		ajaxReq.fail(function(xhr, status, errorThrown) {
-			phpbb.alert('{{ IMGUPLOAD_TITLE }}', '{{ lang("IUL_REQUEST_ERROR")|e("js") }}<br>' +
-												 ' Status: ' + status + 'Error: ' + errorThrown);
-		});
+			if (!this.imgOrientationValue[index]) {
+				return;
+			}
 
-		// Code to run regardless of success or failure;
-		ajaxReq.always(function(xhr, status) {
-			$(button).find('>:first-child').attr('class', 'icon fa-save fa-fw');
-			$('.imcger-iupl-button button').attr('disabled', false).css('cursor','auto');
-		});
+			const url		  = '{{ U_IUL_SAVE_IMAGE }}',
+				  requestData = 'attach_id=' + attach_id +
+								'&img_rotate_deg=' + this.imgOrientationValue[index] +
+								'&creation_time=' + $('input[name="creation_time"]').val() +
+								'&form_token=' + $('input[name="form_token"]').val();
+
+			let ajaxReq = $.ajax({			
+				// The url of the request
+				url: url,
+				
+				// The data to send
+				data: requestData,
+
+				// Whether this is a POST or GET request
+				type: 'POST',
+
+				// The type of data we expect back
+				dataType: "json",
+
+				// Set a timeout (in milliseconds) for the request
+				timeout: 10000,
+
+				// Code to run before the request is send
+				beforeSend: function(xhr, settings) {
+					$(button).find('>:first-child').attr('class', 'icon fa-refresh fa-spin fa-fw');
+					$('.imcger-iupl-button button').attr('disabled', true).css('cursor','not-allowed');
+				},
+			});
+
+			// Code to run if the request succeeds (is done);
+			ajaxReq.done(function(json) {
+				if (json.status < 3) {
+					imcger.imgUpload.updateAttId(json.oldAttachId, json.newAttachId);
+					imcger.imgUpload.image.imgOrientationValue[index] = 0;
+				} else if (json.status == 3) {
+					window.location.assign(window.location.href.replace(window.location.hash, ''));
+				} else {
+					phpbb.alert(json.title, json.message);
+				}
+			});
+
+			// Code to run if the request fails
+			ajaxReq.fail(function(xhr, status, errorThrown) {
+				phpbb.alert('{{ IMGUPLOAD_TITLE }}', '{{ lang("IUL_REQUEST_ERROR")|e("js") }}<br>' +
+													 ' Status: ' + status + 'Error: ' + errorThrown);
+			});
+
+			// Code to run regardless of success or failure;
+			ajaxReq.always(function(xhr, status) {
+				$(button).find('>:first-child').attr('class', 'icon fa-save fa-fw');
+				$('.imcger-iupl-button button').attr('disabled', false).css('cursor','auto');
+			});
+		}
 	}
 
 	/**
@@ -290,7 +312,7 @@
 	$('#file-list').on('click', '.save-image', function(e) {
 		let attachId = $(this).parents('.attach-row').attr('data-attach-id');
 
-		imcger.imgUpload.saveImg(attachId, this);
+		imcger.imgUpload.image.saveImg(attachId, this);
 		e.preventDefault();
 	});
 
