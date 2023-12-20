@@ -166,7 +166,8 @@ class save_rotated_img_controller
 		}
 		else if ($img_data['thumbnail'])
 		{
-			$this->json_response(4, $ext_display_name, $this->language->lang('IUL_THUMB_NOT_EXIST'));
+			$img_data['thumbnail'] = 0;
+			$alert_msg = $this->language->lang('IUL_THUMB_NOT_EXIST');
 		}
 
 		// Update DataBase
@@ -182,7 +183,7 @@ class save_rotated_img_controller
 			$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . (int) $img_attach_id;
 			$this->db->sql_query($sql);
 
-			$this->json_response(0, $ext_display_name, '', $img_attach_id, $new_attach_id);
+			$this->json_response(0, $ext_display_name, $alert_msg ?? '', $img_attach_id, $new_attach_id);
 		}
 		else
 		{

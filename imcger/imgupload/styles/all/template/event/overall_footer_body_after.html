@@ -231,6 +231,11 @@ if (typeof imcger != 'object') {
 				if (json.status < 3) {
 					imcger.imgUpload.updateAttId(json.oldAttachId, json.newAttachId);
 					imcger.imgUpload.image.imgOrientationValue[index] = 0;
+
+					// Display a message when a warning occurs
+					if (json.message) {
+						phpbb.alert(json.title, json.message);
+					}
 				} else if (json.status == 3) {
 					window.location.assign(window.location.href.replace(window.location.hash, ''));
 				} else {
