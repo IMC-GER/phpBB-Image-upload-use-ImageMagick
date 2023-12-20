@@ -102,7 +102,7 @@ if (typeof imcger != 'object') {
 		imgOrientationValue: [],
 
 		/**
-		 * Subroutine from rotateRight() and rotateLeft()
+		 * Subroutine for rotateRight() and rotateLeft()
 		 *
 		 * @param	int		attach_id	attach id from image
 		 * @param	int		deg			angle to rotated
@@ -203,10 +203,10 @@ if (typeof imcger != 'object') {
 								'&creation_time=' + $('input[name="creation_time"]').val() +
 								'&form_token=' + $('input[name="form_token"]').val();
 
-			let ajaxReq = $.ajax({			
+			let ajaxReq = $.ajax({
 				// The url of the request
 				url: url,
-				
+
 				// The data to send
 				data: requestData,
 
@@ -222,7 +222,7 @@ if (typeof imcger != 'object') {
 				// Code to run before the request is send
 				beforeSend: function(xhr, settings) {
 					$(button).find('>:first-child').attr('class', 'icon fa-refresh fa-spin fa-fw');
-					$('.imcger-iupl-button button').attr('disabled', true).css('cursor','not-allowed');
+					$('.imcger-iupl-button button').prop('disabled', true).css('cursor','not-allowed');
 				},
 			});
 
@@ -247,7 +247,7 @@ if (typeof imcger != 'object') {
 			// Code to run regardless of success or failure;
 			ajaxReq.always(function(xhr, status) {
 				$(button).find('>:first-child').attr('class', 'icon fa-save fa-fw');
-				$('.imcger-iupl-button button').attr('disabled', false).css('cursor','auto');
+				$('.imcger-iupl-button button').prop('disabled', false).css('cursor','pointer');
 			});
 		}
 	}
@@ -341,7 +341,7 @@ if (typeof imcger != 'object') {
 	 * Delete a attached file.
 	 */
 	$('#file-list').on('click', '.file-delete', function(e) {
-		let $row		 = $(this).parents('.attach-row'),
+		let $row	 = $(this).parents('.attach-row'),
 			attachId = $row.attr('data-attach-id');
 
 			imcger.imgUpload.delImgBbcode(attachId);
@@ -354,7 +354,7 @@ if (typeof imcger != 'object') {
 	 */
 	imcger.imgUpload.delImgBbcode = function(attachId) {
 		let	$textarea = $('#message', phpbb.plupload.form),
-			text = $textarea.val();
+			text	  = $textarea.val();
 
 		// Return if the bbcode isn't used at all.
 		if (text.indexOf('[img') === -1) {
