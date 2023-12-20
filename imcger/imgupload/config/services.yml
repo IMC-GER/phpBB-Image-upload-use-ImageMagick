@@ -18,6 +18,7 @@ services:
             - '@auth'
             - '@language'
             - '@ext.manager'
+            - '@filesystem'
             - '%core.root_path%'
             - '%core.php_ext%'
 

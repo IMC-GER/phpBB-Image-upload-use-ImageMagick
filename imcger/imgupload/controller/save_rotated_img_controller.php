@@ -39,6 +39,9 @@ class save_rotated_img_controller
 	/** @var \phpbb\extension\manager */
 	protected $ext_manager;
 
+	/** @var \phpbb\filesystem\filesystem */
+	protected $filesystem;
+
 	/** @var string phpBB root path */
 	protected $root_path;
 
@@ -53,6 +56,7 @@ class save_rotated_img_controller
 	 * @param \phpbb\auth\auth					$auth
 	 * @param \phpbb\language\language			$language
 	 * @param \phpbb\extension\manager			$ext_manager
+	 * @param \phpbb\filesystem\filesystem		$filesystem
 	 * @param string							$root_path
 	 * @param string							$php_ext
 	 */
@@ -64,6 +68,7 @@ class save_rotated_img_controller
 		\phpbb\auth\auth $auth,
 		\phpbb\language\language $language,
 		\phpbb\extension\manager $ext_manager,
+		\phpbb\filesystem\filesystem $filesystem,
 		$root_path,
 		$php_ext
 	)
@@ -75,6 +80,7 @@ class save_rotated_img_controller
 		$this->auth			= $auth;
 		$this->language		= $language;
 		$this->ext_manager	= $ext_manager;
+		$this->filesystem	= $filesystem;
 		$this->root_path	= $root_path;
 		$this->php_ext		= $php_ext;
 
@@ -145,7 +151,7 @@ class save_rotated_img_controller
 		$image_file_path = $this->root_path . trim($this->config['upload_path'], '/') . '/' . $img_data['physical_filename'];
 		$thumb_file_path = $this->root_path . trim($this->config['upload_path'], '/') . '/' . 'thumb_' . $img_data['physical_filename'];
 
-		if (file_exists($image_file_path))
+		if ($this->filesystem->exists($image_file_path))
 		{
 			$img_data['filesize'] = $this->rotate_image($image_file_path, $img_rotate_deg);
 		}
@@ -154,7 +160,7 @@ class save_rotated_img_controller
 			$this->json_response(4, $ext_display_name, $this->language->lang('IUL_IMG_NOT_EXIST'));
 		}
 
-		if ($img_data['thumbnail'] && file_exists($thumb_file_path))
+		if ($img_data['thumbnail'] && $this->filesystem->exists($thumb_file_path))
 		{
 			$this->rotate_image($thumb_file_path, $img_rotate_deg);
 		}
