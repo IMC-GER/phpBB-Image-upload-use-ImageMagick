@@ -27,8 +27,8 @@ This extension can change the image size and/or the image file size. It rotate i
 - [Post - upload attachments](https://raw.githubusercontent.com/IMC-GER/images/main/screenshots/imgupload/en/imgupload_upload_en.jpg)
 
 ## Requirements
-- phpBB 3.2.4 or higher
-- php 7.1 or higher
+- phpBB 3.3.0 or higher
+- php 7.2 or higher
 - php ImageMagick library installed
 
 ## Compatible with
@@ -53,6 +53,12 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 - Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
 
 ## Changelog
+
+### v1.4.0 (21-12-2023)
+- Revised JS code
+- Fixed JS code in ACP don't work with radio buttons
+- Added security measures for Ajax request
+- Changed error handling for missing thumbnail file to a warning message
 
 ### v1.3.2 (13-12-2023)
 - Fixed error when upload none image file

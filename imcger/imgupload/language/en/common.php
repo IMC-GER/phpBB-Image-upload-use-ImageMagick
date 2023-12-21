@@ -39,7 +39,7 @@ $lang = array_merge($lang, [
 
 	// Language pack author
 	'ACP_IMCGER_LANG_DESC'			=> 'British English',
-	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.2.1',
+	'ACP_IMCGER_LANG_EXT_VER' 		=> '1.4.0',
 	'ACP_IMCGER_LANG_AUTHOR' 		=> 'IMC-Ger',
 
 	// Messages

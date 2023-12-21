@@ -1,3 +1,10 @@
+{#
+	Image upload use ImageMagick
+	An extension for the phpBB Forum Software package.
+
+	@copyright (c) 2022, Thorsten Ahlers
+	@license GNU General Public License, version 2 (GPL-2.0)
+#}
 {% if S_SHOW_ATTACH_BOX and FILTERS %}
 {% INCLUDECSS '@imcger_imgupload/imgupload.css' %}
 <script>
@@ -67,7 +74,7 @@ if (typeof imcger != 'object') {
 			return parseInt(b.attach_id) - parseInt(a.attach_id);
 		});
 
-		// Replace [attachment=index] with [attachment=imc-ger]
+		// Set marker at attachment thats rotated
 		let messageText = $('#message').val(),
 			regex		= new RegExp('\\[attachment=' + index + '\\]', 'gm');
 
@@ -78,7 +85,7 @@ if (typeof imcger != 'object') {
 		phpbb.plupload.updateBbcode('removal', index);
 		phpbb.plupload.updateBbcode('add', 0);
 
-		// Replace [attachment=imc-ger] with [attachment=0]
+		// Replace attachment marker to index 0
 		messageText = $('#message').val();
 		messageText = messageText.replace(/\[attachment=imc-ger\]/gm, '[attachment=0]');
 
