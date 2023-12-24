@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Image upload use ImageMagick
  * An extension for the phpBB Forum Software package.
  *
@@ -12,13 +11,10 @@
 
 namespace imcger\imgupload\event;
 
-/**
- * @ignore
- */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Image upload use ImageMagick Event listener.
+ * Event listener
  */
 class main_listener implements EventSubscriberInterface
 {

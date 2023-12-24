@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Image upload use ImageMagick
  * An extension for the phpBB Forum Software package.
  *
@@ -11,7 +10,12 @@
 
 namespace imcger\imgupload\controller;
 
-class admin_controller
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+/**
+* ACP Event Listener
+*/
+class admin_controller implements EventSubscriberInterface
 {
 	/** @var config */
 	protected $config;

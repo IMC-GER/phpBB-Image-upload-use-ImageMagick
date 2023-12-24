@@ -4,6 +4,7 @@
  *
  * @copyright (c) 2022, Thorsten Ahlers
  * @license GNU General Public License, version 2 (GPL-2.0)
+ *
  */
 
 $('input[name=img_create_thumbnail]').on('change', function () {

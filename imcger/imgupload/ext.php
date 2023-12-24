@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Image upload use ImageMagick
  * An extension for the phpBB Forum Software package.
  *

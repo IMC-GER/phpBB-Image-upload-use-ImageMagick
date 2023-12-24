@@ -5,16 +5,13 @@
  *
  * @copyright (c) 2022, Thorsten Ahlers
  * @license GNU General Public License, version 2 (GPL-2.0)
+ *
  */
 
 namespace imcger\imgupload\controller;
 
 /**
- * @ignore
- */
-
-/**
- * Main controller
+ * Ajax main controller
  */
 class save_rotated_img_controller
 {
