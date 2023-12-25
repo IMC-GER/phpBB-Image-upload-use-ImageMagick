@@ -548,7 +548,10 @@ class main_listener implements EventSubscriberInterface
 				$image->setOption('png:compression-strategy', 1);
 				$image->setOption('png:compression-filter', 5);
 				$image->setOption('png:compression-level', 9);
-				$image->setImageType(\Imagick::IMGTYPE_PALETTEMATTE);
+				if ($image->getOption('png:bit-depth') == 16)
+				{
+					$image->setOption('png:bit-depth', 8);
+				}
 			break;
 
 			case 'WEBP':
