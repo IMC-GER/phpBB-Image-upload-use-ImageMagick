@@ -10,7 +10,7 @@
 <script>
 
 /**
- * imcger object for pphpBB.
+ * @var	imcger	object for pphpBB.
  */
 if (typeof imcger != 'object') {
 	var imcger = {};
@@ -20,7 +20,9 @@ if (typeof imcger != 'object') {
 
 	'use strict';
 
-	// imcger object for pphpBB extension Image upload use ImageMagick
+	/**
+	 * @var	imgUpload	object for pphpBB extension Image upload use ImageMagick
+	 */
 	imcger.imgUpload = {};
 
 	/**
@@ -238,6 +240,7 @@ if (typeof imcger != 'object') {
 				if (json.status < 3) {
 					imcger.imgUpload.updateAttId(json.oldAttachId, json.newAttachId);
 					imcger.imgUpload.image.imgOrientationValue[index] = 0;
+					imcger.imgUpload.image.setImgSize(json.newAttachId);
 
 					// Display a message when a warning occurs
 					if (json.message) {
@@ -260,6 +263,41 @@ if (typeof imcger != 'object') {
 			ajaxReq.always(function(xhr, status) {
 				$(button).find('>:first-child').attr('class', 'icon fa-save fa-fw');
 				$('.imcger-iupl-button button').prop('disabled', false).css('cursor','pointer');
+			});
+		},
+
+		/**
+		 * Send a request to the Server to get the image filesize
+		 * and update the row with it
+		 *
+		 * @param	int		attach_id	attach id from attach image
+		 */
+		setImgSize: function(attach_id) {
+			let imgURL = $('#img-' + attach_id).attr('src').replace('&t=1', ''),
+				ajaxReq = $.ajax({
+					url: imgURL,
+					data: null,
+					async: false,
+					type: 'HEAD',
+					dataType: "json",
+					timeout: 5000,
+				});
+
+			ajaxReq.done(function(json) {
+				let fileSize = ajaxReq.getResponseHeader('Content-Length'),
+					strFileSize = '';
+
+				if (fileSize < 1024) {
+					strFileSize = fileSize + ' {{ lang("BYTES_SHORT")|e("js") }}';
+				} else if (fileSize < 1048576) {
+					strFileSize = Math.round(fileSize / 10.24) / 100  + ' {{ lang("KIB")|e("js") }}';
+				} else {
+					strFileSize = Math.round(fileSize / 10485.76) / 100  + ' {{ lang("MIB")|e("js") }}';
+				}
+
+				if (strFileSize) {
+					$('.attach-row[data-attach-id="' + attach_id + '"] .file-size').html(strFileSize);
+				}
 			});
 		}
 	}
@@ -535,6 +573,8 @@ if (typeof imcger != 'object') {
 					}
 
 					$(this).css('margin-top', ((maxImgHeight - parseInt(imgHeight)) / 2));
+
+					imcger.imgUpload.image.setImgSize(attach.attach_id);
 				});
 			} else {
 				$link.attr('href', url).html(attach.real_filename);
