@@ -58,7 +58,9 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 - Revised JS code
 - Fixed JS code in ACP don't work with radio buttons
 - Added security measures for Ajax request
+- Added updating the image file size in the line after uploading or rotating
 - Changed error handling for missing thumbnail file to a warning message
+- Changed compression method for png files
 
 ### v1.3.2 (13-12-2023)
 - Fixed error when upload none image file

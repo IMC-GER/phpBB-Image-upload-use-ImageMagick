@@ -141,6 +141,29 @@ if (typeof imcger != 'object') {
 		},
 
 		/**
+		 * Subroutine for converting the file size into a string
+		 *
+		 * @param	int		fileSize	file size in byte
+		 *
+		 * @return	string	strFileSize	file size as byte, KiB or MiB
+		 */
+		sizeToString: function(fileSize) {
+			let	strFileSize = '';
+
+			fileSize = parseInt(fileSize);
+
+			if (fileSize < 1024) {
+				strFileSize = fileSize + ' {{ lang("BYTES_SHORT")|e("js") }}';
+			} else if (fileSize < 1048576) {
+				strFileSize = Math.round(fileSize / 10.24) / 100  + ' {{ lang("KIB")|e("js") }}';
+			} else {
+				strFileSize = Math.round(fileSize / 10485.76) / 100  + ' {{ lang("MIB")|e("js") }}';
+			}
+
+			return(strFileSize);
+		},
+
+		/**
 		 * Rotate the image clockwiese
 		 *
 		 * @param	int		attach_id	attach id from attach image
@@ -232,24 +255,38 @@ if (typeof imcger != 'object') {
 				beforeSend: function(xhr, settings) {
 					$(button).find('>:first-child').attr('class', 'icon fa-refresh fa-spin fa-fw');
 					$('.imcger-iupl-button button').prop('disabled', true).css('cursor','not-allowed');
+					$('.attach-row[data-attach-id="' + attach_id + '"]') .find('.file-status').removeClass('file-uploaded ').addClass('file-working');
+
 				},
 			});
 
 			// Code to run if the request succeeds (is done);
-			ajaxReq.done(function(json) {
-				if (json.status < 3) {
-					imcger.imgUpload.updateAttId(json.oldAttachId, json.newAttachId);
+			ajaxReq.done(function(response) {
+				if (typeof response !== 'object') {
+					return;
+				}
+
+				if (response.status < 3) {
+					imcger.imgUpload.updateAttId(response.oldAttachId, response.newAttachId);
 					imcger.imgUpload.image.imgOrientationValue[index] = 0;
-					imcger.imgUpload.image.setImgSize(json.newAttachId);
+
+					// Update row with new image size
+					if (response.fileSize) {
+						let strFileSize = imcger.imgUpload.image.sizeToString(response.fileSize);
+
+						if (strFileSize) {
+							$('.attach-row[data-attach-id="' + response.newAttachId + '"] .file-size').html(strFileSize);
+						}
+					}
 
 					// Display a message when a warning occurs
-					if (json.message) {
-						phpbb.alert(json.title, json.message);
+					if (response.message) {
+						phpbb.alert(response.title, response.message);
 					}
-				} else if (json.status == 3) {
+				} else if (response.status == 3) {
 					window.location.assign(window.location.href.replace(window.location.hash, ''));
 				} else {
-					phpbb.alert(json.title, json.message);
+					phpbb.alert(response.title, response.message);
 				}
 			});
 
@@ -263,43 +300,35 @@ if (typeof imcger != 'object') {
 			ajaxReq.always(function(xhr, status) {
 				$(button).find('>:first-child').attr('class', 'icon fa-save fa-fw');
 				$('.imcger-iupl-button button').prop('disabled', false).css('cursor','pointer');
+				$('.attach-row[data-attach-id="' + xhr.newAttachId + '"]') .find('.file-status').removeClass('file-working').addClass('file-uploaded');
 			});
 		},
 
 		/**
-		 * Send a request to the Server to get the image filesize
-		 * and update the row with it
+		 * Sends a request to the server to get the file size
+		 * of the image and update the row with it
 		 *
 		 * @param	int		attach_id	attach id from attach image
 		 */
 		setImgSize: function(attach_id) {
-			let imgURL = $('#img-' + attach_id).attr('src').replace('&t=1', ''),
-				ajaxReq = $.ajax({
+			const imgURL = $('#img-' + attach_id).attr('src').replace('&t=1', '');
+
+			let	ajaxReq = $.ajax({
 					url: imgURL,
 					data: null,
-					async: false,
 					type: 'HEAD',
 					dataType: "json",
 					timeout: 5000,
 				});
 
-			ajaxReq.done(function(json) {
-				let fileSize = ajaxReq.getResponseHeader('Content-Length'),
-					strFileSize = '';
-
-				if (fileSize < 1024) {
-					strFileSize = fileSize + ' {{ lang("BYTES_SHORT")|e("js") }}';
-				} else if (fileSize < 1048576) {
-					strFileSize = Math.round(fileSize / 10.24) / 100  + ' {{ lang("KIB")|e("js") }}';
-				} else {
-					strFileSize = Math.round(fileSize / 10485.76) / 100  + ' {{ lang("MIB")|e("js") }}';
-				}
+			ajaxReq.done(function(response, status, xhr) {
+				let strFileSize = imcger.imgUpload.image.sizeToString(xhr.getResponseHeader('Content-Length'));
 
 				if (strFileSize) {
 					$('.attach-row[data-attach-id="' + attach_id + '"] .file-size').html(strFileSize);
 				}
 			});
-		}
+		},
 	}
 
 	/**
@@ -477,6 +506,7 @@ if (typeof imcger != 'object') {
 				} else {
 					// Do nothing wenn click on image
 					$link.attr('onclick', 'return false;');
+					$link.css('cursor','default');
 				}
 
 				// Hack for vertically centered image
@@ -553,6 +583,7 @@ if (typeof imcger != 'object') {
 				} else {
 					// Do nothing wenn click on image
 					$link.attr('onclick', 'return false;');
+					$link.css('cursor','default');
 				}
 
 				// Add thumnail and buttons to rotate it
@@ -573,9 +604,10 @@ if (typeof imcger != 'object') {
 					}
 
 					$(this).css('margin-top', ((maxImgHeight - parseInt(imgHeight)) / 2));
-
-					imcger.imgUpload.image.setImgSize(attach.attach_id);
 				});
+
+				// Update row with the image file size
+				imcger.imgUpload.image.setImgSize(attach.attach_id);
 			} else {
 				$link.attr('href', url).html(attach.real_filename);
 				$row.find('.file-name').html($link);

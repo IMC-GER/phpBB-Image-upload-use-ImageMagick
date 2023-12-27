@@ -180,7 +180,7 @@ class save_rotated_img_controller
 			$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . (int) $img_attach_id;
 			$this->db->sql_query($sql);
 
-			$this->json_response(0, $ext_display_name, $alert_msg ?? '', $img_attach_id, $new_attach_id);
+			$this->json_response(0, $ext_display_name, $alert_msg ?? '', $img_attach_id, $new_attach_id, $img_data['filesize']);
 		}
 		else
 		{
@@ -218,7 +218,7 @@ class save_rotated_img_controller
 	 *
 	 * @return	string	$json
 	 */
-	private function json_response($status, $title = '', $message = '', $old_attach_id = 0, $new_attach_id = 0)
+	private function json_response($status, $title = '', $message = '', $old_attach_id = 0, $new_attach_id = 0, $file_size = 0)
 	{
 		$json_response = new \phpbb\json_response;
 		$json_response->send([
@@ -227,6 +227,7 @@ class save_rotated_img_controller
 			'message'		=> $message,
 			'oldAttachId'	=> (int) $old_attach_id,
 			'newAttachId'	=> (int) $new_attach_id,
+			'fileSize'		=> (int) $file_size,
 		]);
 	}
 }

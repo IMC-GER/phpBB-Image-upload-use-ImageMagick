@@ -10,12 +10,10 @@
 
 namespace imcger\imgupload\controller;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
 /**
-* ACP Event Listener
+* ACP Controller
 */
-class admin_controller implements EventSubscriberInterface
+class admin_controller
 {
 	/** @var config */
 	protected $config;
