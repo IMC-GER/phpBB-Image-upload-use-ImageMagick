@@ -545,13 +545,8 @@ class main_listener implements EventSubscriberInterface
 			break;
 
 			case 'PNG':
-				$image->setOption('png:compression-strategy', 1);
-				$image->setOption('png:compression-filter', 5);
-				$image->setOption('png:compression-level', 9);
-				if ($image->getOption('png:bit-depth') == 16)
-				{
-					$image->setOption('png:bit-depth', 8);
-				}
+				$image->quantizeImage(256, \Imagick::COLORSPACE_SRGB, 16, false, false);
+				$image->setImageType(\Imagick::IMGTYPE_TRUECOLORMATTE);
 			break;
 
 			case 'WEBP':
