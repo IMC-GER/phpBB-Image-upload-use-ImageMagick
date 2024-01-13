@@ -545,12 +545,16 @@ class main_listener implements EventSubscriberInterface
 			break;
 
 			case 'PNG':
-				$image->quantizeImage(256, \Imagick::COLORSPACE_SRGB, 16, false, false);
-				$image->setImageType(\Imagick::IMGTYPE_TRUECOLORMATTE);
+				if ($image->getImageColors() > 256)
+				{
+					$image->quantizeImage(256, \Imagick::COLORSPACE_SRGB, 16, false, false);
+					$image->setImageType(\Imagick::IMGTYPE_TRUECOLORMATTE);
+				}
 			break;
 
 			case 'WEBP':
 				$image->setOption('webp:alpha-compression', 1);
+				$image->setOption('webp:alpha-filtering', 1);
 				$image->setOption('webp:method', 6);
 				$image->setImageCompressionQuality($quality);
 			break;
