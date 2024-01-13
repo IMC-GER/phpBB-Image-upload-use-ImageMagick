@@ -46,6 +46,8 @@ class save_rotated_img_controller
 	protected $php_ext;
 
 	/**
+	 * Constructor for ajax controller
+	 *
 	 * @param \phpbb\config\config				$config
 	 * @param \phpbb\user						$user
 	 * @param \phpbb\request\request			$request
@@ -93,7 +95,7 @@ class save_rotated_img_controller
 	 * @var 	int		creation_time	creation time of token
 	 * @var 	string	form_token		form token
 	 *
-	 * @return	array	Json arry with status, old and new attach id or error message
+	 * @return	array	Json arry with status, old and new attach id, new file size or error message
 	 */
 	public function save_image()
 	{
@@ -215,6 +217,7 @@ class save_rotated_img_controller
 	 * @param 	string	$message		Messagebox message
 	 * @param	int		$old_attach_id	Previous attachment id
 	 * @param 	int		$new_attach_id	New attachment id
+	 * @param 	int		$file_size		New file size
 	 *
 	 * @return	string	$json
 	 */
