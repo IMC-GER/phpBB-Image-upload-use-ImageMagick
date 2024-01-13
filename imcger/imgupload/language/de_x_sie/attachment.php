@@ -44,6 +44,6 @@ $lang = array_merge($lang, [
 	'IUL_WRONG_PARAM'		  => 'Falsche Parameter gesendet.',
 	'IUL_NO_IMG_IN_DATABASE'  => 'Das Bild wurde nicht in der Datenbank gefunden.',
 	'IUL_IMG_NOT_EXIST'		  => 'Die Bilddatei existiert nicht.',
-	'IUL_THUMB_NOT_EXIST'	  => 'Das erwartete Vorschaubild existiert nicht. ',
+	'IUL_THUMB_NOT_EXIST'	  => 'Das erwartete Vorschaubild existiert nicht.',
 	'IUL_DATABASE_NOT_UPDATE' => 'Die Datenbank konnte nicht aktualisiert werden.',
 ]);
