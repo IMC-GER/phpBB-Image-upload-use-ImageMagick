@@ -54,7 +54,7 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
-### v1.4.0 (21-12-2023)
+### v1.4.0 (14-01-2024)
 - Revised JS code
 - Fixed JS code in ACP don't work with radio buttons
 - Fixed if the attachment thumbnail is too small, it will not be centered
