@@ -5,16 +5,13 @@
  *
  * @copyright (c) 2022, Thorsten Ahlers
  * @license GNU General Public License, version 2 (GPL-2.0)
+ *
  */
 
 namespace imcger\imgupload\controller;
 
 /**
- * @ignore
- */
-
-/**
- * Main controller
+ * Ajax main controller
  */
 class save_rotated_img_controller
 {
@@ -39,6 +36,9 @@ class save_rotated_img_controller
 	/** @var \phpbb\extension\manager */
 	protected $ext_manager;
 
+	/** @var \phpbb\filesystem\filesystem */
+	protected $filesystem;
+
 	/** @var string phpBB root path */
 	protected $root_path;
 
@@ -46,6 +46,8 @@ class save_rotated_img_controller
 	protected $php_ext;
 
 	/**
+	 * Constructor for ajax controller
+	 *
 	 * @param \phpbb\config\config				$config
 	 * @param \phpbb\user						$user
 	 * @param \phpbb\request\request			$request
@@ -53,6 +55,7 @@ class save_rotated_img_controller
 	 * @param \phpbb\auth\auth					$auth
 	 * @param \phpbb\language\language			$language
 	 * @param \phpbb\extension\manager			$ext_manager
+	 * @param \phpbb\filesystem\filesystem		$filesystem
 	 * @param string							$root_path
 	 * @param string							$php_ext
 	 */
@@ -64,6 +67,7 @@ class save_rotated_img_controller
 		\phpbb\auth\auth $auth,
 		\phpbb\language\language $language,
 		\phpbb\extension\manager $ext_manager,
+		\phpbb\filesystem\filesystem $filesystem,
 		$root_path,
 		$php_ext
 	)
@@ -75,6 +79,7 @@ class save_rotated_img_controller
 		$this->auth			= $auth;
 		$this->language		= $language;
 		$this->ext_manager	= $ext_manager;
+		$this->filesystem	= $filesystem;
 		$this->root_path	= $root_path;
 		$this->php_ext		= $php_ext;
 
@@ -85,9 +90,12 @@ class save_rotated_img_controller
 	/**
 	 * Rotate Image with ImageMagick
 	 *
-	 * @var 	string	$data	String contain attach id and rotate degree
+	 * @var 	int		attach_id		contain attach id
+	 * @var 	int		img_rotate_deg	contain rotate degree
+	 * @var 	int		creation_time	creation time of token
+	 * @var 	string	form_token		form token
 	 *
-	 * @return	array			Json arry with old and new attach id or error message
+	 * @return	array	Json arry with status, old and new attach id, new file size or error message
 	 */
 	public function save_image()
 	{
@@ -103,14 +111,21 @@ class save_rotated_img_controller
 			$this->json_response(3);
 		}
 
-		$img_attach_id	= $this->request->variable('attach_id', '');
-		$img_rotate_deg	= $this->request->variable('img_rotate_deg', '');
-
 		// Get name of the extension
 		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
 		$ext_display_name = $metadata_manager->get_metadata('display-name');
 
-		if (!$img_attach_id || !$img_rotate_deg)
+		// Check form token
+		if (!check_form_key('posting'))
+		{
+			$this->json_response(5, $ext_display_name, $this->language->lang('FORM_INVALID'));
+		}
+
+		// Get variable, accept only integer
+		$img_attach_id	= intval($this->request->variable('attach_id', ''));
+		$img_rotate_deg	= intval($this->request->variable('img_rotate_deg', ''));
+
+		if (!$img_attach_id || $img_rotate_deg < 1 || $img_rotate_deg > 360)
 		{
 			$this->json_response(5, $ext_display_name, $this->language->lang('IUL_WRONG_PARAM'));
 		}
@@ -135,7 +150,7 @@ class save_rotated_img_controller
 		$image_file_path = $this->root_path . trim($this->config['upload_path'], '/') . '/' . $img_data['physical_filename'];
 		$thumb_file_path = $this->root_path . trim($this->config['upload_path'], '/') . '/' . 'thumb_' . $img_data['physical_filename'];
 
-		if (file_exists($image_file_path))
+		if ($this->filesystem->exists($image_file_path))
 		{
 			$img_data['filesize'] = $this->rotate_image($image_file_path, $img_rotate_deg);
 		}
@@ -144,13 +159,14 @@ class save_rotated_img_controller
 			$this->json_response(4, $ext_display_name, $this->language->lang('IUL_IMG_NOT_EXIST'));
 		}
 
-		if ($img_data['thumbnail'] && file_exists($thumb_file_path))
+		if ($img_data['thumbnail'] && $this->filesystem->exists($thumb_file_path))
 		{
 			$this->rotate_image($thumb_file_path, $img_rotate_deg);
 		}
 		else if ($img_data['thumbnail'])
 		{
-			$this->json_response(4, $ext_display_name, $this->language->lang('IUL_THUMB_NOT_EXIST'));
+			$img_data['thumbnail'] = 0;
+			$alert_msg = $this->language->lang('IUL_THUMB_NOT_EXIST');
 		}
 
 		// Update DataBase
@@ -166,7 +182,7 @@ class save_rotated_img_controller
 			$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . (int) $img_attach_id;
 			$this->db->sql_query($sql);
 
-			$this->json_response(0, $ext_display_name, '', $img_attach_id, $new_attach_id);
+			$this->json_response(0, $ext_display_name, $alert_msg ?? '', $img_attach_id, $new_attach_id, $img_data['filesize']);
 		}
 		else
 		{
@@ -201,10 +217,11 @@ class save_rotated_img_controller
 	 * @param 	string	$message		Messagebox message
 	 * @param	int		$old_attach_id	Previous attachment id
 	 * @param 	int		$new_attach_id	New attachment id
+	 * @param 	int		$file_size		New file size
 	 *
 	 * @return	string	$json
 	 */
-	private function json_response($status, $title = '', $message = '', $old_attach_id = 0, $new_attach_id = 0)
+	private function json_response($status, $title = '', $message = '', $old_attach_id = 0, $new_attach_id = 0, $file_size = 0)
 	{
 		$json_response = new \phpbb\json_response;
 		$json_response->send([
@@ -213,6 +230,7 @@ class save_rotated_img_controller
 			'message'		=> $message,
 			'oldAttachId'	=> (int) $old_attach_id,
 			'newAttachId'	=> (int) $new_attach_id,
+			'fileSize'		=> (int) $file_size,
 		]);
 	}
 }

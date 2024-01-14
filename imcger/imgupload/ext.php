@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Image upload use ImageMagick
  * An extension for the phpBB Forum Software package.
  *
@@ -20,16 +19,16 @@ class ext extends \phpbb\extension\base
 	protected $ext_name = 'imgupload';
 
 	/** @var min phpBB version */
-	protected $phpbb_min_version = '3.2.4';
+	protected $phpbb_min_version = '3.3.0';
 
 	/** @var max phpBB version (>= query) */
 	protected $phpbb_max_version = '4.0.0';
 
 	/** @var min PHP version */
-	protected $php_min_version = '7.1.0';
+	protected $php_min_version = '7.1.3';
 
 	/** @var max PHP version (>= query) */
-	protected $php_max_version = '8.3.0';
+	protected $php_max_version = '8.4.0';
 
 	/**
 	 * Check the minimum and maximum requirements.
@@ -66,7 +65,7 @@ class ext extends \phpbb\extension\base
 			$error_message += [$language->lang('IMCGER_REQUIRE_PHP', $this->php_min_version, $this->php_max_version, PHP_VERSION),];
 		}
 
-		// When phpBB v3.2 use trigger_error() for message output. For v3.1 return false.
+		// When phpBB v3.2 use trigger_error() for message output.
 		if (phpbb_version_compare(PHPBB_VERSION, '3.3.0', '<') && !empty($error_message))
 		{
 			$message = implode('<br>', $error_message);

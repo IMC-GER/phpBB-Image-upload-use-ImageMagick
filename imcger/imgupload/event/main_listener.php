@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Image upload use ImageMagick
  * An extension for the phpBB Forum Software package.
  *
@@ -12,13 +11,10 @@
 
 namespace imcger\imgupload\event;
 
-/**
- * @ignore
- */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Image upload use ImageMagick Event listener.
+ * Event listener
  */
 class main_listener implements EventSubscriberInterface
 {
@@ -549,14 +545,16 @@ class main_listener implements EventSubscriberInterface
 			break;
 
 			case 'PNG':
-				$image->setOption('png:compression-strategy', 1);
-				$image->setOption('png:compression-filter', 5);
-				$image->setOption('png:compression-level', 9);
-				$image->setImageType(\Imagick::IMGTYPE_PALETTEMATTE);
+				if ($image->getImageColors() > 256)
+				{
+					$image->quantizeImage(256, \Imagick::COLORSPACE_SRGB, 16, false, false);
+					$image->setImageType(\Imagick::IMGTYPE_TRUECOLORMATTE);
+				}
 			break;
 
 			case 'WEBP':
 				$image->setOption('webp:alpha-compression', 1);
+				$image->setOption('webp:alpha-filtering', 1);
 				$image->setOption('webp:method', 6);
 				$image->setImageCompressionQuality($quality);
 			break;

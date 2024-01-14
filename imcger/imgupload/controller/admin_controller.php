@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Image upload use ImageMagick
  * An extension for the phpBB Forum Software package.
  *
@@ -11,6 +10,9 @@
 
 namespace imcger\imgupload\controller;
 
+/**
+* ACP Controller
+*/
 class admin_controller
 {
 	/** @var config */
