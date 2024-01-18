@@ -54,6 +54,10 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
+### v1.4.1 (18-01-2024)
+- Set save-button background green when image is rotated
+- Open confirmbox if the image has not been saved after rotation
+
 ### v1.4.0 (14-01-2024)
 - Revised JS code
 - Fixed JS code in ACP don't work with radio buttons

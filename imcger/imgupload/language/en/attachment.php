@@ -39,6 +39,10 @@ $lang = array_merge($lang, [
 	'IUL_PLACE_INLINE'		 => 'Place thumbnail inline',
 	'IUL_IMAGE_PLACE_INLINE' => 'Place image inline',
 
+	// Confirmbox
+	'IUL_CONFIRMBOX_TEXT1'	 => 'The following images were rotated but not saved.',
+	'IUL_CONFIRMBOX_TEXT2'	 => 'Do you want to continue without saving the rotation of the images?',
+
 	// Errors from XMLHttpRequest
 	'IUL_REQUEST_ERROR'		  => 'The request encountered an error.',
 	'IUL_WRONG_PARAM'		  => 'Wrong parameter.',

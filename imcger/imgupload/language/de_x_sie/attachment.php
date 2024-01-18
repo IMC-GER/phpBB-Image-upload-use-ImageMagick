@@ -39,6 +39,10 @@ $lang = array_merge($lang, [
 	'IUL_PLACE_INLINE'		 => 'Vorschaubild im Beitrag anzeigen',
 	'IUL_IMAGE_PLACE_INLINE' => 'Bild im Beitrag anzeigen',
 
+	// Confirmbox
+	'IUL_CONFIRMBOX_TEXT1'	 => 'Folgende Bilder wurden gedreht, jedoch nicht gespeichert.',
+	'IUL_CONFIRMBOX_TEXT2'	 => 'Möchten sie fortfahren ohne die Drehung der Bilder zu speichern?',
+
 	// Errors from XMLHttpRequest
 	'IUL_REQUEST_ERROR'		  => 'Bei der Anfrage ist ein Fehler aufgetreten.',
 	'IUL_WRONG_PARAM'		  => 'Falsche Parameter gesendet.',

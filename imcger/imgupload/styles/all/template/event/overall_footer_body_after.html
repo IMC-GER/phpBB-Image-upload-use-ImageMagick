@@ -138,6 +138,15 @@ if (typeof imcger != 'object') {
 					});
 				}
 			});
+
+			if (deg != 0) {
+				$('[data-attach-id="' + attach_id + '"]').find('.save-image').css({
+					'background-color': '#22f822',
+					'background-image': 'unset'
+				});
+			} else {
+				$('[data-attach-id="' + attach_id + '"]').find('.save-image').removeAttr( 'style' );
+			}
 		},
 
 		/**
@@ -262,6 +271,7 @@ if (typeof imcger != 'object') {
 					imcger.imgUpload.updateAttId(response.oldAttachId, response.newAttachId);
 					imcger.imgUpload.image.imgOrientationValue[index] = 0;
 					imcger.imgUpload.image.updateImgFileSize(response.newAttachId, response.fileSize);
+					$('[data-attach-id="' + response.newAttachId + '"]').find('.save-image').removeAttr( 'style' );
 
 					// Display a message when a warning occurs
 					if (response.message) {
@@ -426,6 +436,48 @@ if (typeof imcger != 'object') {
 	};
 
 	/**
+	 * Open a confirmbox when preview or save post
+	 * and rotated images have not been saved
+	 */
+	$('.submit-buttons').on('click', '.button1', function(e) {
+		imcger.imgUpload.submitType = $(e.target).attr('name');
+		let attach_id   = 0,
+			imgHTMLList = '<ul>';
+
+		// Are all images saved?
+		$.each(imcger.imgUpload.image.imgOrientationValue, function(index, value) {
+
+			if (value != 0) {
+				attach_id = imcger.imgUpload.image.imgOrientationIndex[index];
+
+				imgHTMLList += '<li>' + $('#img-' + attach_id).attr('title');
+			}
+		});
+		imgHTMLList += '</ul>';
+
+		// If one or more images not save open confirmbox
+		if (attach_id) {
+			let confirmMsgText = '<h3 class="alert_title">{{ IMGUPLOAD_TITLE }}</h3><div class="alert_text"><p>{{ lang("IUL_CONFIRMBOX_TEXT1")|e("js") }}</p>' + imgHTMLList + '<p>{{ lang("IUL_CONFIRMBOX_TEXT2")|e("js") }}</p><input type="button" name="confirm" value="{{ lang("YES")|e("js") }}" class="button2">&nbsp;&nbsp;<input type="button" name="cancel" value="{{ lang("NO")|e("js") }}" class="button2"></div>';
+
+			e.preventDefault();
+			phpbb.confirm(confirmMsgText, imcger.imgUpload.confirmSavePost, true);
+		}
+	});
+
+	/**
+	 * Callback function for confirmbox
+	 *
+	 * @param	{bool}	answerYes
+	 */
+	 imcger.imgUpload.confirmSavePost = function(answerYes) {
+
+		if (answerYes) {
+			$('.submit-buttons').off('click', '.button1');
+			$('.submit-buttons [name="' + imcger.imgUpload.submitType + '"').trigger('click');
+		}
+	}
+
+	/**
 	 * Update the relevant elements and hidden data for
 	 * an attachment when page load.
 	 */
@@ -497,7 +549,7 @@ if (typeof imcger != 'object') {
 						imgHeight = maxImgHeight / e.target.width * e.target.height;
 					}
 
-					$(this).css('margin-top', ((maxImgHeight - parseInt(imgHeight)) / 2));
+					$(e.target).css('margin-top', ((maxImgHeight - parseInt(imgHeight)) / 2));
 				});
 			}
 		});
@@ -584,7 +636,7 @@ if (typeof imcger != 'object') {
 						imgHeight = maxImgHeight / e.target.width * e.target.height;
 					}
 
-					$(this).css('margin-top', ((maxImgHeight - parseInt(imgHeight)) / 2));
+					$(e.target).css('margin-top', ((maxImgHeight - parseInt(imgHeight)) / 2));
 				});
 
 				// Update row with the image file size

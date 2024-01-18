@@ -50,3 +50,9 @@
 .imcger-iupl-button .button:hover .icon {
 	color: #D31141;
 }
+
+/*	Post confirmbox
+-------------------------------------- */
+.alert_text ul {
+	margin: -1em 0 1.5em 2em;
+}
