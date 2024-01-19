@@ -472,6 +472,12 @@ if (typeof imcger != 'object') {
 	 imcger.imgUpload.confirmSavePost = function(answerYes) {
 
 		if (answerYes) {
+			let hashPos = phpbb.plupload.form.action.indexOf('#');
+
+			if (hashPos > 0) {
+				phpbb.plupload.form.action = phpbb.plupload.form.action.substr(0, hashPos);
+			}
+
 			$('.submit-buttons').off('click', '.button1');
 			$('.submit-buttons [name="' + imcger.imgUpload.submitType + '"').trigger('click');
 		}
@@ -503,7 +509,7 @@ if (typeof imcger != 'object') {
 				{% if (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 %}
 				$link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\'; $(\'[data-attach-id=' + attach_id + ']\').find(\'.button2.file-inline-bbcode\').hide();" title="' + real_filename + '" alt="' + real_filename + '">');
 				{% else %}
-				$link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '; " alt="' + real_filename + '">');
+				$link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '" alt="' + real_filename + '">');
 				{% endif %}
 
 				if ({{ (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 }}) {
