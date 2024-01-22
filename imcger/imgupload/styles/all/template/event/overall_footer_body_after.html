@@ -327,12 +327,12 @@ if (typeof imcger != 'object') {
 	 */
 	imcger.imgUpload.showAttachImage = function() {
 			  // Attachments that insert in the message
-		const notDisplayedAttachments = {{ IUL_NOT_DISPLAYED_ATTACHMENTS }},
+		const notDisplayedAttachments = {{ IUL_NOT_DISPLAYED_ATTACHMENTS ?? '[]' }},
 			  // If true don't show the attachment box
-			  notDisplayAttachmentBox = {{ IUL_NOT_DISPLAY_ATTACHMENTBOX }};
+			  notDisplayAttachmentBox = {{ IUL_NOT_DISPLAY_ATTACHMENTBOX ?? 0 }};
 
 		// Return when no attachments present
-		if (typeof notDisplayAttachmentBox == 'undefined' || notDisplayAttachmentBox && !notDisplayedAttachments.length) {
+		if (!notDisplayedAttachments.length) {
 			return;
 		}
 
