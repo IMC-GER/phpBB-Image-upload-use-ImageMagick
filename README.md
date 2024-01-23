@@ -54,6 +54,10 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
+### v1.4.2 (23-01-2024)
+- Improved error handling in preview
+- Fixed multiple preview hashes 
+
 ### v1.4.1 (18-01-2024)
 - Set save-button background green when image is rotated
 - Open confirmbox if the image has not been saved after rotation
