@@ -51,6 +51,7 @@
 
 .toggle:disabled {
 	background-color: #cccccc;
+	cursor: default;
 }
 
 .toggle:disabled:before {
