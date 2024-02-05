@@ -662,7 +662,7 @@ if (typeof imcger != 'object') {
 })(jQuery); // Avoid conflicts with other libraries
 </script>
 {% endif %}
-{% if IUL_IMG_MAX_THUMB_WIDTH %}
+{% if IUL_IMG_MAX_THUMB_WIDTH && (attachment || S_HAS_ATTACHMENTS) %}
 <script>
 /**
  * Image upload use ImageMagick
