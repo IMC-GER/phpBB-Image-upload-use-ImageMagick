@@ -1,7 +1,7 @@
 {
     "stable": {
         "1.0": {
-            "current": "1.4.2",
+            "current": "1.4.3",
             "announcement": "https://www.phpbb.de/community/viewtopic.php?t=246009",
             "download": "https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick/tags",
             "eol": null,

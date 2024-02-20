@@ -378,7 +378,7 @@ class main_listener implements EventSubscriberInterface
 		$post_attachments	= $event['attachments'];
 
 		// Do nothing when no attachment
-		if (!count($post_attachments))
+		if (empty($post_attachments[$row['post_id']]))
 		{
 			return;
 		}

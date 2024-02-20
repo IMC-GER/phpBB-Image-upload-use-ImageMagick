@@ -54,6 +54,9 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
+### v1.4.3 (20-02-2024)
+- Fixed [Error in Post](https://www.phpbb.de/community/viewtopic.php?p=1426071#p1426071)
+
 ### v1.4.2 (23-01-2024)
 - Improved error handling in preview
 - Fixed multiple preview hashes 
