@@ -19,7 +19,7 @@ class v121 extends \phpbb\db\migration\migration
 
 	public static function depends_on()
 	{
-		return ['\imcger\imgupload\migrations\v100'];
+		return ['\imcger\imgupload\migrations\v120'];
 	}
 
 	public function update_data()

@@ -113,8 +113,13 @@ class main_listener implements EventSubscriberInterface
 		$allowed_images = [];
 		$img_max_thumb_width = $this->config['imcger_imgupload_img_max_thumb_width'];
 
-		$sql = 'SELECT extension FROM ' . EXTENSIONS_TABLE . ' WHERE group_id = (SELECT group_id FROM ' . EXTENSION_GROUPS_TABLE . ' WHERE group_name = "IMAGES")';
-		$result = $this->db->sql_query($sql);
+		$sql_ary =  'SELECT group_id FROM ' . EXTENSION_GROUPS_TABLE	. ' WHERE group_name = "IMAGES"';
+		$result = $this->db->sql_query($sql_ary);
+		$arry = $this->db->sql_fetchrow($result);
+		$this->db-> sql_freeresult();
+
+		$sql_ary =  'SELECT extension FROM ' . EXTENSIONS_TABLE	. ' WHERE group_id = ' . $arry['group_id'];
+		$result = $this->db->sql_query($sql_ary);
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
