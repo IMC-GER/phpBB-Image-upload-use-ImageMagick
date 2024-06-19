@@ -32,7 +32,7 @@ class v144 extends \phpbb\db\migration\migration
 
 	public function reset_max_filesize()
 	{
-		$sql = 'UPDATE ' . EXTENSION_GROUPS_TABLE . ' SET max_filesize = 0 WHERE group_name = "IMAGES";';
+		$sql = 'UPDATE ' . EXTENSION_GROUPS_TABLE . ' SET max_filesize = 0 WHERE cat_id = 1;';
 		$this->db->sql_query($sql);
 	}
 }

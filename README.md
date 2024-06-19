@@ -40,7 +40,7 @@ This extension can change the image size and/or the image file size. It rotate i
 Copy the extension to `phpBB3/ext/imcger/imgupload`.
 Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
 
-For full functionality "Maximum file size" in "ACP" > "Posting" > "Attachment settings" must be set to 0. This is done automatically during the migration.
+For full functionality "Maximum file size" in "ACP" > "Posting" > "Attachment settings" must be set to 0 and in "ACP" > "Posting" > "Manage attachment extension groups" > "Settings in Images" > "Maximum file size" must be set to 0. This is done automatically during the migration.
 
 For full functionality "Maximum image dimensions" in "ACP" > "Posting" > "Attachment settings" must be set to 0. This is done automatically during the migration.
 For full functionality "Maximum avatar file size" in "ACP" > "Board configuration" > "Avatar settings" must be set to 0. This is done automatically during the migration.
@@ -53,6 +53,10 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 - Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
 
 ## Changelog
+
+### v1.4.4 (19-06-2024)
+- Added Set max filesize in attachment extension groups on migraton to 0.
+- Fixed Don't work in none standard attachment extension groups
 
 ### v1.4.3 (20-02-2024)
 - Fixed [Error in Post](https://www.phpbb.de/community/viewtopic.php?p=1426071#p1426071)

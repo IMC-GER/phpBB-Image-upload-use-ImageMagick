@@ -113,19 +113,22 @@ class main_listener implements EventSubscriberInterface
 		$allowed_images = [];
 		$img_max_thumb_width = $this->config['imcger_imgupload_img_max_thumb_width'];
 
-		$sql_ary =  'SELECT group_id FROM ' . EXTENSION_GROUPS_TABLE	. ' WHERE group_name = "IMAGES"';
-		$result = $this->db->sql_query($sql_ary);
-		$arry = $this->db->sql_fetchrow($result);
-		$this->db-> sql_freeresult();
+		// Get image groups
+		$sql_ary =  'SELECT group_id FROM ' . EXTENSION_GROUPS_TABLE	. ' WHERE cat_id = 1';
+		$result_group = $this->db->sql_query($sql_ary);
 
-		$sql_ary =  'SELECT extension FROM ' . EXTENSIONS_TABLE	. ' WHERE group_id = ' . $arry['group_id'];
-		$result = $this->db->sql_query($sql_ary);
-
-		while ($row = $this->db->sql_fetchrow($result))
+		while ($group_row = $this->db->sql_fetchrow($result_group))
 		{
-			$allowed_images[] = $row['extension'];
+			// Get extension from image groups
+			$sql_ary =  'SELECT extension FROM ' . EXTENSIONS_TABLE	. ' WHERE group_id = ' . $group_row['group_id'];
+			$result_ext = $this->db->sql_query($sql_ary);
+
+			while ($row = $this->db->sql_fetchrow($result_ext))
+			{
+				$allowed_images[] = $row['extension'];
+			}
 		}
-		$this->db-> sql_freeresult();
+		$this->db->sql_freeresult();
 
 		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
 
