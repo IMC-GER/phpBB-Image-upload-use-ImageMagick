@@ -120,7 +120,7 @@ class main_listener implements EventSubscriberInterface
 		while ($group_row = $this->db->sql_fetchrow($result_group))
 		{
 			// Get extension from image groups
-			$sql_ary =  'SELECT extension FROM ' . EXTENSIONS_TABLE	. ' WHERE group_id = ' . $group_row['group_id'];
+			$sql_ary =  'SELECT extension FROM ' . EXTENSIONS_TABLE	. ' WHERE group_id = ' . (int) $group_row['group_id'];
 			$result_ext = $this->db->sql_query($sql_ary);
 
 			while ($row = $this->db->sql_fetchrow($result_ext))
