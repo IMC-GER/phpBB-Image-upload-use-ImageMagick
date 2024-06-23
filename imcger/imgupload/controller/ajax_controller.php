@@ -13,7 +13,7 @@ namespace imcger\imgupload\controller;
 /**
  * Ajax main controller
  */
-class save_rotated_img_controller
+class ajax_controller
 {
 	/** @var \phpbb\config\config */
 	protected $config;
@@ -44,6 +44,9 @@ class save_rotated_img_controller
 
 	/** @var string phpEx */
 	protected $php_ext;
+
+	/** @var string Extension name */
+	protected $ext_display_name;
 
 	/**
 	 * Constructor for ajax controller
@@ -85,19 +88,18 @@ class save_rotated_img_controller
 
 		// Add language file
 		$this->language->add_lang('attachment', 'imcger/imgupload');
+
+		// Get name of the extension
+		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
+		$this->ext_display_name = $metadata_manager->get_metadata('display-name');
 	}
 
 	/**
-	 * Rotate Image with ImageMagick
+	 * Assigns the Ajax request app.php/imgupload/{order}
 	 *
-	 * @var 	int		attach_id		contain attach id
-	 * @var 	int		img_rotate_deg	contain rotate degree
-	 * @var 	int		creation_time	creation time of token
-	 * @var 	string	form_token		form token
-	 *
-	 * @return	array	Json arry with status, old and new attach id, new file size or error message
+	 * @access public
 	 */
-	public function save_image()
+	public function request($order)
 	{
 		// No ajax request, redirect to forum index
 		if (!$this->request->is_ajax())
@@ -111,23 +113,53 @@ class save_rotated_img_controller
 			$this->json_response(3);
 		}
 
-		// Get name of the extension
-		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
-		$ext_display_name = $metadata_manager->get_metadata('display-name');
-
 		// Check form token
-		if (!check_form_key('posting'))
+		if (!(check_form_key('posting') || check_form_key('ucp_pm_compose')))
 		{
-			$this->json_response(5, $ext_display_name, $this->language->lang('FORM_INVALID'));
+			$this->json_response(5, $this->ext_display_name, $this->language->lang('FORM_INVALID'));
 		}
 
-		// Get variable, accept only integer
-		$img_attach_id	= intval($this->request->variable('attach_id', ''));
-		$img_rotate_deg	= intval($this->request->variable('img_rotate_deg', ''));
+		switch ($order)
+		{
+			// Ajax request to save image after rotation
+			case 'save_image':
+				// Get variable, accept only integer
+				$img_attach_id	= intval($this->request->variable('attach_id', 0));
+				$img_rotate_deg	= intval($this->request->variable('img_rotate_deg', 0));
 
+				$this->save_image($img_attach_id, $img_rotate_deg);
+			break;
+
+			// Ajax request for image size
+			case 'image_size':
+				// Get variable, accept only integer
+				$img_attach_id	= intval($this->request->variable('attach_id', 0));
+
+				$this->image_size($img_attach_id);
+			break;
+
+			// Displays the start page of phpBB
+			default:
+				redirect($this->phpbb_root_path . 'index.' . $this->phpEx);
+			break;
+		}
+	}
+
+	/**
+	 * Rotate and save Image with ImageMagick
+	 *
+	 * @var 	int		attach_id		contain attach id
+	 * @var 	int		img_rotate_deg	contain rotate degree
+	 * @var 	int		creation_time	creation time of token
+	 * @var 	string	form_token		form token
+	 *
+	 * @return	array	Json arry with status, old and new attach id, new file size or error message
+	 */
+	private function save_image($img_attach_id, $img_rotate_deg)
+	{
 		if (!$img_attach_id || $img_rotate_deg < 1 || $img_rotate_deg > 360)
 		{
-			$this->json_response(5, $ext_display_name, $this->language->lang('IUL_WRONG_PARAM'));
+			$this->json_response(5, $this->ext_display_name, $this->language->lang('IUL_WRONG_PARAM'));
 		}
 
 		if ($this->auth->acl_gets('u_attach', 'a_attach', 'f_attach'))
@@ -143,7 +175,7 @@ class save_rotated_img_controller
 
 		if (!isset($img_data) || $img_data == false)
 		{
-			$this->json_response(4, $ext_display_name, $this->language->lang('IUL_NO_IMG_IN_DATABASE'));
+			$this->json_response(4, $this->ext_display_name, $this->language->lang('IUL_NO_IMG_IN_DATABASE'));
 		}
 
 		// Get image file path
@@ -156,7 +188,7 @@ class save_rotated_img_controller
 		}
 		else
 		{
-			$this->json_response(4, $ext_display_name, $this->language->lang('IUL_IMG_NOT_EXIST'));
+			$this->json_response(4, $this->ext_display_name, $this->language->lang('IUL_IMG_NOT_EXIST'));
 		}
 
 		if ($img_data['thumbnail'] && $this->filesystem->exists($thumb_file_path))
@@ -182,21 +214,41 @@ class save_rotated_img_controller
 			$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . (int) $img_attach_id;
 			$this->db->sql_query($sql);
 
-			$this->json_response(0, $ext_display_name, $alert_msg ?? '', $img_attach_id, $new_attach_id, $img_data['filesize']);
+			$this->json_response(0, $this->ext_display_name, $alert_msg ?? '', $img_attach_id, $new_attach_id, $img_data['filesize']);
 		}
 		else
 		{
-			$this->json_response(5, $ext_display_name, $this->language->lang('IUL_DATABASE_NOT_UPDATE'));
+			$this->json_response(5, $this->ext_display_name, $this->language->lang('IUL_DATABASE_NOT_UPDATE'));
 		}
+	}
+
+	/**
+	 * Get Image size
+	 *
+	 * @var 	int		$attach_id	contain attach id
+	 *
+	 * @return	array	Json arry with attach id and file size
+	 */
+	private function image_size($attach_id)
+	{
+		$sql = 'SELECT filesize
+				FROM ' . ATTACHMENTS_TABLE . '
+				WHERE attach_id = ' . (int) $attach_id;
+
+		$result	  = $this->db->sql_query($sql);
+		$img_data = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		$this->json_response(0, $this->ext_display_name, '', $attach_id, $attach_id, $img_data['filesize']);
 	}
 
 	/**
 	 * Rotate Image with ImageMagick
 	 *
-	 * @param 	string	$path	Path to the image file
-	 * @param	int		$deg	Rotation angle
+	 * @param 	string	$path		Path to the image file
+	 * @param	int		$deg		Rotation angle
 	 *
-	 * @return	int		Image	file size
+	 * @return	int		$filesize	Image file size
 	 */
 	private function rotate_image($path, $deg)
 	{

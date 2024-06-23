@@ -138,7 +138,8 @@ class main_listener implements EventSubscriberInterface
 			'IUL_IMG_SET_INLINE'	  => $this->config['imcger_imgupload_image_inline'],
 			'IUL_IMG_MAX_THUMB_WIDTH' => $img_max_thumb_width ? $img_max_thumb_width . 'px' : false,
 			'IMGUPLOAD_TITLE' 		  => $metadata_manager->get_metadata('display-name'),
-			'U_IUL_SAVE_IMAGE'  	  => $this->helper->route('imcger_imgupload_save_image_controller'),
+			'U_IUL_SAVE_IMAGE'  	  => $this->helper->route('imcger_imgupload_ajax_controller', ['order' => 'save_image']),
+			'U_IUL_IMAGE_SIZE'  	  => $this->helper->route('imcger_imgupload_ajax_controller', ['order' => 'image_size']),
 		]);
 	}
 
@@ -316,7 +317,7 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * @param \phpbb\event\data	$event	Event object
 	 */
-	function imcger_modify_uploaded_avatar($event)
+	public function imcger_modify_uploaded_avatar($event)
 	{
 		if ($this->config['imcger_imgupload_avatar_resize'])
 		{
@@ -380,7 +381,7 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * @param \phpbb\event\data	$event	Event object
 	 */
-	function imcger_viewtopic_modify_post_row($event)
+	public function imcger_viewtopic_modify_post_row($event)
 	{
 		$row				= $event['row'];
 		$post_attachments	= $event['attachments'];
@@ -422,7 +423,7 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * @param \phpbb\event\data	$event	Event object
 	 */
-	function imcger_posting_modify_template_vars($event)
+	public function imcger_posting_modify_template_vars($event)
 	{
 		// Get message text and attachment data
 		$message_parser = $event['message_parser'];
@@ -458,7 +459,7 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * @return bool		$img_resize	images is resize
 	 */
-	function resize_image($image, $max_width, $max_height)
+	public function resize_image($image, $max_width, $max_height)
 	{
 		$img_resize = false;
 
@@ -504,7 +505,7 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * @return string	$imageformat images format
 	 */
-	function set_image_format($image, $mimetype)
+	public function set_image_format($image, $mimetype)
 	{
 		// Check the mimetype and set the appropriate type for the image
 		switch ($mimetype)
@@ -541,7 +542,7 @@ class main_listener implements EventSubscriberInterface
 	 * @param object	$image		image object
 	 * @param integer	$quality	image quality value
 	 */
-	function set_image_compression($image, $quality = 80)
+	public function set_image_compression($image, $quality = 80)
 	{
 		$image_format = $image->getImageFormat();
 
@@ -581,7 +582,7 @@ class main_listener implements EventSubscriberInterface
 	 * @return array	changed		orientation changed
 	 * 					rotate		rotate 90 degree
 	 */
-	function image_auto_rotate($image)
+	public function image_auto_rotate($image)
 	{
 		$is_rotate	= false; // true, when orientation change between portrait and landscape
 		$is_changed = true;  // true, when orientation change
@@ -657,7 +658,7 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * @return integer	$filesize		file size of the image after shrink
 	 */
-	function image_auto_length($image, $new_image_size)
+	public function image_auto_length($image, $new_image_size)
 	{
 		// get image dimensions
 		$img_geo = $image->getImageGeometry();

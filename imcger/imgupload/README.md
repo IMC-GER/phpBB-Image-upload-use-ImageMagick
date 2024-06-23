@@ -54,6 +54,9 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
+### v1.4.5 (23-06-2024)
+- Fixed Some servers do not send the new file size after uploading images.
+
 ### v1.4.4 (19-06-2024)
 - Added Set max filesize in attachment extension groups on migraton to 0.
 - Fixed Don't work in none standard attachment extension groups

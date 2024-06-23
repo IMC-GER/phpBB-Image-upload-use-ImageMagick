@@ -8,8 +8,8 @@ services:
             - '@request'
             - '@ext.manager'
 
-    imcger.imgupload.save_rotated_img_controller:
-        class: imcger\imgupload\controller\save_rotated_img_controller
+    imcger.imgupload.ajax_controller:
+        class: imcger\imgupload\controller\ajax_controller
         arguments:
             - '@config'
             - '@user'

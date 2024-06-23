@@ -1,0 +1,60 @@
+/*
+ Image upload use ImageMagick
+ Changes for plupload.css
+----------------------------------- */
+
+.file-name {
+	vertical-align: middle;
+	max-width: 200px;
+}
+
+.file-name img {
+	max-height: 150px;
+	max-width: 150px;
+	align-self: center;
+}
+
+.file-name a {
+	min-width: 150px;
+	display: flex;
+}
+
+.attach-name span {
+	padding-left: 0.5em;
+}
+
+.attach-controls {
+	padding-top: 0.5em;
+	float: none;
+}
+
+.attach-controls input.button2 {
+	margin-bottom: 5px;
+}
+
+/*	rotate buttons
+----------------------------------- */
+.file-name.ellipsis-text {
+	text-align: center;
+	display: flex;
+}
+
+.imcger-iupl-button {
+	display: inline-block;
+	align-self: center;
+}
+
+.imcger-iupl-button .button {
+	float: left;
+	margin: 2px 0 2px 0;
+}
+
+.imcger-iupl-button .button:hover .icon {
+	color: #D31141;
+}
+
+/*	Post confirmbox
+-------------------------------------- */
+.alert_text ul {
+	margin: -1em 0 1.5em 2em;
+}

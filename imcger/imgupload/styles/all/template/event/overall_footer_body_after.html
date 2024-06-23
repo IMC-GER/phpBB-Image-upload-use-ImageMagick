@@ -305,18 +305,27 @@ if (typeof imcger != 'object') {
 		 * @param	int		attach_id	attach id from attach image
 		 */
 		setImgSize: function(attach_id) {
-			const imgURL = $('#img-' + attach_id).attr('src').replace('&t=1', '');
+			const url		  = '{{ U_IUL_IMAGE_SIZE }}',
+				  requestData = 'attach_id=' + attach_id +
+								'&creation_time=' + $('input[name="creation_time"]').val() +
+								'&form_token=' + $('input[name="form_token"]').val();
 
-			let	ajaxReq = $.ajax({
-					url: imgURL,
-					data: null,
-					type: 'HEAD',
-					dataType: "json",
-					timeout: 5000,
-				});
+			let ajaxReq = $.ajax({
+				url: url,
+				data: requestData,
+				type: 'POST',
+				dataType: "json",
+				timeout: 10000,
+			});
+			// Code to run if the request succeeds (is done);
+			ajaxReq.done(function(response) {
+				if (typeof response !== 'object') {
+					return;
+				}
 
-			ajaxReq.done(function(response, status, xhr) {
-				imcger.imgUpload.image.updateImgFileSize(attach_id, xhr.getResponseHeader('Content-Length'));
+				if (!isNaN(response.fileSize) && response.status < 3) {
+					imcger.imgUpload.image.updateImgFileSize(response.oldAttachId, response.fileSize);
+				}
 			});
 		},
 	}
