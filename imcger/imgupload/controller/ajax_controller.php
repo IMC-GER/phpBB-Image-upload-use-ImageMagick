@@ -231,7 +231,7 @@ class ajax_controller
 	 */
 	private function image_size($attach_id)
 	{
-		$sql = 'SELECT filesize
+		$sql = 'SELECT physical_filename
 				FROM ' . ATTACHMENTS_TABLE . '
 				WHERE attach_id = ' . (int) $attach_id;
 
@@ -239,7 +239,13 @@ class ajax_controller
 		$img_data = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		$this->json_response(0, $this->ext_display_name, '', $attach_id, $attach_id, $img_data['filesize']);
+		$file_path = join('/', [trim($this->config['upload_path'], '/'), trim($img_data['physical_filename'], '/')]);
+
+		$image = new \Imagick($file_path);
+		$filesize = strlen($image->getImageBlob());
+		$image->clear();
+
+		$this->json_response(0, $this->ext_display_name, '', $attach_id, $attach_id, $filesize);
 	}
 
 	/**
