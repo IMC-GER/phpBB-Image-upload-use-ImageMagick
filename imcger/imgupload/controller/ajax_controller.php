@@ -241,9 +241,13 @@ class ajax_controller
 
 		$file_path = join('/', [trim($this->config['upload_path'], '/'), trim($img_data['physical_filename'], '/')]);
 
-		$image = new \Imagick($file_path);
-		$filesize = strlen($image->getImageBlob());
-		$image->clear();
+		clearstatcache();
+		$filesize = @filesize($file_path);
+
+		if ($filesize == false)
+		{
+			$this->json_response(5);
+		}
 
 		$this->json_response(0, $this->ext_display_name, '', $attach_id, $attach_id, $filesize);
 	}

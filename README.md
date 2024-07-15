@@ -54,6 +54,10 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
+### v1.4.6 (14-07-2024)
+- Changed Determining the image file size.
+- Fixed Submit buttons after closing the confirm box without function.
+
 ### v1.4.5 (23-06-2024)
 - Fixed Some servers do not send the new file size after uploading images.
 

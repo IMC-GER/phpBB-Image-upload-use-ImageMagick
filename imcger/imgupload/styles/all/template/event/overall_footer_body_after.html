@@ -26,6 +26,13 @@ if (typeof imcger != 'object') {
 	imcger.imgUpload = {};
 
 	/**
+	 * Remove new click event in 3.3.12
+	 * It doesn't work with imgUpload,
+	 * the event function is built into imgUpload own event.
+	 */
+	$('[data-prevent-flood] input[type=submit]').off('click');
+
+	/**
 	 * Update row with new attachment id
 	 * when save image after rotate
 	 *
@@ -449,9 +456,13 @@ if (typeof imcger != 'object') {
 	 * and rotated images have not been saved
 	 */
 	$('.submit-buttons').on('click', '.button1', function(e) {
-		imcger.imgUpload.submitType = $(e.target).attr('name');
+		imcger.imgUpload.submitButton = $(this); // Store the button element
+
 		let attach_id   = 0,
 			imgHTMLList = '<ul>';
+
+		// Always add the disabled class for visual feedback
+		imcger.imgUpload.submitButton.addClass('disabled');
 
 		// Are all images saved?
 		$.each(imcger.imgUpload.image.imgOrientationValue, function(index, value) {
@@ -470,6 +481,27 @@ if (typeof imcger != 'object') {
 
 			e.preventDefault();
 			phpbb.confirm(confirmMsgText, imcger.imgUpload.confirmSavePost, true);
+
+			// Re-enable when the confirmbox is closed by clicking on the wrapper
+			$('#darken').on('click', function(e) {imcger.imgUpload.submitButton.removeClass('disabled');});
+
+		} else {
+			const $form = imcger.imgUpload.submitButton.closest('form');
+
+			// Submit form if it hasn't been submitted yet
+			if (!$form.prop('data-form-submitted')) {
+				$form.prop('data-form-submitted', true);
+
+				return;
+			}
+
+			// Prevent default submission for subsequent clicks within 5 seconds
+			e.preventDefault();
+
+			setTimeout(() => {
+				$form.prop('removeProp', 'data-form-submitted');
+				imcger.imgUpload.submitButton.removeClass('disabled'); // Re-enable after 5 seconds
+			}, 5000);
 		}
 	});
 
@@ -488,7 +520,26 @@ if (typeof imcger != 'object') {
 			}
 
 			$('.submit-buttons').off('click', '.button1');
-			$('.submit-buttons [name="' + imcger.imgUpload.submitType + '"').trigger('click');
+			imcger.imgUpload.submitButton.trigger('click');
+
+			const $form = imcger.imgUpload.submitButton.closest('form');
+
+			// Submit form if it hasn't been submitted yet
+			if (!$form.prop('data-form-submitted')) {
+				$form.prop('data-form-submitted', true);
+
+				return;
+			}
+
+			// Prevent default submission for subsequent clicks within 5 seconds
+			e.preventDefault();
+
+			setTimeout(() => {
+				$form.prop('removeProp', 'data-form-submitted');
+				imcger.imgUpload.submitButton.removeClass('disabled'); // Re-enable after 5 seconds
+			}, 5000);
+		} else {
+			imcger.imgUpload.submitButton.removeClass('disabled'); // Re-enable
 		}
 	}
 
