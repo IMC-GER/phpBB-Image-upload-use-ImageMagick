@@ -113,21 +113,20 @@ class main_listener implements EventSubscriberInterface
 		$allowed_images = [];
 		$img_max_thumb_width = $this->config['imcger_imgupload_img_max_thumb_width'];
 
-		// Get image groups
-		$sql_ary =  'SELECT group_id FROM ' . EXTENSION_GROUPS_TABLE	. ' WHERE cat_id = 1';
-		$result_group = $this->db->sql_query($sql_ary);
+		// Get extension from image groups
+		$sql_ary =  'SELECT e.extension
+					 FROM ' . EXTENSIONS_TABLE . ' e
+					 JOIN ' . EXTENSION_GROUPS_TABLE . ' g
+					 WHERE e.group_id = g.group_id
+					 AND g.cat_id = 1';
 
-		while ($group_row = $this->db->sql_fetchrow($result_group))
-		{
-			// Get extension from image groups
-			$sql_ary =  'SELECT extension FROM ' . EXTENSIONS_TABLE	. ' WHERE group_id = ' . (int) $group_row['group_id'];
-			$result_ext = $this->db->sql_query($sql_ary);
+		$result_ext = $this->db->sql_query($sql_ary);
 
-			while ($row = $this->db->sql_fetchrow($result_ext))
-			{
-				$allowed_images[] = $row['extension'];
-			}
-		}
+		$ext_ary = $this->db->sql_fetchrowset($result_ext);
+
+		// Convert 2 dimensional array into simple array
+		$allowed_images = array_map(function ($n) {return $n['extension'];}, $ext_ary);
+
 		$this->db->sql_freeresult();
 
 		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
