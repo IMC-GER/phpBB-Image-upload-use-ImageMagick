@@ -1,0 +1,24 @@
+name: Tests
+
+on:
+  push:           # Run tests when commits are pushed to these branches in your repo,
+    branches:     # ... or remove this branches section to run tests on all your branches
+      - main      # Main production branch
+      - master    # Legacy or alternative main branch
+  
+  pull_request:   # Run tests when pull requests are made on these branches in your repo,
+    branches:     # ... or remove this branches section to run tests on all your branches
+      - main
+      - master
+
+jobs:
+  call-tests:
+    name: Extension tests
+    uses: phpbb-extensions/test-framework/.github/workflows/tests.yml@3.3.x
+    with:
+      EXTNAME: imcger/imgupload   # Your extension vendor/package name (required)
+      RUN_MYSQL_JOBS: 0
+      RUN_PGSQL_JOBS: 0
+      RUN_MSSQL_JOBS: 0
+      RUN_WINDOWS_JOBS: 0
+      PRIMARY_PHP_VERSION: '8.3'
