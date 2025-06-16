@@ -12,17 +12,17 @@ namespace imcger\imgupload\migrations;
 
 class v121 extends \phpbb\db\migration\migration
 {
-	public function effectively_installed()
+	public function effectively_installed(): bool
 	{
 		return version_compare($this->config['imcger_imgupload_version'], '1.2.1', '>=');
 	}
 
-	public static function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\imcger\imgupload\migrations\v120'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return [
 			['config.update', ['imcger_imgupload_version', '1.2.1']],

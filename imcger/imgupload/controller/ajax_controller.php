@@ -10,58 +10,20 @@
 
 namespace imcger\imgupload\controller;
 
-/**
- * Ajax main controller
- */
 class ajax_controller
 {
-	/** @var \phpbb\config\config */
-	protected $config;
+	protected object $config;
+	protected object $user;
+	protected object $request;
+	protected object $db;
+	protected object $auth;
+	protected object $language;
+	protected object $ext_manager;
+	protected object $filesystem;
+	protected string $root_path;
+	protected string $php_ext;
+	protected string $ext_display_name;
 
-	/** @var \phpbb\user */
-	protected $user;
-
-	/** @var \phpbb\request\request */
-	private $request;
-
-	/** @var \phpbb\db\driver\driver_interface */
-	private $db;
-
-	/** @var \phpbb\auth\auth */
-	private $auth;
-
-	/** @var \phpbb\language\language */
-	protected $language;
-
-	/** @var \phpbb\extension\manager */
-	protected $ext_manager;
-
-	/** @var \phpbb\filesystem\filesystem */
-	protected $filesystem;
-
-	/** @var string phpBB root path */
-	protected $root_path;
-
-	/** @var string phpEx */
-	protected $php_ext;
-
-	/** @var string Extension name */
-	protected $ext_display_name;
-
-	/**
-	 * Constructor for ajax controller
-	 *
-	 * @param \phpbb\config\config				$config
-	 * @param \phpbb\user						$user
-	 * @param \phpbb\request\request			$request
-	 * @param \phpbb\db\driver\driver_interface	$db
-	 * @param \phpbb\auth\auth					$auth
-	 * @param \phpbb\language\language			$language
-	 * @param \phpbb\extension\manager			$ext_manager
-	 * @param \phpbb\filesystem\filesystem		$filesystem
-	 * @param string							$root_path
-	 * @param string							$php_ext
-	 */
 	public function __construct(
 		\phpbb\config\config $config,
 		\phpbb\user $user,
@@ -71,8 +33,8 @@ class ajax_controller
 		\phpbb\language\language $language,
 		\phpbb\extension\manager $ext_manager,
 		\phpbb\filesystem\filesystem $filesystem,
-		$root_path,
-		$php_ext
+		string $root_path,
+		string $php_ext
 	)
 	{
 		$this->config		= $config;
@@ -86,29 +48,25 @@ class ajax_controller
 		$this->root_path	= $root_path;
 		$this->php_ext		= $php_ext;
 
-		// Add language file
 		$this->language->add_lang('attachment', 'imcger/imgupload');
 
-		// Get name of the extension
 		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
 		$this->ext_display_name = $metadata_manager->get_metadata('display-name');
 	}
 
 	/**
 	 * Assigns the Ajax request app.php/imgupload/{order}
-	 *
-	 * @access public
 	 */
-	public function request($order)
+	public function request(string $order): void
 	{
 		// No ajax request, redirect to forum index
-		if (!$this->request->is_ajax())
+		if (!$this->request->is_ajax() || $this->user->data['is_bot'])
 		{
 			redirect($this->root_path . '/index.' . $this->php_ext);
 		}
 
 		// No user logged in, redirect in js to login page
-		if ($this->user->data['user_id'] == ANONYMOUS)
+		if (!$this->user->data['is_registered'])
 		{
 			$this->json_response(3);
 		}
@@ -147,15 +105,8 @@ class ajax_controller
 
 	/**
 	 * Rotate and save Image with ImageMagick
-	 *
-	 * @var 	int		attach_id		contain attach id
-	 * @var 	int		img_rotate_deg	contain rotate degree
-	 * @var 	int		creation_time	creation time of token
-	 * @var 	string	form_token		form token
-	 *
-	 * @return	array	Json arry with status, old and new attach id, new file size or error message
 	 */
-	private function save_image($img_attach_id, $img_rotate_deg)
+	private function save_image(int $img_attach_id, int $img_rotate_deg): array
 	{
 		if (!$img_attach_id || $img_rotate_deg < 1 || $img_rotate_deg > 360)
 		{
@@ -224,12 +175,8 @@ class ajax_controller
 
 	/**
 	 * Get Image size
-	 *
-	 * @var 	int		$attach_id	contain attach id
-	 *
-	 * @return	array	Json arry with attach id and file size
 	 */
-	private function image_size($attach_id)
+	private function image_size(int $attach_id): void
 	{
 		$sql = 'SELECT physical_filename
 				FROM ' . ATTACHMENTS_TABLE . '
@@ -254,13 +201,8 @@ class ajax_controller
 
 	/**
 	 * Rotate Image with ImageMagick
-	 *
-	 * @param 	string	$path		Path to the image file
-	 * @param	int		$deg		Rotation angle
-	 *
-	 * @return	int		$filesize	Image file size
 	 */
-	private function rotate_image($path, $deg)
+	private function rotate_image(string $path, int $deg): int
 	{
 		$image = new \Imagick($path);
 		$image->rotateImage('#000', $deg);
@@ -272,18 +214,9 @@ class ajax_controller
 	}
 
 	/**
-	 * Generate json string
-	 *
-	 * @param 	int		$status			Status 0=id's, 3=redirect, 4=file not found, 5=error
-	 * @param	string	$title			Messagebox title
-	 * @param 	string	$message		Messagebox message
-	 * @param	int		$old_attach_id	Previous attachment id
-	 * @param 	int		$new_attach_id	New attachment id
-	 * @param 	int		$file_size		New file size
-	 *
-	 * @return	string	$json
+	 * Generate and send json string
 	 */
-	private function json_response($status, $title = '', $message = '', $old_attach_id = 0, $new_attach_id = 0, $file_size = 0)
+	private function json_response(int $status, string $title = '', string $message = '', int $old_attach_id = 0, int $new_attach_id = 0, int $file_size = 0): void
 	{
 		$json_response = new \phpbb\json_response;
 		$json_response->send([

@@ -13,45 +13,16 @@ namespace imcger\imgupload\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
- * Event listener
- */
 class main_listener implements EventSubscriberInterface
 {
-	/** @var \phpbb\config\config */
-	protected $config;
+	protected object $config;
+	protected object $language;
+	protected object $imagesize;
+	protected object $db;
+	protected object $template;
+	protected object $ext_manager;
+	protected object $helper;
 
-	/** @var \phpbb\language\language */
-	protected $language;
-
-	/** @var \FastImageSize\FastImageSize */
-	protected $imagesize;
-
-	/** @var \phpbb\db\driver\driver_interface */
-	protected $db;
-
-	/** @var \phpbb\template\template */
-	protected $template;
-
-	/** @var \phpbb\extension\manager */
-	protected $ext_manager;
-
-	/** @var \phpbb\controller\helper */
-	protected $helper;
-
-	/**
-	 * Constructor for listener
-	 *
-	 * @param \phpbb\config\config				$config		phpBB config
-	 * @param \phpbb\language\language			$language	phpBB language
-	 * @param \FastImageSize\FastImageSize		$imagesize	FastImageSize object
-	 * @param \phpbb\db\driver\driver_interface	$db			phpBB DataBase
-	 * Qparam \phpbb\template\template			$template	phpBB template
-	 * @param \phpbb\extension\manager			$ext_manager
-	 * @param \phpbb\controller\helper			$helper
-	 *
-	 * @access public
-	 */
 	public function __construct
 	(
 		\phpbb\config\config $config,
@@ -72,7 +43,7 @@ class main_listener implements EventSubscriberInterface
 		$this->helper		= $helper;
 	}
 
-	public static function getSubscribedEvents()
+	public static function getSubscribedEvents(): array
 	{
 		return [
 			'core.page_header'							 => 'set_template_vars',
@@ -88,7 +59,7 @@ class main_listener implements EventSubscriberInterface
 	/**
 	 * Add language file for avatar upload page
 	 */
-	public function new_profil_avatar_text()
+	public function new_profil_avatar_text(): void
 	{
 		if ($this->config['imcger_imgupload_avatar_resize'])
 		{
@@ -98,36 +69,40 @@ class main_listener implements EventSubscriberInterface
 
 	/**
 	 * Set template vars
-	 *
-	 * @return null
-	 * @access public
 	 */
-	public function set_template_vars()
+	public function set_template_vars(): void
 	{
-		// Load language vars for buttons in post editor
-		if ($this->config['img_create_thumbnail'])
-		{
-			$this->language->add_lang('attachment','imcger/imgupload');
-		}
+		$this->language->add_lang('attachment','imcger/imgupload');
 
 		$allowed_images = [];
 		$img_max_thumb_width = $this->config['imcger_imgupload_img_max_thumb_width'];
 
 		// Get extension from image groups
-		$sql_ary =  'SELECT e.extension
-					 FROM ' . EXTENSIONS_TABLE . ' e
-					 JOIN ' . EXTENSION_GROUPS_TABLE . ' g
-					 WHERE e.group_id = g.group_id
-					 AND g.cat_id = 1';
+		$sql_ary = [
+			'SELECT'	=> 'e.extension',
+			'FROM'		=> [EXTENSIONS_TABLE => 'e',],
+			'LEFT_JOIN'	=> [
+				[
+					'FROM'	=> [EXTENSION_GROUPS_TABLE => 'eg',],
+					'ON'	=> 'eg.cat_id = 1',
+				]
+			],
+			'WHERE'		=> 'e.group_id = eg.group_id',
+		];
+		$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_ary);
 
-		$result_ext = $this->db->sql_query($sql_ary);
+		$result_ext = $this->db->sql_query($sql);
 
 		$ext_ary = $this->db->sql_fetchrowset($result_ext);
 
-		// Convert 2 dimensional array into simple array
-		$allowed_images = array_map(function ($n) {return $n['extension'];}, $ext_ary);
-
 		$this->db->sql_freeresult();
+
+		// Convert 2 dimensional array into simple array
+		$allowed_images = array_map(
+								function ($n)
+								{
+									return $n['extension'];
+								}, $ext_ary);
 
 		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
 
@@ -136,7 +111,6 @@ class main_listener implements EventSubscriberInterface
 			'IUL_ALLOWED_IMAGES'	  => json_encode($allowed_images),
 			'IUL_IMG_SET_INLINE'	  => $this->config['imcger_imgupload_image_inline'],
 			'IUL_IMG_MAX_THUMB_WIDTH' => $img_max_thumb_width ? $img_max_thumb_width . 'px' : false,
-			'IMGUPLOAD_TITLE' 		  => $metadata_manager->get_metadata('display-name'),
 			'U_IUL_SAVE_IMAGE'  	  => $this->helper->route('imcger_imgupload_ajax_controller', ['order' => 'save_image']),
 			'U_IUL_IMAGE_SIZE'  	  => $this->helper->route('imcger_imgupload_ajax_controller', ['order' => 'image_size']),
 		]);
@@ -144,10 +118,8 @@ class main_listener implements EventSubscriberInterface
 
 	/**
 	 * Create a thumbnail using IMagick
-	 *
-	 * @param \phpbb\event\data	$event	Event object
 	 */
-	public function imcger_create_tumbnail($event)
+	public function imcger_create_tumbnail(object $event): void
 	{
 		// create a new instance of ImageMagick and load current image
 		$thumbnail = new \Imagick(realpath($event['source']));
@@ -192,16 +164,13 @@ class main_listener implements EventSubscriberInterface
 			$event['mimetype'] = 'image/jpeg';
 		}
 
-		// set return value
 		$event['thumbnail_created'] = $thumbnail_created;
 	}
 
 	/**
 	 * Modify upload image using IMagick
-	 *
-	 * @param \phpbb\event\data	$event	Event object
 	 */
-	public function imcger_modify_uploaded_file($event)
+	public function imcger_modify_uploaded_file(object $event): void
 	{
 		if ($event['is_image'])
 		{
@@ -221,7 +190,7 @@ class main_listener implements EventSubscriberInterface
 
 			if ($size === false)
 			{
-				return false;
+				return;
 			}
 
 			// if image no jpeg or webp and image properties smaller then maximum values do nothing
@@ -231,7 +200,7 @@ class main_listener implements EventSubscriberInterface
 				(!$image_max_filesize || $image_max_filesize >= $filesize)
 			)
 			{
-				return true;
+				return;
 			}
 
 			// create a new instance of ImageMagick and load current image
@@ -313,10 +282,8 @@ class main_listener implements EventSubscriberInterface
 
 	/**
 	 * Modify upload avatar image using IMagick
-	 *
-	 * @param \phpbb\event\data	$event	Event object
 	 */
-	public function imcger_modify_uploaded_avatar($event)
+	public function imcger_modify_uploaded_avatar(object $event): void
 	{
 		if ($this->config['imcger_imgupload_avatar_resize'])
 		{
@@ -329,7 +296,7 @@ class main_listener implements EventSubscriberInterface
 
 			if ($size === false)
 			{
-				return false;
+				return;
 			}
 
 			// when avatar image file to great modify it
@@ -361,7 +328,7 @@ class main_listener implements EventSubscriberInterface
 
 				if ($write === false)
 				{
-					return false;
+					return;
 				}
 
 				// set return value new file size
@@ -377,10 +344,8 @@ class main_listener implements EventSubscriberInterface
 	/**
 	 * Modify post data
 	 * Don't display attachments when shown as image in post message
-	 *
-	 * @param \phpbb\event\data	$event	Event object
 	 */
-	public function imcger_viewtopic_modify_post_row($event)
+	public function imcger_viewtopic_modify_post_row(object $event): void
 	{
 		$row				= $event['row'];
 		$post_attachments	= $event['attachments'];
@@ -419,10 +384,8 @@ class main_listener implements EventSubscriberInterface
 	/**
 	 * Modify post data for post editor preview
 	 * Don't display attachments when shown as image in post message
-	 *
-	 * @param \phpbb\event\data	$event	Event object
 	 */
-	public function imcger_posting_modify_template_vars($event)
+	public function imcger_posting_modify_template_vars(object $event): void
 	{
 		// Get message text and attachment data
 		$message_parser = $event['message_parser'];
@@ -453,12 +416,8 @@ class main_listener implements EventSubscriberInterface
 
 	/**
 	 * resize image if image to large
-	 *
-	 * @param object	$image	image object
-	 *
-	 * @return bool		$img_resize	images is resize
 	 */
-	public function resize_image($image, $max_width, $max_height)
+	public function resize_image(object $image, int $max_width, int $max_height): bool
 	{
 		$img_resize = false;
 
@@ -498,13 +457,8 @@ class main_listener implements EventSubscriberInterface
 
 	/**
 	 * set the image format for the generated image
-	 *
-	 * @param object	$image		image object
-	 * @param string	$mimetype	mimetype of the image in phpBB internal format
-	 *
-	 * @return string	$imageformat images format
 	 */
-	public function set_image_format($image, $mimetype)
+	public function set_image_format(object $image, string $mimetype): string
 	{
 		// Check the mimetype and set the appropriate type for the image
 		switch ($mimetype)
@@ -537,11 +491,8 @@ class main_listener implements EventSubscriberInterface
 
 	/**
 	 * set the compression value for the generated image
-	 *
-	 * @param object	$image		image object
-	 * @param integer	$quality	image quality value
 	 */
-	public function set_image_compression($image, $quality = 80)
+	public function set_image_compression(object $image, int $quality = 80): void
 	{
 		$image_format = $image->getImageFormat();
 
@@ -574,14 +525,9 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * rotate the generated image
-	 *
-	 * @param object	$image		image object
-	 *
-	 * @return array	changed		orientation changed
-	 * 					rotate		rotate 90 degree
+	 * Rotate the generated image
 	 */
-	public function image_auto_rotate($image)
+	public function image_auto_rotate(object $image): array
 	{
 		$is_rotate	= false; // true, when orientation change between portrait and landscape
 		$is_changed = true;  // true, when orientation change
@@ -651,13 +597,8 @@ class main_listener implements EventSubscriberInterface
 
 	/**
 	 * resize the image file
-	 *
-	 * @param object	$image			image object
-	 * @param integer	$new_image_size	new size of the image
-	 *
-	 * @return integer	$filesize		file size of the image after shrink
 	 */
-	public function image_auto_length($image, $new_image_size)
+	public function image_auto_length(object $image, int $new_image_size): int
 	{
 		// get image dimensions
 		$img_geo = $image->getImageGeometry();

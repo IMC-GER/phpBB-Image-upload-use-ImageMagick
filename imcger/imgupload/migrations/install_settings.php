@@ -12,17 +12,17 @@ namespace imcger\imgupload\migrations;
 
 class install_settings extends \phpbb\db\migration\migration
 {
-	public function effectively_installed()
+	public function effectively_installed(): bool
 	{
 		return isset($this->config['imcger_imgupload_version']);
 	}
 
-	public static function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\imcger\imgupload\migrations\install_acp_module'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return [
 			['config.update', ['max_filesize', 0]],

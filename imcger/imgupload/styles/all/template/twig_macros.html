@@ -1,0 +1,42 @@
+{#
+ * Twig Macros
+ * For the phpBB Forum Software package.
+ *
+ * @copyright (c) LukeWCS, https://github.com/LukeWCS
+ * @license GNU General Public License, version 2 (GPL-2.0-only)
+ *
+ #}
+
+{% macro switch(name, checked = false, type = 'toggle') -%}
+	{% if type == 'toggle' || type == 'checkbox' -%}
+		<input type="checkbox"{{ type == 'toggle' ? ' class="toggle"' }} name="{{ name }}" value="1"{{ checked ? ' checked' }}>
+	{%- elseif type == 'radio' -%}
+		<label><input type="radio" class="radio" name="{{ name }}" value="1"{{ checked ? ' checked' }}> {{ lang('YES') }}</label>
+		<label><input type="radio" class="radio" name="{{ name }}" value="0"{{ !checked ? ' checked' }}> {{ lang('NO') }}</label>
+	{%- endif %}
+{%- endmacro %}
+
+{% macro select(name, value, options) -%}
+	<select name="{{ name }}">
+		{% for opt_lang_var, opt_value in options %}
+			<option value="{{ opt_value }}"{{ opt_value == value ? ' selected' }}>{{ lang(opt_lang_var) }}</option>
+		{% endfor %}
+	</select>
+{%- endmacro %}
+
+{% macro number(name, value, min = null, max = null, step = null, placeholder = null) -%}
+	<input type="number" name="{{ name }}" value="{{ value }}"{{
+		(min !== null ? ' min="' ~ min ~ '"') ~
+		(max !== null ? ' max="' ~ max ~ '"') ~
+		(step !== null ? ' step="' ~ step ~ '"') ~
+		(placeholder !== null ? ' placeholder="' ~ placeholder ~ '"')
+	}}>
+{%- endmacro %}
+
+{% macro text(name, value, size = null, placeholder = null, pattern = null) -%}
+	<input type="text" name="{{ name }}" value="{{ value }}"{{
+		(size !== null ? ' size="' ~ size ~ '"') ~
+		(placeholder !== null ? ' placeholder="' ~ placeholder ~ '"') ~
+		(pattern !== null ? ' pattern="' ~ pattern ~ '"')
+	}}>
+{%- endmacro %}

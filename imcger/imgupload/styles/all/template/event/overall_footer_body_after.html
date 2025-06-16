@@ -567,9 +567,9 @@ if (typeof imcger != 'object') {
 			if (isImage) {
 				let getThumbnail = '&t=1';
 				{% if (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 %}
-				$link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\'; $(\'[data-attach-id=' + attach_id + ']\').find(\'.button2.file-inline-bbcode\').hide();" title="' + real_filename + '" alt="' + real_filename + '">');
+					$link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\'; $(\'[data-attach-id=' + attach_id + ']\').find(\'.button2.file-inline-bbcode\').hide();" title="' + real_filename + '" alt="' + real_filename + '">');
 				{% else %}
-				$link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '" alt="' + real_filename + '">');
+					$link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\';" title="' + real_filename + '" alt="' + real_filename + '">');
 				{% endif %}
 
 				if ({{ (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 }}) {
@@ -742,7 +742,7 @@ $(".attachbox .attach-image").each(function() {
 	$(this).append($link);
 	$link.append($image);
 
-	$(this).parent().find('dd').remove();
+	$(this).parent().find('dd:not(:has(em))').remove();
 });
 </script>
 {% endif %}

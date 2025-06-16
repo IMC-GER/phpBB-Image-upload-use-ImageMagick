@@ -1,4 +1,18 @@
+{#
+ * Image upload use ImageMagick
+ * An extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2022, Thorsten Ahlers
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ #}
+
+{% INCLUDECSS '@imcger_imgupload/acp_toggle.css' %}
+{% INCLUDECSS '@imcger_imgupload/acp_imgupload.css' %}
+{% INCLUDEJS '@imcger_imgupload/acp_imgupload.js' %}
+
 {% INCLUDE 'overall_header.html' %}
+{% import '@imcger_imgupload/twig_macros.html' as common %}
 {% set switch_type = TOGGLECTRL_TYPE ?? 'toggle' %}
 
 <h1>{{ lang('ACP_IMCGER_IMGUPLOAD_TITLE') }}</h1>
@@ -12,25 +26,25 @@
 		<dl>
 			<dt><label for="img_create_thumbnail">{{ lang('CREATE_THUMBNAIL') ~ lang('COLON') }}</label><br><span>{{ lang('CREATE_THUMBNAIL_EXPLAIN') }}</span></dt>
 			<dd>
-				{{ _self.switch('img_create_thumbnail', CREATE_THUMBNAIL, switch_type) }}
+				{{ common.switch('img_create_thumbnail', CREATE_THUMBNAIL, switch_type) }}
 			</dd>
 		</dl>
 		<dl>
 			<dt><label for="imcger_imgupload_tum_quality">{{ lang('ACP_IMCGER_THUMB_QUALITY') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_THUMB_QUALITY_DESC') }}</span></dt>
 			<dd>
-				{{ _self.number('imcger_imgupload_tum_quality', IMCGER_TUM_QUALITY, 50, 90) }}
+				{{ common.number('imcger_imgupload_tum_quality', IMCGER_TUM_QUALITY, 50, 90) }}
 			</dd>
 		</dl>
 		<dl>
 			<dt><label for="imcger_imgupload_image_inline">{{ lang('ACP_IMCGER_IMAGE_INLINE') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_IMAGE_INLINE_DESC') }}</span></dt>
 			<dd>
-				{{ _self.switch('imcger_imgupload_image_inline', IMCGER_IMGUPLOAD_IMAGE_INLINE, switch_type) }}
+				{{ common.switch('imcger_imgupload_image_inline', IMCGER_IMGUPLOAD_IMAGE_INLINE, switch_type) }}
 			</dd>
 		</dl>
 		<dl>
 			<dt><label for="imcger_imgupload_img_max_thumb_width">{{ lang('ACP_IMCGER_IMG_MAX_THUMB_WIDTH') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_IMG_MAX_THUMB_WIDTH_DESC') }}</span></dt>
 			<dd>
-				{{ _self.number('imcger_imgupload_img_max_thumb_width', IMCGER_IMG_MAX_THUMB_WIDTH, 0, 99999) }}
+				{{ common.number('imcger_imgupload_img_max_thumb_width', IMCGER_IMG_MAX_THUMB_WIDTH, 0, 99999) }}
 			</dd>
 		</dl>
 	</fieldset>
@@ -40,28 +54,30 @@
 		<dl>
 			<dt><label for="imcger_imgupload_img_quality">{{ lang('ACP_IMCGER_IMAGE_QUALITY') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_IMAGE_QUALITY_DESC') }}</span></dt>
 			<dd>
-				{{ _self.number('imcger_imgupload_img_quality', IMCGER_IMG_QUALITY, 50, 90) }}
+				{{ common.number('imcger_imgupload_img_quality', IMCGER_IMG_QUALITY, 50, 90) }}
 			</dd>
 		</dl>
 
 		<dl>
 			<dt><label for="imcger_imgupload_max_width">{{ lang('ACP_IMCGER_MAX_SIZE') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_MAX_SIZE_DESC') }}</span></dt>
 			<dd>
-				{{ _self.number('imcger_imgupload_max_width', IMCGER_MAX_WIDTH, 0, 99999) }} x {{ _self.number('imcger_imgupload_max_height', IMCGER_MAX_HEIGHT, 0, 99999) }}
+				{{ common.number('imcger_imgupload_max_width', IMCGER_MAX_WIDTH, 0, 99999) }} x {{ common.number('imcger_imgupload_max_height', IMCGER_MAX_HEIGHT, 0, 99999) }}
 			</dd>
 		</dl>
 
 		<dl>
-			<dt><label for="imcger_imgupload_max_filesize">{{ lang('ACP_IMCGER_MAX_FILESIZE') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_MAX_FILESIZE_DESC') }}</span></dt>
+			<dt><label for="imcger_imgupload_max_filesize">{{ lang('ACP_IMCGER_FILESIZE_MAX') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_FILESIZE_MAX_DESC') }}</span></dt>
 			<dd>
-				{{ _self.number('imcger_imgupload_max_filesize', IMCGER_MAX_FILESIZE, 0, 9999999999) }} <select name="size_select"><option value="b" {% if IMCGER_UNIT == 'b' %} selected{% endif %}>Bytes</option><option value="kb" {% if IMCGER_UNIT == 'kb' %} selected{% endif %}>KiB</option><option value="mb" {% if IMCGER_UNIT == 'mb' %} selected{% endif %}>MiB</option></select>
+				{{ common.number('imcger_imgupload_max_filesize', IMCGER_FILESIZE_MAX, 0, 9999999999) }}
+				{% set units = {'BYTES': 'b', 'KIB': 'kb', 'MBI': 'mb', } %}
+				{{ common.select('unit_select', IMCGER_FILESIZE_UNIT, units) }}
 			</dd>
 		</dl>
 
 		<dl>
 			<dt><label for="imcger_imgupload_del_exif">{{ lang('ACP_IMCGER_DEL_EXIF') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_DEL_EXIF_DESC') }}</span></dt>
 			<dd>
-				{{ _self.switch('imcger_imgupload_del_exif', IMCGER_DEL_EXIF, switch_type) }}
+				{{ common.switch('imcger_imgupload_del_exif', IMCGER_DEL_EXIF, switch_type) }}
 			</dd>
 		</dl>
 	</fieldset>
@@ -72,7 +88,7 @@
 			<dt><label for="imcger_imgupload_avatar_resize">{{ lang('ACP_IMCGER_AVATAR_RESIZE') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_AVATAR_RESIZE_DESC') }}</span>
 				{% if IMCGER_AVATAR_FILESIZE_ISSET %}<br><span style="color: red">{{ lang('ACP_IMCGER_AVATAR_FILESIZE_ISSET') }}</span>{% endif %}</dt>
 			<dd>
-				{{ _self.switch('imcger_imgupload_avatar_resize', IMCGER_AVATAR_RESIZE, switch_type) }}
+				{{ common.switch('imcger_imgupload_avatar_resize', IMCGER_AVATAR_RESIZE, switch_type) }}
 			</dd>
 		</dl>
 	</fieldset>
@@ -94,37 +110,3 @@
 </p>
 
 {% INCLUDE 'overall_footer.html' %}
-
-{% INCLUDECSS '@imcger_imgupload/acp_toggle.css' %}
-{% INCLUDECSS '@imcger_imgupload/acp_imgupload.css' %}
-{% INCLUDEJS '@imcger_imgupload/acp_imgupload.js' %}
-
-{#
-	Twig Macros
-	@copyright (c) 2023 LukeWCS, https://github.com/LukeWCS
-#}
-
-{% macro switch(name, checked = false, type = 'toggle') -%}
-	{% if type == 'toggle' || type == 'checkbox' -%}
-		<input type="checkbox"{{ type == 'toggle' ? ' class="toggle"' }} name="{{ name }}" value="1"{{ checked ? ' checked' }}>
-	{%- elseif type == 'radio' -%}
-		<label><input type="radio" class="radio" name="{{ name }}" value="1"{{ checked ? ' checked' }}> {{ lang('YES') }}</label>
-		<label><input type="radio" class="radio" name="{{ name }}" value="0"{{ !checked ? ' checked' }}> {{ lang('NO') }}</label>
-	{%- endif %}
-{%- endmacro %}
-
-{% macro select(name, value, options) -%}
-	<select name="{{ name }}">
-		{% for opt_lang_var, opt_value in options %}
-			<option value="{{ opt_value }}"{{ opt_value == value ? ' selected' }}>{{ lang(opt_lang_var) }}</option>
-		{% endfor %}
-	</select>
-{%- endmacro %}
-
-{% macro number(name, value, min, max, step = 1, placeholder = '') -%}
-	<input type="number" name="{{ name }}" value="{{ value }}" min="{{ min }}" max="{{ max }}" step="{{ step }}"{{ placeholder ? ' placeholder="' ~ placeholder ~ '"' }}>
-{%- endmacro %}
-
-{% macro text(name, value, size = 10, placeholder = '', pattern = '') -%}
-	<input type="text" name="{{ name }}" value="{{ value }}" size="{{ size }}"{{ placeholder ? ' placeholder="' ~ placeholder ~ '"' }}{{ pattern ? ' pattern="' ~ pattern ~ '"' }}>
-{%- endmacro %}

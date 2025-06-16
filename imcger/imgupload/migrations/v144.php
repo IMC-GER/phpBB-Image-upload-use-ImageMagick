@@ -12,17 +12,17 @@ namespace imcger\imgupload\migrations;
 
 class v144 extends \phpbb\db\migration\migration
 {
-	public function effectively_installed()
+	public function effectively_installed(): bool
 	{
 		return version_compare($this->config['imcger_imgupload_version'], '1.4.4', '>=');
 	}
 
-	public static function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\imcger\imgupload\migrations\v121'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return [
 			['config.update', ['imcger_imgupload_version', '1.4.4']],
@@ -30,7 +30,7 @@ class v144 extends \phpbb\db\migration\migration
 		];
 	}
 
-	public function reset_max_filesize()
+	public function reset_max_filesize(): void
 	{
 		$sql = 'UPDATE ' . EXTENSION_GROUPS_TABLE . ' SET max_filesize = 0 WHERE cat_id = 1;';
 		$this->db->sql_query($sql);

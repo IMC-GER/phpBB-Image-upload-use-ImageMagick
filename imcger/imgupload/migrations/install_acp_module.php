@@ -12,17 +12,17 @@ namespace imcger\imgupload\migrations;
 
 class install_acp_module extends \phpbb\db\migration\migration
 {
-	public function effectively_installed()
+	public function effectively_installed(): bool
 	{
 		return isset($this->config['imcger_imgupload_tum_quality']);
 	}
 
-	public static function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\phpbb\db\migration\data\v32x\v324'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		global $config;
 

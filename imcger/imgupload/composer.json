@@ -3,13 +3,12 @@
     "type": "phpbb-extension",
     "description": "Using ImageMagick php librarie for resize image attachments and creating thumbnails.",
     "homepage": "https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick/tags",
-    "version": "1.4.6",
-    "time": "2024-07-14",
+    "version": "1.5.0",
+    "time": "2025-06-16",
     "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "Thorsten Ahlers",
-            "email": "",
             "homepage": "https://github.com/IMC-GER",
             "role": "Developer"
         },
@@ -19,7 +18,7 @@
         }
     ],
     "require": {
-        "php": ">=7.1.0",
+        "php": ">=7.4.0",
         "phpbb/phpbb": "^3.3.0",
         "composer/installers": "~1.0",
         "ext-imagick": "*"
