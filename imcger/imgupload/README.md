@@ -6,6 +6,8 @@ The extension uses the PHP imagick class to modify uploaded images, thumbnails a
 The extension supports JPEG, WEBP, GIF and PNG images. Other image formats, for example BMP, are converted to JPEG when resized.
 This extension can change the image size and/or the image file size. It rotate images, thumbnails and avatars according to their EXIF information and it can remove the EXIF data from JPEG and WEBP files. Images and thumbnails can also be rotated manually.
 
+[![Tests](https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick/actions/workflows/tests.yml/badge.svg)](https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick/actions/workflows/tests.yml)
+
 #### Settings in User Control Panel
 - No settings. 
 
@@ -53,6 +55,17 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 - Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
 
 ## Changelog
+
+### v1.5.0 (16-06-2025)
+- Fixed Language variables are lost when 'Create thumbnail' is deactivated.
+- Fixed Error message from Composer Validator
+- Fixed Each PHP statement must be on a line by itself
+- Set max php version to 8.4, min version to 7.4
+- Changed PHP code has been updated to include data types for the variable
+- Changed security query in the Ajax controller
+- Changed sql query from string to array
+- Revised language files
+- Moved twig macros in separate file
 
 ### v1.4.6 (14-07-2024)
 - Changed Determining the image file size.
