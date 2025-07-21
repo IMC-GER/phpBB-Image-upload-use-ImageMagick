@@ -69,7 +69,7 @@
 			<dt><label for="imcger_imgupload_max_filesize">{{ lang('ACP_IMCGER_FILESIZE_MAX') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_IMCGER_FILESIZE_MAX_DESC') }}</span></dt>
 			<dd>
 				{{ common.number('imcger_imgupload_max_filesize', IMCGER_FILESIZE_MAX, 0, 9999999999) }}
-				{% set units = {'BYTES': 'b', 'KIB': 'kb', 'MBI': 'mb', } %}
+				{% set units = {'BYTES': 'b', 'KIB': 'kb', 'MIB': 'mb', } %}
 				{{ common.select('unit_select', IMCGER_FILESIZE_UNIT, units) }}
 			</dd>
 		</dl>
