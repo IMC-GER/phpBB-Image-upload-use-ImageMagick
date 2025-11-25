@@ -98,11 +98,7 @@ class main_listener implements EventSubscriberInterface
 		$this->db->sql_freeresult();
 
 		// Convert 2 dimensional array into simple array
-		$allowed_images = array_map(
-								function ($n)
-								{
-									return $n['extension'];
-								}, $ext_ary);
+		$allowed_images = array_column($ext_ary, 'extension');
 
 		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');
 
@@ -250,6 +246,15 @@ class main_listener implements EventSubscriberInterface
 				$write_image = true;
 			}
 
+			$image_filesize = strlen($image->getImageBlob());
+
+			if ($image_filesize > $filesize)
+			{
+				$image->clear();
+
+				return;
+			}
+
 			// store the image when attribute change
 			if ($write_image || $img['changed'])
 			{
@@ -262,7 +267,7 @@ class main_listener implements EventSubscriberInterface
 					$filedata_array = $event['filedata'];
 
 					// set new file size
-					$filedata_array['filesize'] = $filesize ? $filesize : $image->getImageBlob();
+					$filedata_array['filesize'] = $image_filesize;
 
 					// if image format change to JPEG set filedata to JPEG
 					if ($image_format == 'JPEG' && $event['filedata']['mimetype'] != 'image/jpeg')
@@ -504,11 +509,13 @@ class main_listener implements EventSubscriberInterface
 			break;
 
 			case 'PNG':
-				if ($image->getImageColors() > 256)
+				if ($image->getImageColors() > 128)
 				{
-					$image->quantizeImage(256, \Imagick::COLORSPACE_SRGB, 16, false, false);
+					$image->quantizeImage(128, \Imagick::COLORSPACE_SRGB, 8, false, false);
 					$image->setImageType(\Imagick::IMGTYPE_TRUECOLORMATTE);
 				}
+
+				$image->setCompressionQuality(95);
 			break;
 
 			case 'WEBP':

@@ -87,7 +87,7 @@ class admin_controller
 	protected function set_variable(): void
 	{
 		$unit_select  = $this->request->variable('unit_select', 'b');
-		$max_filesize = $this->request->variable('imcger_imgupload_max_filesize', 0);
+		$max_filesize = $this->request->variable('imcger_imgupload_max_filesize', 0.0);
 		$max_filesize = ($unit_select == 'kb') ? round($max_filesize * 1024) : (($unit_select == 'mb') ? round($max_filesize * 1048576) : $max_filesize);
 
 		$this->config->set('imcger_imgupload_tum_quality', $this->request->variable('imcger_imgupload_tum_quality', 80));
