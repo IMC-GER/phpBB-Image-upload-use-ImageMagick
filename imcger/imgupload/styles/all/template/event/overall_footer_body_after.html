@@ -237,7 +237,7 @@ if (typeof imcger != 'object') {
 		 */
 		saveImg: function(attach_id, button) {
 			let index = 0;
-
+			
 			if (this.imgOrientationIndex.includes(attach_id)) {
 				index = this.imgOrientationIndex.indexOf(attach_id);
 			} else {
@@ -261,7 +261,7 @@ if (typeof imcger != 'object') {
 				dataType: "json",
 				timeout: 10000,
 				beforeSend: function(xhr, settings) {
-					$(button).find('>:first-child').attr('class', 'icon fa-refresh fa-spin fa-fw');
+					$(button).find('>:first-child').attr('class', 'o-icon o-icon-font fa-refresh fa-spin fa-fw c-button-icon');
 					$('.imcger-iupl-button button').prop('disabled', true).css('cursor','not-allowed');
 					$('.attach-row[data-attach-id="' + attach_id + '"]') .find('.file-status').removeClass('file-uploaded ').addClass('file-working');
 
@@ -299,7 +299,7 @@ if (typeof imcger != 'object') {
 
 			// Code to run regardless of success or failure;
 			ajaxReq.always(function(xhr, status) {
-				$(button).find('>:first-child').attr('class', 'icon fa-save fa-fw');
+				$(button).find('>:first-child').attr('class', 'o-icon o-icon-font fa-save fa-fw c-button-icon');
 				$('.imcger-iupl-button button').prop('disabled', false).css('cursor','pointer');
 				$('.attach-row[data-attach-id="' + xhr.newAttachId + '"]') .find('.file-status').removeClass('file-working').addClass('file-uploaded');
 			});
@@ -549,23 +549,24 @@ if (typeof imcger != 'object') {
 	 */
 	imcger.imgUpload.updateRow = function() {
 		$('.file-name.ellipsis-text a').each(function() {
-			const allowedExt	= {{ IUL_ALLOWED_IMAGES }};
+			const allowedExt = {{ IUL_ALLOWED_IMAGES }};
+			const regex		 = /attachment\/(\d+)/;
+			
 			let maxImgHeight,
 				$link			= $(this),
 				imgUrl			= $(this).attr('href'),
 				real_filename	= $(this).html(),
-				searchParams	= new URLSearchParams(imgUrl.split('?')[1]),
-				attach_id		= searchParams.get('id'),
+				attach_id		= imgUrl.match(regex)[1],
 				filenameArray	= real_filename.split('.'),
 				isImage			= allowedExt.includes(filenameArray[filenameArray.length - 1].toLowerCase()),
 				imcgerButtonsForRotate = '<span class="imcger-iupl-button" >' +
-										 '<button class="button rotate-right" type="button"><i id="fa-redo" class="icon fa-undo fa-flip-horizontal fa-fw" aria-hidden="true"></i></button><br>' +
-										 '<button class="button rotate-left" type="button"><i id="fa-undo" class="icon fa-undo fa-fw" aria-hidden="true"></i></button><br>' +
-										 '<button class="button save-image" type="button"><i id="fa-save" class="icon fa-save fa-fw" aria-hidden="true"></i></button></span>';
+										 '<button class="button rotate-right" type="button"><i id="fa-redo" class="o-icon o-icon-font fa-undo fa-flip-horizontal fa-fw c-button-icon" aria-hidden="true"></i></button><br>' +
+										 '<button class="button rotate-left" type="button"><i id="fa-undo" class="o-icon o-icon-font fa-undo fa-fw c-button-icon" aria-hidden="true"></i></button><br>' +
+										 '<button class="button save-image" type="button"><i id="fa-save" class="o-icon o-icon-font fa-save fa-fw c-button-icon" aria-hidden="true"></i></button></span>';
 
 			// If image add thumbnail to the link
 			if (isImage) {
-				let getThumbnail = '&t=1';
+				let getThumbnail = '?t=1';
 				{% if (IUL_IMG_SET_INLINE && S_BBCODE_ALLOWED && S_BBCODE_IMG) ? 1 : 0 %}
 					$link.html('<img id="img-' + attach_id + '" src="' + imgUrl + getThumbnail + '" onerror="this.src=\'' + imgUrl + '\'; $(\'[data-attach-id=' + attach_id + ']\').find(\'.button2.file-inline-bbcode\').hide();" title="' + real_filename + '" alt="' + real_filename + '">');
 				{% else %}
