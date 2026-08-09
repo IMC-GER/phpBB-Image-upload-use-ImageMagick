@@ -7,6 +7,7 @@ The extension supports JPEG, WEBP, GIF and PNG images. Other image formats, for 
 This extension can change the image size and/or the image file size. It rotate images, thumbnails and avatars according to their EXIF information and it can remove the EXIF data from JPEG and WEBP files. Images and thumbnails can also be rotated manually.
 
 [![Tests](https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick/actions/workflows/tests.yml/badge.svg)](https://github.com/IMC-GER/phpBB-Image-upload-use-ImageMagick/actions/workflows/tests.yml)
+[![Github All Releases](https://img.shields.io/github/downloads/IMC-GER/phpBB-Image-upload-use-ImageMagick/total.svg)]()
 
 #### Settings in User Control Panel
 - No settings. 
