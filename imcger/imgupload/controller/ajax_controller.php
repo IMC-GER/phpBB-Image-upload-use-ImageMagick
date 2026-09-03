@@ -113,20 +113,52 @@ class ajax_controller
 			$this->json_response(5, $this->ext_display_name, $this->language->lang('IUL_WRONG_PARAM'));
 		}
 
-		if ($this->auth->acl_gets('u_attach', 'a_attach', 'f_attach'))
-		{
-			$sql = 'SELECT *
-					FROM ' . ATTACHMENTS_TABLE . '
-					WHERE attach_id = ' . (int) $img_attach_id;
+		$sql_array = [
+			'SELECT'    => 'a.*, t.forum_id',
+			'FROM'      => [ATTACHMENTS_TABLE => 'a'],
+			'LEFT_JOIN' => [
+				[
+					'FROM' => [TOPICS_TABLE => 't'],
+					'ON'   => 't.topic_id = a.topic_id',
+				],
+			],
+			'WHERE'     => 'a.attach_id = ' . (int) $img_attach_id,
+		];
 
-			$result	  = $this->db->sql_query($sql);
-			$img_data = $this->db->sql_fetchrow($result);
-			$this->db->sql_freeresult($result);
-		}
+		$sql   	  = $this->db->sql_build_query('SELECT', $sql_array);
+		$result	  = $this->db->sql_query($sql);
+		$img_data = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
 
 		if (!isset($img_data) || $img_data == false)
 		{
 			$this->json_response(4, $this->ext_display_name, $this->language->lang('IUL_NO_IMG_IN_DATABASE'));
+		}
+
+		if ($img_data['in_message'])
+		{
+			// Check permission for pm attachments
+			$is_poster = ($img_data['poster_id'] == $this->user->data['user_id']);
+
+			$allowed_in_pm = $is_poster && $this->auth->acl_get('u_pm_attach') && $this->config['allow_pm_attach'];
+
+			if (!$allowed_in_pm)
+			{
+				$this->json_response(4, $this->ext_display_name, $this->language->lang('IUL_REQUEST_ERROR'));
+			}
+		}
+		else
+		{
+			// Check permission for post attachments
+			$f_attach			= empty($img_data['forum_id']) ? true : $this->auth->acl_get('f_attach', $img_data['forum_id']);
+			$is_poster_or_admin = $img_data['poster_id'] == $this->user->data['user_id'] || $this->auth->acl_get('a_attach');
+
+			$allowed_in_post = $f_attach && $is_poster_or_admin && $this->auth->acl_get('u_attach') && $this->config['allow_attachments'];
+
+			if (!$allowed_in_post)
+			{
+				$this->json_response(4, $this->ext_display_name, $this->language->lang('IUL_REQUEST_ERROR'));
+			}
 		}
 
 		// Get image file path
@@ -154,6 +186,8 @@ class ajax_controller
 
 		// Update DataBase
 		unset($img_data['attach_id']);
+		unset($img_data['forum_id']);
+
 		$sql = 'INSERT INTO ' . ATTACHMENTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $img_data);
 		$this->db->sql_query($sql);
 
@@ -178,7 +212,7 @@ class ajax_controller
 	 */
 	private function image_size(int $attach_id): void
 	{
-		$sql = 'SELECT physical_filename
+		$sql = 'SELECT physical_filename, poster_id
 				FROM ' . ATTACHMENTS_TABLE . '
 				WHERE attach_id = ' . (int) $attach_id;
 
@@ -191,7 +225,9 @@ class ajax_controller
 		clearstatcache();
 		$filesize = @filesize($file_path);
 
-		if ($filesize == false)
+		$is_poster_or_admin = $img_data['poster_id'] == $this->user->data['user_id'] || $this->auth->acl_get('a_attach');
+
+		if ($filesize == false || !$is_poster_or_admin)
 		{
 			$this->json_response(5);
 		}
