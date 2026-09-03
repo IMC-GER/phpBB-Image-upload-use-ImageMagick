@@ -15,23 +15,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class main_listener implements EventSubscriberInterface
 {
-	protected object $config;
-	protected object $language;
-	protected object $imagesize;
-	protected object $db;
-	protected object $template;
-	protected object $ext_manager;
-	protected object $helper;
-
 	public function __construct
 	(
-		\phpbb\config\config $config,
-		\phpbb\language\language $language,
-		\FastImageSize\FastImageSize $imagesize,
-		\phpbb\db\driver\driver_interface $db,
-		\phpbb\template\template $template,
-		\phpbb\extension\manager $ext_manager,
-		\phpbb\controller\helper $helper
+		protected \phpbb\config\config $config,
+		protected \phpbb\language\language $language,
+		protected \FastImageSize\FastImageSize $imagesize,
+		protected \phpbb\db\driver\driver_interface $db,
+		protected \phpbb\template\template $template,
+		protected \phpbb\extension\manager $ext_manager,
+		protected \phpbb\controller\helper $helper,
+		protected \imcger\imgupload\core\iul_image_converter $image_converter,
 	)
 	{
 		$this->config		= $config;
@@ -84,7 +77,7 @@ class main_listener implements EventSubscriberInterface
 			'LEFT_JOIN'	=> [
 				[
 					'FROM'	=> [EXTENSION_GROUPS_TABLE => 'eg',],
-					'ON'	=> 'eg.cat_id = 1',
+					'ON'	=> 'eg.cat_id = 1 OR eg.group_name = \'IUL_IMAGES\'',
 				]
 			],
 			'WHERE'		=> 'e.group_id = eg.group_id',
@@ -168,6 +161,8 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function imcger_modify_uploaded_file(object $event): void
 	{
+		$filedata = $event['filedata'];
+
 		if ($event['is_image'])
 		{
 			$write_image		= false; // set to true wenn image attribute changed
@@ -176,10 +171,10 @@ class main_listener implements EventSubscriberInterface
 			$image_quality		= $this->config['imcger_imgupload_img_quality'];
 			$image_del_exif		= $this->config['img_strip_metadata'];
 			$image_max_filesize = $this->config['imcger_imgupload_max_filesize'];
-			$filesize			= $event['filedata']['filesize'];
+			$filesize			= $filedata['filesize'];
 
 			// get file path
-			$file_path = join('/', [trim($this->config['upload_path'], '/'), trim($event['filedata']['physical_filename'], '/')]);
+			$file_path = join('/', [trim($this->config['upload_path'], '/'), trim($filedata['physical_filename'], '/')]);
 
 			// get image dimension and type
 			$size = $this->imagesize->getImageSize($file_path);
@@ -209,7 +204,7 @@ class main_listener implements EventSubscriberInterface
 			$write_image = $this->resize_image($image, $image_max_width, $image_max_height);
 
 			// set image format
-			$image_format = $this->set_image_format($image, $event['filedata']['mimetype']);
+			$image_format = $this->set_image_format($image, $filedata['mimetype']);
 
 			// when not resize don`t changed image quality when it less then quality set in ACP
 			if (($image_format == 'JPEG' || $image_format == 'WEBP') && ($write_image || $image_quality < $image->getImageCompressionQuality()))
@@ -246,8 +241,8 @@ class main_listener implements EventSubscriberInterface
 				$write_image = true;
 			}
 
+			// If new filesize greater, don't write file
 			$image_filesize = strlen($image->getImageBlob());
-
 			if ($image_filesize > $filesize)
 			{
 				$image->clear();
@@ -264,13 +259,13 @@ class main_listener implements EventSubscriberInterface
 				if ($write)
 				{
 					// set return value new file size and filedata
-					$filedata_array = $event['filedata'];
+					$filedata_array = $filedata;
 
 					// set new file size
 					$filedata_array['filesize'] = $image_filesize;
 
 					// if image format change to JPEG set filedata to JPEG
-					if ($image_format == 'JPEG' && $event['filedata']['mimetype'] != 'image/jpeg')
+					if ($image_format == 'JPEG' && $filedata['mimetype'] != 'image/jpeg')
 					{
 						$filedata_array['mimetype'] = 'image/jpeg';
 						$filedata_array['extension'] = 'jpg';

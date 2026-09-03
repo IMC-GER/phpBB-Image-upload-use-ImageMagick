@@ -36,22 +36,26 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// Messages requirement check
-	'IMCGER_REQUIRE_IMAGICK'	=> 'This extension requires the ImageMagick PHP library for installation. Please update your PHP installation.',
-	'IMCGER_REQUIRE_PHPBB'		=> 'This extension requires a phpBB version greater or equal than %1$s and less than %2$s. Your version is %3$s.',
-	'IMCGER_REQUIRE_PHP'		=> 'This extension requires a php version greater or equal than %1$s and less than %2$s. Your version is %3$s.',
+	'IMCGER_REQUIRE_IMAGICK'		=> 'This extension requires the ImageMagick PHP library for installation. Please update your PHP installation.',
+	'IMCGER_REQUIRE_EXT_DEF'		=> 'The file extension “%1$s” is already defined in the attachment extension manager. Please delete it to install “%2$s”.',
+	'IMCGER_REQUIRE_PHP'			=> 'Yours php Version is %1$s. Version %2$s is required.',
+	'IMCGER_REQUIRE_PHPBB'			=> 'Yours phpBB Version is %1$s. Version %2$s is required.',
 
 	// Language pack author
-	'ACP_IMCGER_LANG_DESC'		=> 'British English',
-	'ACP_IMCGER_LANG_EXT_VER'	=> '1.5.0',
-	'ACP_IMCGER_LANG_AUTHOR'	=> 'IMC-Ger',
+	'ACP_IMCGER_LANG_DESC'			=> 'British English',
+	'ACP_IMCGER_LANG_EXT_VER'		=> '1.6.0',
+	'ACP_IMCGER_LANG_AUTHOR'		=> 'IMC-Ger',
 
 	// Messages
-	'ACP_IMCGER_SETTINGS_SAVED'	=> 'Settings have been saved successfully.',
+	'ACP_IMCGER_SETTINGS_SAVED'		=> 'Settings have been saved successfully.',
 
 	// ACP settings
 	'ACP_IMCGER_IMGUPLOAD_TITLE'	=> 'Image upload use ImageMagick',
 	'ACP_IMCGER_IMGUPLOAD_DESC'		=> 'The extension uses the PHP Imagick class to modify upload​ed image​s. If the values set in the ACP are exceeded by the image file, the image ​is being ​resized by the extension.<br>The extension sup​port​s JPEG, WEBP, GIF and PNG images. Other image formats, for example BMP, ​are ​convert​ed​ to JPEG when resize​d.<br>This extension can change the image size and/or the image file size. It rotate images, thumbnails and avatars according to their EXIF information and it can remove the EXIF data from JPEG and WEBP files.',
 	'ACP_IMCGER_SETTINGS'			=> 'Settings',
+
+	// Manage attachment extensions
+	'EXT_GROUP_IUL_IMAGES'			=> 'Images upload',
 
 	// Attachment settings
 	'ACP_IMCGER_THUMB_QUALITY'		=> 'Thumbnail compression quality',

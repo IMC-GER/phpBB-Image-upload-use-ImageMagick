@@ -22,6 +22,11 @@ services:
             - '%core.root_path%'
             - '%core.php_ext%'
 
+    imcger.imgupload.image_converter:
+        class: imcger\imgupload\core\iul_image_converter
+        arguments:
+            - '@config'
+
     imcger.imgupload.listener:
         class: imcger\imgupload\event\main_listener
         arguments:
@@ -32,5 +37,6 @@ services:
             - '@template'
             - '@ext.manager'
             - '@controller.helper'
+            - '@imcger.imgupload.image_converter'
         tags:
             - { name: event.listener }
