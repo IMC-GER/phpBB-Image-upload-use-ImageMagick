@@ -10,7 +10,7 @@
 
 namespace imcger\imgupload\controller;
 
-class admin_controller
+class iul_admin_controller
 {
 	protected object $config;
 	protected object $template;

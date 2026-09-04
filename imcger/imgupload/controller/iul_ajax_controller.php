@@ -10,44 +10,23 @@
 
 namespace imcger\imgupload\controller;
 
-class ajax_controller
+class iul_ajax_controller
 {
-	protected object $config;
-	protected object $user;
-	protected object $request;
-	protected object $db;
-	protected object $auth;
-	protected object $language;
-	protected object $ext_manager;
-	protected object $filesystem;
-	protected string $root_path;
-	protected string $php_ext;
 	protected string $ext_display_name;
 
 	public function __construct(
-		\phpbb\config\config $config,
-		\phpbb\user $user,
-		\phpbb\request\request $request,
-		\phpbb\db\driver\driver_interface $db,
-		\phpbb\auth\auth $auth,
-		\phpbb\language\language $language,
-		\phpbb\extension\manager $ext_manager,
-		\phpbb\filesystem\filesystem $filesystem,
-		string $root_path,
-		string $php_ext
+		protected \phpbb\config\config $config,
+		protected \phpbb\user $user,
+		protected \phpbb\request\request $request,
+		protected \phpbb\db\driver\driver_interface $db,
+		protected \phpbb\auth\auth $auth,
+		protected \phpbb\language\language $language,
+		protected \phpbb\extension\manager $ext_manager,
+		protected \phpbb\filesystem\filesystem $filesystem,
+		protected string $root_path,
+		protected string $php_ext,
 	)
 	{
-		$this->config		= $config;
-		$this->user			= $user;
-		$this->request		= $request;
-		$this->db			= $db;
-		$this->auth			= $auth;
-		$this->language		= $language;
-		$this->ext_manager	= $ext_manager;
-		$this->filesystem	= $filesystem;
-		$this->root_path	= $root_path;
-		$this->php_ext		= $php_ext;
-
 		$this->language->add_lang('attachment', 'imcger/imgupload');
 
 		$metadata_manager = $this->ext_manager->create_extension_metadata_manager('imcger/imgupload');

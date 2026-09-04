@@ -13,34 +13,19 @@ namespace imcger\imgupload\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class main_listener implements EventSubscriberInterface
+class iul_main_listener implements EventSubscriberInterface
 {
-	protected object $config;
-	protected object $language;
-	protected object $imagesize;
-	protected object $db;
-	protected object $template;
-	protected object $ext_manager;
-	protected object $helper;
-
 	public function __construct
 	(
-		\phpbb\config\config $config,
-		\phpbb\language\language $language,
-		\FastImageSize\FastImageSize $imagesize,
-		\phpbb\db\driver\driver_interface $db,
-		\phpbb\template\template $template,
-		\phpbb\extension\manager $ext_manager,
-		\phpbb\controller\helper $helper
+		protected \phpbb\config\config $config,
+		protected \phpbb\language\language $language,
+		protected \FastImageSize\FastImageSize $imagesize,
+		protected \phpbb\db\driver\driver_interface $db,
+		protected \phpbb\template\template $template,
+		protected \phpbb\extension\manager $ext_manager,
+		protected \phpbb\controller\helper $helper,
 	)
 	{
-		$this->config		= $config;
-		$this->language		= $language;
-		$this->imagesize	= $imagesize;
-		$this->db			= $db;
-		$this->template		= $template;
-		$this->ext_manager	= $ext_manager;
-		$this->helper		= $helper;
 	}
 
 	public static function getSubscribedEvents(): array

@@ -10,29 +10,8 @@
 
 namespace imcger\imgupload;
 
-/**
- * Extension base
- */
 class ext extends \phpbb\extension\base
 {
-	/** @var min phpBB version */
-	protected string $phpbb_min_version = '3.3.0';
-
-	/** @var max phpBB version (>= query) */
-	protected string $phpbb_max_version = '4.0.0-dev';
-
-	/** @var min PHP version */
-	protected string $php_min_version = '7.4.0';
-
-	/** @var max PHP version (>= query) */
-	protected string $php_max_version = '8.5.0-dev';
-
-	/**
-	 * Check the minimum and maximum requirements.
-	 *
-	 * The return value is a union type array|bool
-	 * Not specified for reasons of compatibility with php 7
-	 */
 	public function is_enableable()
 	{
 		// If phpBB version 3.2 or less cancel
@@ -52,16 +31,13 @@ class ext extends \phpbb\extension\base
 			$error_message[] = $language->lang('IMCGER_REQUIRE_IMAGICK');
 		}
 
-		// phpBB version greater equal $phpbb_min_version and less then $phpbb_max_version
-		if (phpbb_version_compare(PHPBB_VERSION, $this->phpbb_min_version, '<') || phpbb_version_compare(PHPBB_VERSION, $this->phpbb_max_version, '>='))
-		{
-			$error_message[] = $language->lang('IMCGER_REQUIRE_PHPBB', $this->phpbb_min_version, $this->phpbb_max_version, PHPBB_VERSION);
-		}
+		// Check php and phpBB extension requirments
+		$ext_requirements = new \imcger\imgupload\core\imcger_ext_requirements($this->extension_name);
+		$requirements	  = $ext_requirements->check();
 
-		// php version equal or greater $php_min_version and less $php_max_version
-		if (version_compare(PHP_VERSION, $this->php_min_version, '<') || version_compare(PHP_VERSION, $this->php_max_version, '>='))
+		if ($requirements !== true)
 		{
-			$error_message[] = $language->lang('IMCGER_REQUIRE_PHP', $this->php_min_version, $this->php_max_version, PHP_VERSION);
+			$error_message = array_merge($error_message, $requirements);
 		}
 
 		return empty($error_message) ? true : $error_message;

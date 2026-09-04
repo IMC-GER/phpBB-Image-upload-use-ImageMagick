@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	// Messages requirement check
 	'IMCGER_REQUIRE_IMAGICK'	=> 'Diese Erweiterung benötigt die PHP-Bibliothek ImageMagick für die Installation. Bitte aktualisiere deine PHP-Installation',
-	'IMCGER_REQUIRE_PHPBB'		=> 'Diese Erweiterung benötigt eine phpBB Version gleich oder grösser %1$s und kleiner %2$s. Deine Version ist %3$s.',
-	'IMCGER_REQUIRE_PHP'		=> 'Diese Erweiterung benötigt eine php Version gleich oder grösser %1$s und kleiner %2$s. Deine Version ist %3$s.',
+	'IMCGER_REQUIRE_PHP'		=> 'Deine php Version ist %1$s. Benötigt wird eine Version %2$s.',
+	'IMCGER_REQUIRE_PHPBB'		=> 'Deine phpBB Version ist %1$s. Benötigt wird eine Version %2$s.',
 
 	// Language pack author
 	'ACP_IMCGER_LANG_DESC'		=> 'Deutsch (Du)',
-	'ACP_IMCGER_LANG_EXT_VER'	=> '1.5.0',
+	'ACP_IMCGER_LANG_EXT_VER'	=> '1.5.1',
 	'ACP_IMCGER_LANG_AUTHOR'	=> 'IMC-Ger',
 
 	// Messages

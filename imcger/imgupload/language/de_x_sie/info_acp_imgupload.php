@@ -37,14 +37,13 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	// Messages requirement check
 	'IMCGER_REQUIRE_IMAGICK'	=> 'Diese Erweiterung benötigt die PHP-Bibliothek ImageMagick für die Installation. Bitte aktualisiere deine PHP-Installation',
-	'IMCGER_REQUIRE_PHPBB'		=> 'Diese Erweiterung benötigt eine phpBB Version gleich oder grösser %1$s und kleiner %2$s. Deine Version ist %3$s.',
-	'IMCGER_REQUIRE_PHP'		=> 'Diese Erweiterung benötigt eine php Version gleich oder grösser %1$s und kleiner %2$s. Deine Version ist %3$s.',
+	'IMCGER_REQUIRE_PHP'		=> 'Ihre php Version ist %1$s. Benötigt wird eine Version %2$s.',
+	'IMCGER_REQUIRE_PHPBB'		=> 'Ihre phpBB Version ist %1$s. Benötigt wird eine Version %2$s.',
 
 	// Language pack author
 	'ACP_IMCGER_LANG_DESC'		=> 'Deutsch (Sie)',
-	'ACP_IMCGER_LANG_EXT_VER'	=> '1.5.0',
+	'ACP_IMCGER_LANG_EXT_VER'	=> '1.5.1',
 	'ACP_IMCGER_LANG_AUTHOR'	=> 'IMC-Ger',
-	'ACP_IMCGER_SETTINGS'		=> 'Einstellungen',
 
 	// Messages
 	'ACP_IMCGER_SETTINGS_SAVED'	=> 'Einstellungen wurden erfolgreich gespeichert.',
@@ -52,6 +51,7 @@ $lang = array_merge($lang, [
 	// ACP settings
 	'ACP_IMCGER_IMGUPLOAD_TITLE'	=> 'Image upload use ImageMagick',
 	'ACP_IMCGER_IMGUPLOAD_DESC'		=> 'Die Erweiterung verwendet die PHP Imagick Klasse, um hochgeladene Bilder, Thumbnails und Avatars zu verändern. Wenn die im ACP eingestellten Werte von der Bilddatei überschritten werden, wird die Größe des Bildes von der Erweiterung angepasst. Die Erweiterung unterstützt JPEG, WEBP, GIF und PNG Bilder. Andere Bildformate, z. B. BMP, werden beim Ändern der Größe in JPEG umgewandelt. Diese Erweiterung kann die Bildgröße und/oder die Größe der Bilddatei ändern. Es dreht Bilder, Thumbnails und Avatare entsprechend ihrer EXIF Informationen und kann die EXIF Daten aus JPEG und WEBP Dateien entfernen.',
+	'ACP_IMCGER_SETTINGS'			=> 'Einstellungen',
 
 	// Attachment settings
 	'ACP_IMCGER_THUMB_QUALITY'		=> 'Vorschaubilder Komprimierungsqualität',

@@ -1,6 +1,6 @@
 services:
     imcger.imgupload.admin.controller:
-        class: imcger\imgupload\controller\admin_controller
+        class: imcger\imgupload\controller\iul_admin_controller
         arguments:
             - '@config'
             - '@template'
@@ -9,7 +9,7 @@ services:
             - '@ext.manager'
 
     imcger.imgupload.ajax_controller:
-        class: imcger\imgupload\controller\ajax_controller
+        class: imcger\imgupload\controller\iul_ajax_controller
         arguments:
             - '@config'
             - '@user'
@@ -23,7 +23,7 @@ services:
             - '%core.php_ext%'
 
     imcger.imgupload.listener:
-        class: imcger\imgupload\event\main_listener
+        class: imcger\imgupload\event\iul_main_listener
         arguments:
             - '@config'
             - '@language'

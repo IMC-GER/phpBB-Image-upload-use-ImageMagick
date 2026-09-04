@@ -31,7 +31,7 @@ This extension can change the image size and/or the image file size. It rotate i
 
 ## Requirements
 - phpBB 3.3.0 or higher
-- php 7.2 or higher
+- php 8.0 or higher
 - php ImageMagick library installed
 
 ## Compatible with
@@ -56,6 +56,17 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 - Go to "ACP" > "Customise" > "Manage extensions" and enable the "Image upload use ImageMagick" extension.
 
 ## Changelog
+
+### v1.5.1 (04-09-2026)
+- Added: The file will not be changed if the iMagick image is larger than the original image.
+- Update `license.txt`
+- Changed: php min version 8.x
+- Changed: Decimal places are not truncated when entering the maximum file size.
+- Changed: array_map() replaced by array_column().
+- Changed: Set the maximum number of colours for PNG files to 128.
+- Changed: Improving security for AJAX-Requests
+- Changed: Use `composer.json` requirements in `ext.php`
+  - Added class `imcger_ext_requirements`
 
 ### v1.5.0 (16-06-2025)
 - Fixed Language variables are lost when 'Create thumbnail' is deactivated.
