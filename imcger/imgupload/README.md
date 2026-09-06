@@ -57,7 +57,7 @@ For full functionality "Maximum avatar file size" in "ACP" > "Board configuratio
 
 ## Changelog
 
-### v1.5.1 (04-09-2026)
+### v1.5.1 (06-09-2026)
 - Added: The file will not be changed if the iMagick image is larger than the original image.
 - Update `license.txt`
 - Changed: php min version 8.x
